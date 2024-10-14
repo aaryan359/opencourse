@@ -27,6 +27,8 @@ const userSchema = new mongoose.Schema({
     type: String,
   },
   googleId: String, // For Google OAuth
+
+  
   videos: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Video', // Reference to Video model
