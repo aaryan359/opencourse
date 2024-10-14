@@ -4,6 +4,7 @@ import Timeline1 from '../Components/Timeline';
 // Sample data for course roadmap and videos
 const courseData = {
     webDevelopment: {
+
         roadmap: [
             'HTML & CSS Basics',
             'JavaScript Fundamentals',
@@ -12,12 +13,17 @@ const courseData = {
             'Backend Development (e.g., Node.js)',
             'Deployment and Hosting',
         ],
+
+
         videos: [
             { id: 1, title: 'HTML Basics', videoUrl: 'https://www.youtube.com/embed/XXXXX' },
             { id: 2, title: 'CSS Fundamentals', videoUrl: 'https://www.youtube.com/embed/YYYYY' },
             { id: 3, title: 'JavaScript Introduction', videoUrl: 'https://www.youtube.com/embed/ZZZZZ' },
         ],
     },
+
+
+    
     dataScience: {
         roadmap: [
             'Introduction to Python',
@@ -28,11 +34,14 @@ const courseData = {
             'Project Development',
         ],
         videos: [
-            { id: 1, title: 'Python Basics', videoUrl: 'https://www.youtube.com/embed/AAAAA' },
-            { id: 2, title: 'Data Analysis with Pandas', videoUrl: 'https://www.youtube.com/embed/BBBBB' },
+            { id: 1, title: 'Python Basics', videoUrl: 'https://www.youtube.com' },
+            { id: 2, title: 'Data Analysis with Pandas', videoUrl: 'https://www.youtube.com' },
         ],
     },
 };
+
+
+
 
 const UserPanel = () => {
     const [selectedCategory, setSelectedCategory] = useState('webDevelopment');
@@ -44,9 +53,12 @@ const UserPanel = () => {
         setSelectedCategory(category);
     };
 
+
+
     return (
         <div className="container mx-auto p-6 bg-gray-50 min-h-screen">
             <h1 className="text-4xl font-bold text-center text-gray-800 mb-8">Explore Tech Courses</h1>
+
 
             <div className="mb-6 text-center">
                 <button
@@ -55,6 +67,8 @@ const UserPanel = () => {
                 >
                     Web Development
                 </button>
+
+
                 <button
                     onClick={() => handleCategoryChange('dataScience')}
                     className={`px-6 py-3 rounded-lg transition-colors duration-300 ${selectedCategory === 'dataScience' ? 'bg-blue-600 text-white' : 'bg-gray-300 text-gray-800 hover:bg-gray-400'}`}
@@ -63,12 +77,20 @@ const UserPanel = () => {
                 </button>
             </div>
 
+
+
+
             {/* Course Roadmap Section */}
             <div className="mb-8">
                 <h2 className="text-2xl font-semibold mb-4 text-gray-800">Course Roadmap</h2>
                 {/* Dynamically rendering the Timeline1 component based on selected category */}
                 <Timeline1 data={selectedRoadmap} />
             </div>
+
+
+
+
+
 
             {/* Video Section */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -85,6 +107,8 @@ const UserPanel = () => {
                             className="rounded-lg"
                         ></iframe>
                     </div>
+
+                    
                 ))}
             </div>
         </div>

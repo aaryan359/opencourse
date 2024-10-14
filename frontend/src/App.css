@@ -1,0 +1,144 @@
+.container {
+    padding: 20px;
+    margin: auto;
+  }
+  
+  h1 {
+    font-family: 'Poppins', sans-serif;
+    color: #4a56e2;
+    text-align: center;
+  }
+  
+  button {
+    margin: 5px;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+  }
+  
+  .timeline {
+    position: relative;
+    padding: 20px 0;
+    margin: 20px 0;
+    list-style: none;
+  }
+  
+  .timeline-item {
+    position: relative;
+    margin: 20px 0;
+    padding-left: 30px;
+  }
+  
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: 15px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: #ddd;
+  }
+  
+  .timeline-icon {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 30px;
+    height: 30px;
+    background: #4a56e2;
+    border-radius: 50%;
+    color: white;
+    text-align: center;
+    line-height: 30px;
+    font-weight: bold;
+  }
+  
+  .timeline-content {
+    background: #f9f9f9;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+  }
+  
+  .timeline-content:hover {
+    background: #eef1f8;
+    transition: background 0.3s ease-in-out;
+  }
+  
+  .subtimeline-item {
+    margin-top: 10px;
+    padding-left: 30px;
+    position: relative;
+  }
+  
+  .subtimeline-item::before {
+    content: '';
+    position: absolute;
+    left: 15px;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: #bbb;
+  }
+  
+  .subtimeline-content {
+    padding: 10px;
+    background: #fff;
+    border-left: 3px solid #4a56e2;
+    border-radius: 5px;
+  }
+  button {
+  background: linear-gradient(135deg, #42a5f5, #4a56e2);
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: inline-block;
+  text-align: center;
+}
+
+button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 12px 20px rgba(0, 0, 0, 0.2);
+  background: linear-gradient(135deg, #4a56e2, #42a5f5); /* Reverse gradient on hover */
+}
+
+button:focus {
+  outline: none;
+}
+
+.flex {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
+@media (max-width: 600px) {
+  button {
+    font-size: 14px;
+    padding: 10px 20px;
+  }
+}
+
+  .text-center {
+    text-align: center;
+  }
+  
+  .max-w-4xl {
+    max-width: 800px;
+    margin: auto;
+  }
+  
+  @media (max-width: 600px) {
+    .timeline-content, .subtimeline-content {
+      max-width: 100%;
+    }
+  }
+  
