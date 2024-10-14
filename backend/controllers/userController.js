@@ -1,0 +1,150 @@
+const User = require('../models/User');
+
+const bcrypt = require('bcryptjs');
+
+const jwt = require('jsonwebtoken');
+
+// Register a new user
+const registerUser = async (req, res) => {
+  const { username, email, password, expertise, experience, portfolio } = req.body;
+
+  try {
+    // Check if user already exists
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ error: 'User already exists with this email' });
+    }
+
+    // Hash password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Create new user
+    const user = new User({
+      username,
+      email,
+      password: hashedPassword,
+      expertise,
+      experience,
+      portfolio,
+    });
+
+    // Save the user to the database
+    await user.save();
+
+
+    // Generate JWT token
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1d' });
+
+    // Send token to client
+    res.status(201).json({ token, user });
+
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// Login a user
+const loginUser = async (req, res) => {
+  const { email, password } = req.body;
+
+  
+  try {
+    // Find user by email
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    // Check if password matches
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(401).json({ error: 'Password dosen`t match' });
+    }
+
+    // Generate JWT token
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1d' });
+
+    // Send token to client
+    res.json({ token, user });
+
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+
+
+// Get user profile (protected route)
+const getUserProfile = async (req, res) => {
+  try {
+    // `req.user` is added by `authMiddleware`
+    const user = await User.findById(req.user._id).populate('videos fields');
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    res.json(user);
+
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+
+
+
+// Update user profile
+const updateUserProfile = async (req, res) => {
+    // taking is updated input form user 
+
+  const { username, expertise, experience, portfolio } = req.body;
+
+  // find that if user is exxist or not 
+  try {
+    const user = await User.findById(req.user._id);
+
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+
+    // Update fields
+
+    user.username = username || user.username;
+    user.expertise = expertise || user.expertise;
+    user.experience = experience || user.experience;
+    user.portfolio = portfolio || user.portfolio;
+
+    // save updated user in db
+    await user.save();
+    res.json(user);
+
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+
+
+
+// Delete a user
+const deleteUser = async (req, res) => {
+  try {
+    await User.findByIdAndDelete(req.user._id);
+    res.json({ message: 'User deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+
+
+module.exports = {
+  registerUser,
+  loginUser,
+  getUserProfile,
+  updateUserProfile,
+  deleteUser,
+};
