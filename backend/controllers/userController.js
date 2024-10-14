@@ -4,7 +4,9 @@ const bcrypt = require('bcryptjs');
 
 const jwt = require('jsonwebtoken');
 
+
 // Register a new user
+// tested api
 const registerUser = async (req, res) => {
   const { username, email, password, expertise, experience, portfolio } = req.body;
 
@@ -43,11 +45,14 @@ const registerUser = async (req, res) => {
   }
 };
 
+
+
+
+// tested api 
 // Login a user
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
 
-  
   try {
     // Find user by email
     const user = await User.findOne({ email });
@@ -74,6 +79,8 @@ const loginUser = async (req, res) => {
 
 
 
+
+
 // Get user profile (protected route)
 const getUserProfile = async (req, res) => {
   try {
@@ -90,6 +97,8 @@ const getUserProfile = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+
 
 
 
@@ -125,6 +134,9 @@ const updateUserProfile = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+
+
 
 
 
