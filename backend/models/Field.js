@@ -1,29 +1,19 @@
-// to store the fields models
-
 const mongoose = require("mongoose");
 
-const videoSchema = new mongoose.Schema({
+const fieldSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true, // Corrected typo: 'require' to 'required'
+    trim: true,
+  },
 
-    name:{
-      type: String,
-      require:true,
-      trim:true,
-    },
-
-    // inside fields there are multiple topics
-
-    subtopic:[
-        {
-            name:{
-                type:String
-            },
-            videos:{
-                type: Schema.Types.ObjectId, 
-                ref: 'Video' // give refrence to video model
-                },
-        }
-    ],
-    
+  // Inside fields, there are multiple subtopics
+  subtopics: [
+    {
+      type: mongoose.Schema.Types.ObjectId, 
+      ref: 'SubTopic', // Corrected subtopic array to refer directly to SubTopic
+    }
+  ]
 });
 
-module.exports = mongoose.model("Video", videoSchema);
+module.exports = mongoose.model("Field", fieldSchema);

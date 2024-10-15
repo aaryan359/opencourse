@@ -8,11 +8,17 @@ const videoSchema = new mongoose.Schema({
       trim:true,
     },
 
+    url:{
+      type:String,
+      require:true
+    },
+
     description:{
         type: String,
         require:true,
         trim:true,
       },
+      
     
 });
 

@@ -5,6 +5,29 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 
+
+const generateAccessAndRefreshTokens = async (userId) => {
+  try {
+    const user = await User.findById(userId);
+
+    if (!user) throw new ApiError(404, "User not found");
+
+    const accessToken = user.generateAccessToken();
+    const refreshToken = user.generateRefreshToken();
+
+    user.refreshToken = refreshToken;
+    await user.save({ validateBeforeSave: false });
+
+    return { accessToken, refreshToken };
+  } catch (error) {
+    throw new ApiError(500, "Something went wrong while generating tokens");
+  }
+};
+
+
+
+
+
 // Register a new user
 // tested api
 const registerUser = async (req, res) => {
@@ -38,7 +61,7 @@ const registerUser = async (req, res) => {
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1d' });
 
     // Send token to client
-    res.status(201).json({ token, user });
+    res.status(201).json({ token });
 
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -51,6 +74,7 @@ const registerUser = async (req, res) => {
 // tested api 
 // Login a user
 const loginUser = async (req, res) => {
+
   const { email, password } = req.body;
 
   try {
@@ -62,15 +86,36 @@ const loginUser = async (req, res) => {
 
     // Check if password matches
     const isMatch = await bcrypt.compare(password, user.password);
+
     if (!isMatch) {
       return res.status(401).json({ error: 'Password dosen`t match' });
     }
 
-    // Generate JWT token
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1d' });
+   const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(
+      user._id
+   );
+  
+  const options = {
+    httpOnly: true,
+    secure: true,
+  };
+  
+  console.log("option si",options)
 
-    // Send token to client
-    res.json({ token, user });
+  return res
+  .status(200)
+  .cookie("accessToken", accessToken, options)
+  .cookie("refreshToken", refreshToken, options)
+  .json({
+    status: 200, // HTTP status code
+    data: {
+      user,
+      accessToken,
+      refreshToken,
+    },
+    message: "User logged in successfully",
+  });
+
 
   } catch (error) {
     res.status(500).json({ error: error.message });

@@ -18,17 +18,18 @@ const Login = () => {
     e.preventDefault();
 
     try {
-      const response = await axios.post('http://localhost:5001/auth/login', formData);
-      
 
-      if (response.status >= 200 && response.status < 300) {
+      const response = await axios.post('http://localhost:5001/auth/login', formData);
+          
+      if (response) {
         navigate('/');
+        
       } else {
         alert('Login failed');
       }
       
     } catch (err) {
-      console.error(err);
+    console.log("error is ",err)
       alert('Error logging in');
     }
   };

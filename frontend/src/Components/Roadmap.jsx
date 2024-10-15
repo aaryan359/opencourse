@@ -33,11 +33,11 @@ const Roadmap = () => {
           {index + 1}
         </div>
         <div className="timeline-content">
-          <h3 className="font-semibold text-gray-800 text-lg mb-2">{topic.name}</h3>
-          <ul className="list-disc pl-5 mt-2 text-gray-700">
+          <h3 className="font-semibold text-gray-800  cursor-pointer text-lg mb-2">{topic.name}</h3>
+          <ul className="list-disc pl-5 mt-2 text-gray-700 ">
             {topic.subtopics.map((subtopic, subIndex) => (
               <li key={subIndex} className="text-sm">
-                <div className="subtimeline-item">
+                <div className="subtimeline-item cursor-pointer hover:">
                   <div className="subtimeline-content">
                     <span>{subtopic}</span>
                   </div>

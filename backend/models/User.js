@@ -1,5 +1,5 @@
-// models/User.js
 const mongoose = require("mongoose");
+const jwt = require('jsonwebtoken');
 
 const userSchema = new mongoose.Schema({
   username: {
@@ -13,30 +13,47 @@ const userSchema = new mongoose.Schema({
     trim: true,
     unique: true, // Ensure emails are unique
   },
-  password: { // Corrected to 'password'
+  password: { 
     type: String,
-    required: [true, "Password is necessary"],
+    required: [true, "Password is necessary"], // Corrected validation
   },
-  expertise: {
-    type: String,
-  },
-  experience: {
-    type: String,
-  },
-  portfolio: {
-    type: String,
-  },
+  expertise: String,
+  experience: String,
+  portfolio: String,
   googleId: String, // For Google OAuth
 
-  
+  // Videos that the user has uploaded
   videos: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Video', // Reference to Video model
   }],
-  fields: [{ // Corrected to 'fields' and changed to an array to hold multiple fields
+  
+  // Fields that the user is associated with
+  fields: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Field', // Reference to Field model
   }],
 });
+
+// JWT token generation methods
+userSchema.methods.generateAccessToken = function(){
+  return jwt.sign(
+    {
+      _id: this._id,
+      email: this.email,
+      username: this.username,
+    },
+    process.env.ACCESS_TOKEN_SECRET,
+    { expiresIn: process.env.ACCES_TOKEN_EXPIRY }
+  );
+}
+
+userSchema.methods.generateRefreshToken = function(){
+  return jwt.sign(
+    { _id: this._id },
+    process.env.REFERESH_TOKEN_SECRET,
+    { expiresIn: process.env.REFERESH_TOKEN_EXPIRY }
+  );
+}
 
 module.exports = mongoose.model("User", userSchema);

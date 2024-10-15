@@ -5,6 +5,10 @@ const session = require('express-session');
 const passport = require('passport');
 const connectDB = require('./config/db');
 const userRoutes = require('./routes/userRoutes');
+const field = require('./routes/fieldsRoutes')
+
+const authMiddleware = require('./middlewares/authMiddlewares');
+
 require('./config/passport-setup'); // Import passport setup
 
 const app = express();
@@ -39,6 +43,9 @@ app.use(passport.session());
 // Routes
 
 app.use('/auth', userRoutes);
+
+app.use('/user',field);
+
 
 
 // Start server
