@@ -1,52 +1,85 @@
-
-const Video = require('../models/Video');
-
-
-const Field = require('../models/Field'); // Import your Field model
+const Field = require('../models/Field');
+const SubTopic = require('../models/Topics');
+const Video = require('../models/Video'); 
 
 
 
 
 
-
-
+//tested
 const getFields = async (req, res) => {
   try {
-    const fields = await Field.find()
-      .populate({
-        path: 'subtopics', // Populate subtopics
-        populate: {
-          path: 'videos', // Nested populate for videos in subtopics
-          model: 'Video',
-        }
-      });
 
-      // Return all fields with populated subtopics and videos
-    res.json(fields);
-    
-  } catch (error) {
+
+    // Fetch the fields without populate first
+    const fields = await Field.find();
+
+    // console.log("field is",fields)
+
+    // Check if fields are found
+    if (!fields || fields.length === 0) {
+      return res.status(404).json({ error: 'No fields found' });
+    }
+
+
+    // Now try to populate subtopics and videos
+    const populatedFields = await Field.find().populate({
+      path: 'subtopic',
+      populate: {
+        path: 'videos',
+        model: 'Video',
+      }
+    });
+
+    // Return all fields with populated subtopics and videos
+    res.json(populatedFields);
+
+  } 
+  
+  catch (error) {
     console.error('Error fetching fields:', error);
     res.status(500).json({ error: 'Failed to fetch fields' });
   }
 };
 
 
+
+
 const addField = async (req, res) => {
   const { name } = req.body;
 
+  // Validate input: check if name is provided
+  if (!name || name.trim() === "") {
+    return res.status(400).json({ error: 'Field name is required' });
+  }
+
   try {
+    // Normalize the field name (optional: lowercase or trim)
+    const normalizedFieldName = name.trim();
+
     // Check if the field already exists
-    const existingField = await Field.findOne({ name });
+    const existingField = await Field.findOne({ name: normalizedFieldName });
     if (existingField) {
-      return res.status(400).json({ error: 'Field already exists' });
+      return res.status(409).json({ error: 'Field already exists' }); // Use 409 Conflict for duplicate resource
     }
 
-    const newField = new Field({ name });
+    // Create a new field
+    const newField = new Field({ name: normalizedFieldName });
     await newField.save();
-    
-    res.status(201).json(newField); // Return the newly created field
+
+    res.status(201).json({
+      message: 'Field successfully created',
+      field: newField, // Return the created field
+    });
   } catch (error) {
     console.error('Error adding field:', error);
+
+    // Check if the error is related to validation
+    if (error.name === 'ValidationError') {
+      return res.status(400).json({ error: 'Invalid input', details: error.errors });
+    }
+
+    // Handle other types of errors
     res.status(500).json({ error: 'Failed to add field' });
   }
 };

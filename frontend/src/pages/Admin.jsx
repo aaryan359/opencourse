@@ -22,6 +22,9 @@ function Admin() {
     fetchFields();
   }, []);
 
+
+  
+
   const fetchFields = async () => {
     try {
       const response = await axios.get("http://localhost:5001/user/getfields");
@@ -51,7 +54,7 @@ function Admin() {
   };
 
   // Handle field click by setting full field object (including _id)
-  
+
   const handleFieldClick = (field) => {
     setSelectedField(field); // Set the full field object
   };
@@ -158,9 +161,11 @@ function Admin() {
         <div className="mb-8">
           <h2 className="text-2xl font-semibold text-blue-700 mb-4">My Videos</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+
             {myVideos.map((video, index) => (
               <div key={index} className="p-4 bg-purple-100 text-purple-900 rounded-lg shadow-lg">
                 <h3 className="text-xl font-bold text-center">{video.title}</h3>
+
                 <p className="text-center text-sm">{video.field}</p>
               </div>
             ))}
@@ -256,6 +261,7 @@ function Admin() {
             <h3 className="text-xl font-bold mb-4">Upload Video to {selectedTopic.name}</h3>
 
             <div className="mb-4">
+
               <label className="block text-gray-700 mb-2">Video Title</label>
               <input
                 type="text"
@@ -266,8 +272,12 @@ function Admin() {
                 required
               />
             </div>
+
+
             <div className="mb-4">
-              <label className="block text-gray-700 mb-2">YouTube URL</label>
+
+               <label className="block text-gray-700 mb-2">YouTube URL</label>
+
               <input
                 type="url"
                 name="url"
@@ -276,9 +286,16 @@ function Admin() {
                 className="border border-gray-300 rounded-lg p-2 w-full"
                 required
               />
+
             </div>
+
+
             <div className="mb-4">
+
+
               <label className="block text-gray-700 mb-2">Video Description</label>
+
+
               <textarea
                 name="description"
                 value={videoDetails.description}
@@ -288,12 +305,16 @@ function Admin() {
                 required
               />
             </div>
+
+
             <button
               type="submit"
               className="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700 transition-colors"
             >
               Upload Video
             </button>
+
+            
           </form>
         )}
       </div>

@@ -1,19 +1,23 @@
 const mongoose = require("mongoose");
 
 const fieldSchema = new mongoose.Schema({
+
   name: {
+
     type: String,
-    required: true, // Corrected typo: 'require' to 'required'
+    required: true, 
     trim: true,
   },
 
-  // Inside fields, there are multiple subtopics
-  subtopics: [
+
+  subtopic: [
     {
       type: mongoose.Schema.Types.ObjectId, 
-      ref: 'SubTopic', // Corrected subtopic array to refer directly to SubTopic
+      ref: 'SubTopic', 
     }
   ]
 });
 
-module.exports = mongoose.model("Field", fieldSchema);
+const Field = mongoose.model("Field", fieldSchema);
+
+module.exports = Field;

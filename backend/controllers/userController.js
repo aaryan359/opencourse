@@ -26,8 +26,6 @@ const generateAccessAndRefreshTokens = async (userId) => {
 
 
 
-
-
 // Register a new user
 // tested api
 const registerUser = async (req, res) => {
