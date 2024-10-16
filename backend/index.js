@@ -15,7 +15,10 @@ const app = express();
 
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:5173', // Change to your frontend URL
+  credentials: true // Allow cookies to be sent
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -24,17 +27,17 @@ connectDB();
 
 
 // Express session
-app.use(session({
-  secret: process.env.SESSION_SECRET,
-  resave: false,
-  saveUninitialized: true,
-}));
+// app.use(session({
+//   secret: process.env.SESSION_SECRET,
+//   resave: false,
+//   saveUninitialized: true,
+// }));
 
 
 
 // Passport middleware
-app.use(passport.initialize());
-app.use(passport.session());
+// app.use(passport.initialize());
+// app.use(passport.session());
 
 
 

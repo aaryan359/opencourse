@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate ,Link } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { setToken } from '../reducer/slice/authSlice';
+import Cookies from 'js-cookie'
 
 const SignUp = () => {
   const [formData, setFormData] = useState({
@@ -13,7 +16,7 @@ const SignUp = () => {
   });
 
   const navigate = useNavigate();
-
+  const dispatch = useDispatch();
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -23,10 +26,11 @@ const SignUp = () => {
 
     try {
       const response = await axios.post('http://localhost:5001/auth/signup', formData);
-      alert('User registered successfully');
+      alert('User registered successfully, Login to continue');
 
       if (response.status >= 200 && response.status < 300) {
-        navigate('/');
+        dispatch(setToken(Cookies.get('accessToken')));
+        navigate('/login');
       } else {
         alert('Signup failed');
       }

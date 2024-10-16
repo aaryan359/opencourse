@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate,Link } from 'react-router-dom';
-
+import { useDispatch } from 'react-redux';
+import { setToken } from '../reducer/slice/authSlice';
+import Cookies from 'js-cookie'
 const Login = () => {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
   });
-
+ 
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -19,9 +22,14 @@ const Login = () => {
 
     try {
 
-      const response = await axios.post('http://localhost:5001/auth/login', formData);
+      const response = await axios.post('http://localhost:5001/auth/login', formData ,{
+        withCredentials:true,
+      }
+      );
           
       if (response) {
+        dispatch(setToken(Cookies.get('accessToken')));
+       
         navigate('/');
         
       } else {
