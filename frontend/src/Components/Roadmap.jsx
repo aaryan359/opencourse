@@ -3,6 +3,7 @@ import '../App.css';
 
 const Roadmap = () => {
   const [selectedField, setSelectedField] = useState("");
+
   const [topics, setTopics] = useState([
     {
       name: "HTML & CSS",
@@ -26,26 +27,57 @@ const Roadmap = () => {
     setSelectedField(field);
   };
 
+
+
   const TopicTimeline = ({ topicList }) => {
+
     return topicList.map((topic, index) => (
+      
+
       <div key={index} className="timeline-item">
+
         <div className="timeline-icon">
+
           {index + 1}
+
         </div>
+
+
+
         <div className="timeline-content">
+
+
           <h3 className="font-semibold text-gray-800  cursor-pointer text-lg mb-2">{topic.name}</h3>
+
+
           <ul className="list-disc pl-5 mt-2 text-gray-700 ">
+
             {topic.subtopics.map((subtopic, subIndex) => (
+
               <li key={subIndex} className="text-sm">
+
                 <div className="subtimeline-item cursor-pointer hover:">
+
                   <div className="subtimeline-content">
+
                     <span>{subtopic}</span>
+
                   </div>
+
                 </div>
+
               </li>
+
+
             ))}
+
+
           </ul>
+
+
         </div>
+
+
       </div>
     ));
   };

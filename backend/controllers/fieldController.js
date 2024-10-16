@@ -4,12 +4,9 @@ const Video = require('../models/Video');
 
 
 
-
-
 //tested
-const getFields = async (req, res) => {
-  try {
-
+ const getFields = async (req, res) => {
+   try {
 
     // Fetch the fields without populate first
     const fields = await Field.find();
@@ -20,7 +17,6 @@ const getFields = async (req, res) => {
     if (!fields || fields.length === 0) {
       return res.status(404).json({ error: 'No fields found' });
     }
-
 
     // Now try to populate subtopics and videos
     const populatedFields = await Field.find().populate({
@@ -34,8 +30,7 @@ const getFields = async (req, res) => {
     // Return all fields with populated subtopics and videos
     res.json(populatedFields);
 
-  } 
-  
+  }   
   catch (error) {
     console.error('Error fetching fields:', error);
     res.status(500).json({ error: 'Failed to fetch fields' });
@@ -44,8 +39,9 @@ const getFields = async (req, res) => {
 
 
 
-
+//tested 
 const addField = async (req, res) => {
+
   const { name } = req.body;
 
   // Validate input: check if name is provided
@@ -87,27 +83,57 @@ const addField = async (req, res) => {
 
 
 
-
+//tested 
 const addSubtopic = async (req, res) => {
   const { fieldId } = req.params;
   const { subtopicName } = req.body;
 
-  try {
-    // Create a new subtopic
-    const newSubtopic = new SubTopic({ name: subtopicName });
-    await newSubtopic.save();
+  // Validate input
+  if (!subtopicName || subtopicName.trim() === "") {
+    return res.status(400).json({ error: 'Subtopic name is required' });
+  }
 
-    // Find the field by ID and push the new subtopic to it
+  try {
+    // Check if the field exists
     const field = await Field.findById(fieldId);
-    field.subtopics.push(newSubtopic._id);
+    if (!field) {
+      console.error('Field not found');
+      return res.status(404).json({ error: 'Field not found' });
+    }
+
+    // Ensure the subtopic field is an array
+    if (!Array.isArray(field.subtopic)) {
+      field.subtopic = [];
+    }
+
+    // Create a new subtopic
+    const newSubtopic = new SubTopic({ name: subtopicName.trim() });
+    await newSubtopic.save();
+    console.log('New Subtopic:', newSubtopic);
+
+    // Add the new subtopic to the field's subtopics array
+    field.subtopic.push(newSubtopic._id);
     await field.save();
 
-    res.status(201).json(newSubtopic); // Return the newly created subtopic
+    res.status(201).json({
+      message: 'Subtopic successfully created and added to field',
+      subtopic: newSubtopic,
+    });
   } catch (error) {
     console.error('Error adding subtopic:', error);
+
+    // Check if the error is related to validation
+    if (error.name === 'ValidationError') {
+      return res.status(400).json({ error: 'Invalid input', details: error.errors });
+    }
+
+    // Handle other types of errors
     res.status(500).json({ error: 'Failed to add subtopic' });
   }
 };
+
+
+
 
 
 
@@ -131,6 +157,8 @@ const addVideoToSubtopic = async (req, res) => {
     res.status(500).json({ error: 'Failed to upload video' });
   }
 };
+
+
 
 
 

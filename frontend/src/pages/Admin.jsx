@@ -3,19 +3,94 @@ import axios from "axios";
 
 function Admin() {
   const [fields, setFields] = useState([]);
+
+
   const [selectedField, setSelectedField] = useState(null);
+
   const [topics, setTopics] = useState({});
+
   const [myVideos, setMyVideos] = useState([]);
+
   const [newField, setNewField] = useState("");
+
   const [newTopic, setNewTopic] = useState("");
+
   const [selectedTopic, setSelectedTopic] = useState(null);
+
   const [videoDetails, setVideoDetails] = useState({
     url: "",
     title: "",
     description: ""
   });
 
-  const predefinedFields = ["WebDev", "Blockchain", "Data Science", "AI/ML", "Mobile Development"];
+
+
+
+  const predefinedFields = [
+    "WebDev",
+    "Blockchain",
+    "Data Science",
+    "AI/ML",
+    "Mobile Development",
+    "Cloud Computing",
+    "Cybersecurity",
+    "DevOps",
+    "Internet of Things (IoT)",
+    "Game Development",
+    "Augmented Reality (AR)",
+    "Virtual Reality (VR)",
+    "Software Engineering",
+    "Big Data",
+    "UI/UX Design",
+    "Embedded Systems",
+    "Computer Vision",
+    "Quantum Computing",
+    "Robotics",
+    "Natural Language Processing (NLP)",
+    "Networking",
+    "Edge Computing",
+    "Generative AI",
+    "AI Ethics",
+    "Explainable AI",
+    "Autonomous Systems",
+    "AI-Powered Automation",
+    "AI in Healthcare",
+    "AI in Finance",
+    "AI in Education",
+    "Deep Learning",
+    "Reinforcement Learning",
+    "Federated Learning",
+    "AI in Cybersecurity",
+    "AI-Driven Personalization",
+    "Speech Recognition",
+    "AI in Manufacturing",
+    "AI in Retail",
+    "AI in Marketing",
+    "AI Governance",
+    "Conversational AI",
+    "AI-Enhanced Creativity",
+    "AI in Drug Discovery",
+    "AI in Climate Science",
+    "Synthetic Data",
+    "AI for Social Good",
+    "AI Regulation and Policy",
+    "AI in Energy Optimization",
+    "Machine Learning",
+    "Supervised Learning",
+    "Unsupervised Learning",
+    "Transfer Learning",
+    "Generative Adversarial Networks (GANs)",
+    "Self-Supervised Learning",
+    "Neural Networks",
+    "Transformer Models",
+    "Natural Language Generation (NLG)",
+    "Prompt Engineering",
+    "Multimodal AI",
+    "AI in Art and Creativity",
+    "AI for Human Augmentation"
+  ];
+  
+
 
   // Fetch all fields with topics and videos
   useEffect(() => {
@@ -23,7 +98,8 @@ function Admin() {
   }, []);
 
 
-  
+
+
 
   const fetchFields = async () => {
     try {
@@ -32,13 +108,18 @@ function Admin() {
 
       setFields(data); // Store full field objects
       const topicsMap = {};
+
       data.forEach(field => {
         topicsMap[field.name] = field.subtopic.map(sub => ({
+          
           name: sub.name,
           id: sub._id // Store subtopicId
         }));
       });
       setTopics(topicsMap);
+
+      console.log("topic map is",topicsMap);
+
 
       // Fetch user videos and set them
       const videoList = data.flatMap(field =>
@@ -47,18 +128,25 @@ function Admin() {
           field: field.name
         })))
       );
+      console.log("video map is",videoList);
       setMyVideos(videoList);
+
     } catch (error) {
       console.error("Failed to fetch fields", error);
     }
   };
 
-  // Handle field click by setting full field object (including _id)
 
+
+
+
+
+  // Handle field click by setting full field object (including _id)
   const handleFieldClick = (field) => {
     setSelectedField(field); // Set the full field object
   };
 
+  //add new filed 
   const handleAddField = async () => {
     if (fields.some(f => f.name === newField)) {
       alert(`${newField} has already been added.`);
@@ -82,34 +170,62 @@ function Admin() {
     }
   };
 
+
+
+
   const handleAddTopic = async () => {
+
     if (!selectedField) {
       alert("Select a field first");
       return;
     }
-
+  
+    if (!newTopic || newTopic.trim() === "") {
+      alert("Topic name cannot be empty.");
+      return;
+    }
+  
     if (!topics[selectedField.name]?.some(topic => topic.name === newTopic)) {
-      if (newTopic) {
-        try {
-          const response = await axios.post(`http://localhost:5001/user/fields/${selectedField._id}/subtopics`, {
-            subtopicName: newTopic
-          });
-
-          const data = response.data;
-          setTopics({
-            ...topics,
-            [selectedField.name]: [...(topics[selectedField.name] || []), { name: newTopic, id: data._id }]
-          });
-          setNewTopic(""); // Reset the input field
-        } catch (error) {
-          console.error("Error adding topic", error);
-          alert("Failed to add topic");
+  
+      console.log("Field ID is:", selectedField._id); // Only log selectedField._id
+  
+      try {
+        const response = await axios.post(`http://localhost:5001/user/fields/${selectedField._id}/subtopics`, {
+          subtopicName: newTopic.trim()
+        });
+  
+        const data = response.data;
+        console.log("Data of new subtopic:", data);
+  
+        // Update the topics state with the new subtopic
+        setTopics(prevTopics => ({
+          ...prevTopics,
+          [selectedField.name]: [
+            ...(prevTopics[selectedField.name] || []),
+            { name: newTopic.trim(), id: data.subtopic._id }
+          ]
+        }));
+  
+        setNewTopic(""); // Reset the input field
+  
+      } catch (error) {
+        console.error("Error adding topic", error);
+  
+        if (error.response) {
+          alert(`Failed to add topic: ${error.response.data.error}`);
+        } else {
+          alert("Failed to add topic due to network error");
         }
       }
     } else {
       alert(`${newTopic} already exists in ${selectedField.name}.`);
     }
   };
+  
+
+
+
+
 
   const handleUploadVideo = (topic) => {
     setSelectedTopic(topic); // Open form for the selected topic

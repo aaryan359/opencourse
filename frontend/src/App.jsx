@@ -54,6 +54,8 @@ function App() {
               </div>
             </div>
 
+
+
             {/* Courses Section */}
 
             <div className="text-center bg-blue-200 rounded-2xl p-4">
@@ -71,7 +73,7 @@ function App() {
      
                {/* link for the non tech course */}
                 <Link
-                  to="#"
+                  to="/seenontechcourse"
                   className="bg-blue-500 hover:bg-blue-600 text-white py-3 px-8 rounded-lg shadow-lg transition-transform transform hover:scale-105 hover:no-underline hover:text-white focus:outline-none active:bg-blue-700" >
                   Non Tech
                 </Link>

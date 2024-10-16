@@ -1,5 +1,5 @@
 import { Timeline } from 'rsuite';
-import 'rsuite/dist/rsuite.min.css'; // Importing CSS
+import 'rsuite/dist/rsuite.min.css'; 
 
 const Timeline1 = ({ data }) => (
   <Timeline>

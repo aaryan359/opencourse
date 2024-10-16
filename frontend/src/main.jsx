@@ -11,6 +11,7 @@ import UserPanel from './pages/UserPanel.jsx';
 import Header from './Components/Header.jsx';
 import Interview from './pages/Interview.jsx';
 import InterviewPrep from './pages/InterviewPrep.jsx';
+import NontechSeeCoursePage from './pages/NontechSeeCoursePage.jsx';
 
 
 createRoot(document.getElementById('root')).render(
@@ -40,6 +41,9 @@ createRoot(document.getElementById('root')).render(
         <Route path="/interview" element={<Interview />} />
 
         <Route path="/interviewprep" element={<InterviewPrep />} />
+
+        <Route path="/seenontechcourse" element={<NontechSeeCoursePage />} />
+
 
       </Routes>
 

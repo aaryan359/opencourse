@@ -5,28 +5,44 @@ import { useNavigate ,Link } from 'react-router-dom';
 const SignUp = () => {
   const [formData, setFormData] = useState({
     username: '',
+
     email: '',
+
     password: '',
+
     expertise: '', 
-    experience: '', // Can be years of experience or description
-    portfolio: '',  // Optional: URL or upload for their work samples
+
+    // Can be years of experience or description
+    experience: '', 
+
+ // Optional: URL or upload for their work samples
+    portfolio: '', 
   });
+
+
 
   const navigate = useNavigate();
 
+
+  //taking form data 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+
+// on submit function
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
       const response = await axios.post('http://localhost:5001/auth/signup', formData);
-      alert('User registered successfully');
 
+        // sent no alert redirect to home page or take or non tech field
+        
       if (response.status >= 200 && response.status < 300) {
+
         navigate('/');
+
       } else {
         alert('Signup failed');
       }
@@ -37,8 +53,16 @@ const SignUp = () => {
     }
   };
 
+
+
+
+
+
+
   return (
     <div className="flex items-center justify-center h-screen bg-gradient-to-r from-blue-200 to-indigo-200">
+
+
       <form 
         onSubmit={handleSubmit} 
         className="bg-white shadow-lg rounded-lg p-8 max-w-md w-full"
@@ -55,6 +79,7 @@ const SignUp = () => {
           required
         />
 
+
         <input
           type="email"
           name="email"
@@ -64,6 +89,7 @@ const SignUp = () => {
           className="border border-gray-300 p-3 mb-4 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
           required
         />
+
 
         <input
           type="password"
@@ -75,6 +101,7 @@ const SignUp = () => {
           required
         />
 
+
         <input
           type="text"
           name="expertise"
@@ -84,6 +111,7 @@ const SignUp = () => {
           className="border border-gray-300 p-3 mb-4 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
           required
         />
+
 
         <input
           type="text"
@@ -95,6 +123,7 @@ const SignUp = () => {
           required
         />
 
+
         <input
           type="text"
           name="portfolio"
@@ -104,10 +133,13 @@ const SignUp = () => {
           className="border border-gray-300 p-3 mb-4 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
 
+
         <button type="submit" className="w-full bg-blue-600 text-white py-3 rounded hover:bg-blue-700 transition duration-200">
           Sign Up
         </button>
         
+
+
         <p className="mt-4 text-center text-gray-600">
           Already have an account? <Link to="/login" className="text-blue-600 hover:underline">Log In</Link>
         </p>
