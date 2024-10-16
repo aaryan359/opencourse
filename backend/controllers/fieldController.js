@@ -6,6 +6,9 @@ const Video = require('../models/Video');
 
 //tested
  const getFields = async (req, res) => {
+
+
+  
    try {
 
     // Fetch the fields without populate first
