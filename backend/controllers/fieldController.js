@@ -1,6 +1,8 @@
 const Field = require('../models/Field');
 const SubTopic = require('../models/Topics');
 const Video = require('../models/Video'); 
+const User = require('../models/User')
+
 
 
 
@@ -36,6 +38,7 @@ const Video = require('../models/Video');
     res.status(500).json({ error: 'Failed to fetch fields' });
   }
 };
+
 
 
 
@@ -130,6 +133,7 @@ const addSubtopic = async (req, res) => {
     // Handle other types of errors
     res.status(500).json({ error: 'Failed to add subtopic' });
   }
+
 };
 
 
@@ -138,28 +142,51 @@ const addSubtopic = async (req, res) => {
 
 
 const addVideoToSubtopic = async (req, res) => {
-  const { fieldId, subtopicId } = req.params;
-  const { title, url, description } = req.body;
+  const { subtopicId } = req.params; 
+  const { title, url, description, userId } = req.body; // Add userId to body if needed
 
   try {
-    // Create a new video object
-    const newVideo = new Video({ title, url, description });
+    // Find the subtopic by ID and populate its videos
+    const subtopic = await SubTopic.findById(subtopicId).populate('videos');
+
+    // Get unique user IDs of those who uploaded videos
+    const uniqueUserIds = [...new Set(subtopic.videos.map(video => video.userId?.toString()))];
+
+    // If the limit of unique users is reached
+    if (uniqueUserIds.length >= 5) {
+      return res.status(403).json({ error: "This subtopic already has videos from 5 different users." });
+    }
+
+    // Proceed with adding the video
+    const newVideo = new Video({
+      title,
+      url,
+      description,
+      // userId, // Uncomment if you pass userId from the body
+    });
+
+    // Save the video
     await newVideo.save();
 
-    // Find the subtopic and push the new video into its videos array
-    const subtopic = await SubTopic.findById(subtopicId);
+    // Add the video to the subtopic's videos list
     subtopic.videos.push(newVideo._id);
     await subtopic.save();
 
-    res.status(201).json(newVideo); // Return the newly created video
+    // If userId is available, update the user's list of uploaded videos
+    if (userId) {
+      const user = await User.findById(userId);
+      user.videos.push(newVideo._id);
+      await user.save();
+    }
+
+    // Send success response
+    res.status(200).json({ message: "Video uploaded successfully", video: newVideo });
+
   } catch (error) {
-    console.error('Error adding video:', error);
-    res.status(500).json({ error: 'Failed to upload video' });
+    console.error("Error uploading video:", error);
+    res.status(500).json({ error: "Failed to upload video" });
   }
 };
-
-
-
 
 
 // // Get all fields

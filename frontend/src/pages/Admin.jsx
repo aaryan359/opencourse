@@ -91,6 +91,21 @@ function Admin() {
   ];
   
 
+  const getYoutubeVideoId = (url) => {
+    if (!url) {
+      console.error("Invalid URL provided:", url);
+      return null;
+    }
+  
+    // Match standard YouTube URLs and shortened youtu.be URLs
+    const match = url.match(
+      /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^&\n?]+)/ 
+    );
+  
+    return match ? match[1] : null;
+  };
+  
+
 
   // Fetch all fields with topics and videos
   useEffect(() => {
@@ -118,14 +133,15 @@ function Admin() {
       });
       setTopics(topicsMap);
 
-      console.log("topic map is",topicsMap);
+      console.log("complete data is",data);
 
 
       // Fetch user videos and set them
       const videoList = data.flatMap(field =>
         field.subtopic.flatMap(sub => sub.videos.map(video => ({
           title: video.title,
-          field: field.name
+          field: field.name,
+          url:video.url
         })))
       );
       console.log("video map is",videoList);
@@ -140,11 +156,11 @@ function Admin() {
 
 
 
-
   // Handle field click by setting full field object (including _id)
   const handleFieldClick = (field) => {
     setSelectedField(field); // Set the full field object
   };
+
 
   //add new filed 
   const handleAddField = async () => {
@@ -186,9 +202,11 @@ function Admin() {
     }
   
     if (!topics[selectedField.name]?.some(topic => topic.name === newTopic)) {
-  
-      console.log("Field ID is:", selectedField._id); // Only log selectedField._id
-  
+
+
+          // Only log selectedField._id
+      //console.log("Field ID is:", selectedField._id);
+      
       try {
         const response = await axios.post(`http://localhost:5001/user/fields/${selectedField._id}/subtopics`, {
           subtopicName: newTopic.trim()
@@ -242,30 +260,39 @@ function Admin() {
   const handleSubmitVideo = async (e) => {
     e.preventDefault();
     const { url, title, description } = videoDetails;
-
-    if (title && url && description) {
+  
+    if (title && url && description && selectedTopic) {
       try {
-        const response = await axios.post(`http://localhost:5001/user/fields/${selectedField._id}/subtopics/${selectedTopic._id}/videos`, {
-          title,
-          url,
-          description
-        });
-
+        const response = await axios.post(
+          `http://localhost:5001/user/subtopics/${selectedTopic.id}/videos`, // Use selectedTopic.id here
+          { title, url, description }
+        );
+  
         if (response.status === 200) {
-          setMyVideos([...myVideos, { title, field: selectedField.name }]);
           alert("Video uploaded successfully");
+          setMyVideos([...myVideos, { title, subtopic: selectedTopic.name }]);
           setVideoDetails({ url: "", title: "", description: "" });
-          setSelectedTopic(null); // Close the form after submission
-        } else {
-          alert("Failed to upload video");
+  
+          // Reset selectedTopic only after success
+          setSelectedTopic(null);
         }
       } catch (error) {
-        console.error("Error uploading video", error);
-        alert("Failed to upload video");
+        if (error.response?.status === 403) {
+          alert("This subtopic already has videos from 5 different users.");
+        } else {
+          console.error("Error uploading video", error.response ? error.response.data : error);
+          alert("Failed to upload video");
+        }
       }
+    } else {
+      alert("Please fill in all details and select a subtopic.");
     }
   };
+  
 
+  console.log("my videos is",myVideos)
+
+  
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-100 to-blue-200 p-6">
       <h1 className="text-4xl font-extrabold text-blue-800 mb-8 text-center">
@@ -278,15 +305,29 @@ function Admin() {
           <h2 className="text-2xl font-semibold text-blue-700 mb-4">My Videos</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
 
+
             {myVideos.map((video, index) => (
               <div key={index} className="p-4 bg-purple-100 text-purple-900 rounded-lg shadow-lg">
                 <h3 className="text-xl font-bold text-center">{video.title}</h3>
-
                 <p className="text-center text-sm">{video.field}</p>
+
+                {/* Embed YouTube video */}
+                <div className=" relative h-0 overflow-hidden" style={{ paddingBottom: '56.25%' }}>
+                  <iframe
+                    className="absolute top-0 left-0 w-full h-full"
+                    src={`https://www.youtube.com/embed/${getYoutubeVideoId(video.url)}`}
+                    frameBorder="0"
+                    allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    title={video.title}
+                  />
+                </div>
               </div>
             ))}
+
           </div>
         </div>
+
 
         {/* Add New Field Section */}
         <div className="mb-8">
