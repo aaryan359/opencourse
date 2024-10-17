@@ -7,3 +7,7 @@
 ## problem 1 : how we are model it 
 
 
+# nontechmodels
+## nontechfields
+### branch of fields
+#### subtopics of that branch

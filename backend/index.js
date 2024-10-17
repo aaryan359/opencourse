@@ -5,7 +5,8 @@ const session = require('express-session');
 const passport = require('passport');
 const connectDB = require('./config/db');
 const userRoutes = require('./routes/userRoutes');
-const field = require('./routes/fieldsRoutes')
+const field = require('./routes/fieldsRoutes');
+const nontechfieldroutes   = require('./routes/NontechRouting/nontechRoutes')
 
 const authMiddleware = require('./middlewares/authMiddlewares');
 
@@ -48,6 +49,7 @@ app.use(passport.session());
 app.use('/auth', userRoutes);
 
 app.use('/user',field);
+app.use('/nontech',nontechfieldroutes );
 
 
 

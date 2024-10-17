@@ -22,6 +22,8 @@ const verifyJWT = async (req, res, next) => {
     // Verify the token and extract the payload
     try {
       decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+      req.user = decodedToken;
+
     } catch (error) {
       throw new Error(401, "Invalid or expired token.");
     }
@@ -46,4 +48,4 @@ const verifyJWT = async (req, res, next) => {
   }
 }
 
-module.exports = verifyJWT;
+module.exports = {verifyJWT};
