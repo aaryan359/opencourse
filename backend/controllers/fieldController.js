@@ -7,8 +7,16 @@ const User = require('../models/User')
 
 
 //tested
+
+ const getFields = async (req, res) => {
+
+
+  
+   try {
+
 const getFields = async (req, res) => {
   try {
+
 
     // Fetch the fields without populate first
     const fields = await Field.find();

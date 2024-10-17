@@ -1,6 +1,10 @@
 const express = require('express');
 const { registerUser, loginUser, getUserProfile } = require('../controllers/userController');
 
+const {verifyJWT} = require('../middlewares/authMiddlewares');
+
+
+
 
 
 
@@ -14,7 +18,11 @@ router.post('/signup', registerUser);
 router.post('/login', loginUser);
 
 
-// Protected routesss
-router.get('/profile', authMiddleware, getUserProfile);
+
+// Protected route
+router.get('/profile', verifyJWT, getUserProfile);
+
+
+
 
 module.exports = router;
