@@ -1,118 +1,136 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Timeline1 from '../Components/Timeline';
-
-// Sample data for course roadmap and videos
-const courseData = {
-    webDevelopment: {
-
-        roadmap: [
-            'HTML & CSS Basics',
-            'JavaScript Fundamentals',
-            'Responsive Design',
-            'Frontend Frameworks (e.g., React)',
-            'Backend Development (e.g., Node.js)',
-            'Deployment and Hosting',
-        ],
-
-
-        videos: [
-            { id: 1, title: 'HTML Basics', videoUrl: 'https://www.youtube.com/embed/XXXXX' },
-            { id: 2, title: 'CSS Fundamentals', videoUrl: 'https://www.youtube.com/embed/YYYYY' },
-            { id: 3, title: 'JavaScript Introduction', videoUrl: 'https://www.youtube.com/embed/ZZZZZ' },
-        ],
-    },
-
-
-    
-    dataScience: {
-        roadmap: [
-            'Introduction to Python',
-            'Data Analysis with Pandas',
-            'Data Visualization',
-            'Machine Learning Basics',
-            'Deep Learning Concepts',
-            'Project Development',
-        ],
-        videos: [
-            { id: 1, title: 'Python Basics', videoUrl: 'https://www.youtube.com' },
-            { id: 2, title: 'Data Analysis with Pandas', videoUrl: 'https://www.youtube.com' },
-        ],
-    },
-};
-
-
-
+import axios from 'axios';
 
 const UserPanel = () => {
-    const [selectedCategory, setSelectedCategory] = useState('webDevelopment');
-    
-    // Extract the roadmap and videos for the selected category
-    const selectedRoadmap = courseData[selectedCategory].roadmap;
 
-    const handleCategoryChange = (category) => {
-        setSelectedCategory(category);
+  // Store fields and subtopics
+  const [fieldData, setFieldData] = useState([]); 
+
+
+  // Track selected field
+  const [selectedField, setSelectedField] = useState(null); 
+
+   // Track selected subtopic
+  const [selectedSubtopic, setSelectedSubtopic] = useState(null); 
+
+ // Store videos for selected subtopic
+  const [videos, setVideos] = useState([]);
+
+  // Fetch fields and subtopics when the component mounts
+  useEffect(() => {
+    const getFieldData = async () => {
+      try {
+        const response = await axios.get('http://localhost:5001/user/getfields');
+        setFieldData(response.data);
+      } catch (error) {
+        console.error('Error fetching field data:', error);
+      }
     };
-
-
-
-    return (
-        <div className="container mx-auto p-6 bg-gray-50 min-h-screen">
-            <h1 className="text-4xl font-bold text-center text-gray-800 mb-8">Explore Tech Courses</h1>
-
-
-            <div className="mb-6 text-center">
-                <button
-                    onClick={() => handleCategoryChange('webDevelopment')}
-                    className={`mr-4 px-6 py-3 rounded-lg transition-colors duration-300 ${selectedCategory === 'webDevelopment' ? 'bg-blue-600 text-white' : 'bg-gray-300 text-gray-800 hover:bg-gray-400'}`}
-                >
-                    Web Development
-                </button>
-
-
-                <button
-                    onClick={() => handleCategoryChange('dataScience')}
-                    className={`px-6 py-3 rounded-lg transition-colors duration-300 ${selectedCategory === 'dataScience' ? 'bg-blue-600 text-white' : 'bg-gray-300 text-gray-800 hover:bg-gray-400'}`}
-                >
-                    Data Science
-                </button>
-            </div>
+    getFieldData();
+  }, []);
 
 
 
 
-            {/* Course Roadmap Section */}
-            <div className="mb-8">
-                <h2 className="text-2xl font-semibold mb-4 text-gray-800">Course Roadmap</h2>
-                {/* Dynamically rendering the Timeline1 component based on selected category */}
-                <Timeline1 data={selectedRoadmap} />
-            </div>
+  // Fetch videos for the selected subtopic
+
+  const fetchVideosForSubtopic = async (fieldId, subtopicName) => {
+    console.log("field id and subtopic name is",fieldId,subtopicName);
+    try {
+      const response = await axios.get(`http://localhost:5001/user/fields/${fieldId}/subtopic/${subtopicName}/videos`);
+      console.log("video  by subtopic ,",response)
+      setVideos(response.data); // Set the videos for the selected subtopic
+    } catch (error) {
+      console.error('Error fetching videos:', error);
+    }
+  };
+
+    console.log(" video according to suntopic",videos)
+
+
+  const handleFieldSelect = (field) => {
+    setSelectedField(field);
+
+     // Reset subtopic when a new field is selected
+    setSelectedSubtopic(null); 
+
+  // Clear videos when changing field
+    setVideos([]); 
+  };
+
+
+  const handleSubtopicSelect = (subtopicName) => {
+    // console.log("Selected subtopic:", subtopicName);
+  
+    setSelectedSubtopic(subtopicName);
+  
+    // Pass subtopicName directly since it's a string now
+    fetchVideosForSubtopic(selectedField._id, subtopicName);
+  };
+  
 
 
 
+  return (
+    <div className="container mx-auto p-6 bg-gray-50 min-h-screen">
+      <h1 className="text-4xl font-bold text-center text-gray-800 mb-8">Explore Tech Courses</h1>
 
+      {/* Field Selection */}
+      <div className="mb-6 text-center">
+        {fieldData.map((field) => (
+          <button
+            key={field._id}
+            onClick={() => handleFieldSelect(field)}
+            className={`mr-4 px-6 py-3 rounded-lg transition-colors duration-300 ${selectedField?._id === field._id ? 'bg-blue-600 text-white' : 'bg-gray-300 text-gray-800 hover:bg-gray-400'}`}
+          >
+            {field.name}
+          </button>
+        ))}
+      </div>
 
+      {/* Roadmap Section */}
+      {selectedField && (
+        <div className="mb-8">
+          <h2 className="text-2xl font-semibold mb-4 text-gray-800">Course Roadmap for {selectedField.name}</h2>
 
-            {/* Video Section */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                {courseData[selectedCategory].videos.map((video) => (
-                    <div key={video.id} className="bg-white shadow-xl rounded-lg p-6 flex flex-col">
-                        <h3 className="text-xl font-semibold mb-2 text-gray-800">{video.title}</h3>
-                        <iframe
-                            width="100%"
-                            height="215"
-                            src={video.videoUrl}
-                            title={video.title}
-                            frameBorder="0"
-                            allowFullScreen
-                            className="rounded-lg"
-                        ></iframe>
-                    </div>
-
-                    
-                ))}
-            </div>
+          <Timeline1  data={selectedField.subtopic.map((subtopic) => subtopic.name)} onSubtopicClick={handleSubtopicSelect} />
         </div>
-    );
+      )}
+
+      {/* Videos Section */}
+     
+        {selectedSubtopic && (
+            <div className="mb-8">
+              <h3 className="text-2xl font-semibold mb-4 text-gray-800">Videos for {selectedSubtopic}</h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                {videos.map((video) => (
+                  <div key={video._id} className="bg-white shadow-xl rounded-lg p-6 flex flex-col">
+                    <h3 className="text-xl font-semibold mb-2 text-gray-800">{video.title}</h3>
+                    <iframe
+                      width="100%"
+                      height="215"
+                      src={`https://www.youtube.com/embed/${getYoutubeVideoId(video.url)}`}
+                      title={video.title}
+                      frameBorder="0"
+                      allowFullScreen
+                      className="rounded-lg"
+                    ></iframe>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+      
+    </div>
+  );
+};
+
+// Helper function to extract YouTube video ID
+const getYoutubeVideoId = (url) => {
+  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+  const match = url.match(regExp);
+  return match && match[2].length === 11 ? match[2] : null;
 };
 
 export default UserPanel;

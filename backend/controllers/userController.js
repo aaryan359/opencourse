@@ -100,7 +100,8 @@ const loginUser = async (req, res) => {
     path: '/' // The cookie is available within the entire site
 };
   
-  console.log("option si",options)
+  console.log("option si",options);
+  
 
   return res
   .status(200)
