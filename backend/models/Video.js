@@ -19,6 +19,12 @@ const videoSchema = new mongoose.Schema({
         require:true,
         trim:true,
       },
+
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User', // Reference to the user who uploaded the video
+        
+      }
 });
 
 const Video = mongoose.model("Video", videoSchema);

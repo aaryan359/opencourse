@@ -1,37 +1,37 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate,Link } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { setToken } from '../reducer/slice/authSlice';
+import Cookies from 'js-cookie'
 
 const Login = () => {
-
-  //login data
   const [formData, setFormData] = useState({
     email: '',
     password: '',
   });
-
+ 
+  
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
-
-  //Taking loging data in input
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-
-
-  // handle loggin button
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
 
-      const response = await axios.post('http://localhost:5001/auth/login', formData);
+      const response = await axios.post('http://localhost:5001/auth/login', formData ,{
+        withCredentials:true,
+      }
+      );
           
-
-
-      // if get response then redirect to home page
       if (response) {
+        dispatch(setToken(Cookies.get('accessToken')));
+       
         navigate('/');
         
       } else {
@@ -44,11 +44,8 @@ const Login = () => {
     }
   };
 
-
   return (
     <div className="flex items-center justify-center h-screen bg-gradient-to-r from-blue-200 to-indigo-200">
-
-      
       <form 
         onSubmit={handleSubmit} 
         className="bg-white shadow-lg rounded-lg p-8 max-w-md w-full"
@@ -87,4 +84,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Login

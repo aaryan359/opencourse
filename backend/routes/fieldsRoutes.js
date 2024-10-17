@@ -12,6 +12,6 @@ router.post('/fields', addField);
 router.post('/fields/:fieldId/subtopics', addSubtopic);
 
 // Add a new video to a specific subtopic
-router.post('/fields/:fieldId/subtopics/:subtopicId/videos', addVideoToSubtopic);
+router.post('/subtopics/:subtopicId/videos', addVideoToSubtopic);
 
 module.exports = router;
