@@ -5,18 +5,8 @@ const User = require('../models/User')
 
 
 
-
-//tested
-
- const getFields = async (req, res) => {
-
-
-  
-   try {
-
 const getFields = async (req, res) => {
   try {
-
 
     // Fetch the fields without populate first
     const fields = await Field.find();
@@ -46,7 +36,6 @@ const getFields = async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch fields' });
   }
 };
-
 
 
 
@@ -197,6 +186,8 @@ const addVideoToSubtopic = async (req, res) => {
 };
 
 
+
+
 // // Get all fields
 // const getFields = async (req, res) => {
 //   try {
@@ -208,9 +199,8 @@ const addVideoToSubtopic = async (req, res) => {
 // };
 
 
-
+//tested
 // Get videos for a specific subtopic
-
 const getVideosBySubtopic = async (req, res) => {
   
   console.log("backend me aa gya ")

@@ -69,6 +69,7 @@ const registerUser = async (req, res) => {
 
 
 
+
 // tested api 
 // Login a user
 const loginUser = async (req, res) => {
@@ -94,8 +95,8 @@ const loginUser = async (req, res) => {
    );
   
    const options = {
-    httpOnly: true, // true if you don't need to access the cookie via JavaScript
-    secure: true,  // Set to false for local development
+    httpOnly: false, // true if you don't need to access the cookie via JavaScript
+    secure: false,  // Set to false for local development
     sameSite: 'Lax', // Use 'Lax' for simple cross-origin requests
     path: '/' // The cookie is available within the entire site
 };
@@ -147,8 +148,6 @@ const getUserProfile = async (req, res) => {
 
 
 
-
-
 // Update user profile
 const updateUserProfile = async (req, res) => {
     // taking is updated input form user 
@@ -180,8 +179,6 @@ const updateUserProfile = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
-
-
 
 
 
