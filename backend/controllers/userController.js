@@ -94,8 +94,8 @@ const loginUser = async (req, res) => {
    );
   
    const options = {
-    httpOnly: true, // true if you don't need to access the cookie via JavaScript
-    secure: true,  // Set to false for local development
+    httpOnly: false, // true if you don't need to access the cookie via JavaScript
+    secure: false,  // Set to false for local development
     sameSite: 'Lax', // Use 'Lax' for simple cross-origin requests
     path: '/' // The cookie is available within the entire site
 };

@@ -12,7 +12,7 @@ import Header from './Components/Header.jsx';
 import Interview from './pages/Interview.jsx';
 import InterviewPrep from './pages/InterviewPrep.jsx';
 import NontechSeeCoursePage from './pages/NontechSeeCoursePage.jsx';
-
+import { ToastContainer } from 'react-toastify';
 
 import { Provider, useSelector } from "react-redux";
 import { configureStore} from "@reduxjs/toolkit"
@@ -20,6 +20,8 @@ import { configureStore} from "@reduxjs/toolkit"
 
 import { Toaster } from "react-hot-toast";
 import rootreducer from './reducer/index.js';
+import TopicPage from './pages/nontechadminparts/NonTechBranch.jsx';
+import SubTopicPage from './pages/nontechadminparts/NonTechSubTopic.jsx';
 
 
 
@@ -56,6 +58,8 @@ createRoot(document.getElementById('root')).render(
         <Route path="/admin" element={<Admin />} />
 
         <Route path="/nontech" element={<NonTechAdmin />} />
+        <Route path="/nontech/:fieldname" element={<TopicPage/>} /> 
+        <Route path="/nontech/:fieldname/:topicname" element={  <SubTopicPage/> } />
 
         <Route path="/userpanel" element={<UserPanel />} />
 
@@ -69,6 +73,8 @@ createRoot(document.getElementById('root')).render(
       </Routes>
 
     </Router>
+
+    <ToastContainer />
     </Provider>
     </StrictMode>
 

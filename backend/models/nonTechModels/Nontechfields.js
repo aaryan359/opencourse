@@ -28,7 +28,21 @@ const nontechfieldSchema = new mongoose.Schema({
       type: mongoose.Schema.Types.ObjectId, 
       ref: 'NonTechVideo', 
     }
-  ] 
+  ] ,
+  qaPairs: [
+    {
+      question: {
+        type: String,
+        required: true, // Ensure question is provided
+        trim: true,
+      },
+      answer: {
+        type: String,
+        required: true, // Ensure answer is provided
+        trim: true,
+      },
+    },
+  ],
 });
 
 const NonTechField = mongoose.model("NonTechField", nontechfieldSchema);
