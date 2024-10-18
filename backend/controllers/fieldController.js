@@ -1,17 +1,22 @@
 const Field = require('../models/Field');
 const SubTopic = require('../models/Topics');
-const Video = require('../models/Video'); 
+const Video = require('../models/Video');
 const User = require('../models/User')
 
 
 
 
 //tested
+
  const getFields = async (req, res) => {
 
 
   
    try {
+
+const getFields = async (req, res) => {
+  try {
+
 
     // Fetch the fields without populate first
     const fields = await Field.find();
@@ -35,7 +40,7 @@ const User = require('../models/User')
     // Return all fields with populated subtopics and videos
     res.json(populatedFields);
 
-  }   
+  }
   catch (error) {
     console.error('Error fetching fields:', error);
     res.status(500).json({ error: 'Failed to fetch fields' });
@@ -143,9 +148,9 @@ const addSubtopic = async (req, res) => {
 
 
 
-
+//tested
 const addVideoToSubtopic = async (req, res) => {
-  const { subtopicId } = req.params; 
+  const { subtopicId } = req.params;
   const { title, url, description, userId } = req.body; // Add userId to body if needed
 
   try {
@@ -205,24 +210,46 @@ const addVideoToSubtopic = async (req, res) => {
 
 
 // Get videos for a specific subtopic
+
 const getVideosBySubtopic = async (req, res) => {
+  
+  console.log("backend me aa gya ")
   const { fieldId, subtopicName } = req.params;
+
   try {
-    const field = await Field.findById(fieldId).populate('subtopic.videos');
+    // Find the field and populate subtopics and videos
+    const field = await Field.findById(fieldId).populate({
+      path: 'subtopic', 
+      populate: {
+        path: 'videos', 
+        model: 'Video',
+      }
+    });
+
+    // Check if the field exists
     if (!field) {
       return res.status(404).json({ error: 'Field not found' });
     }
 
-    // Find the subtopic
+    // Find the specific subtopic by name
     const subtopic = field.subtopic.find(sub => sub.name === subtopicName);
+    
+    // If subtopic is not found
     if (!subtopic) {
       return res.status(404).json({ error: 'Subtopic not found' });
     }
 
-    // Get the video details for this subtopic
-    const videos = await Video.find({ _id: subtopic.videos });
+    // If subtopic has videos, return them, else return an empty array
+    const videos = subtopic.videos || [];
+
+
+    console.log("video from backend ",videos);
+
+
     res.status(200).json(videos);
+
   } catch (error) {
+    console.error('Error fetching videos for subtopic:', error);
     res.status(500).json({ error: 'Failed to fetch videos' });
   }
 };
@@ -234,6 +261,7 @@ module.exports = {
   getFields,
   addField,
   addSubtopic,
-  addVideoToSubtopic
+  addVideoToSubtopic,
+  getVideosBySubtopic
 };
 
