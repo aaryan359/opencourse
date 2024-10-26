@@ -8,19 +8,22 @@ const nontechfieldSchema = new mongoose.Schema({
     required: true, 
     trim: true,
   },
+
   branchname: {
     type: String,
     required: true,
     trim: true,
   },
+
   subtopicname: {
     type: String,
     required: true,
     trim: true,
   },
+
   userId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User', // Reference to the user who uploaded the video
+    ref: 'User', 
     
   },
   nonTechvideo:[
@@ -29,6 +32,7 @@ const nontechfieldSchema = new mongoose.Schema({
       ref: 'NonTechVideo', 
     }
   ] 
+  
 });
 
 const NonTechField = mongoose.model("NonTechField", nontechfieldSchema);

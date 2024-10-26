@@ -1,124 +1,133 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
 const InterviewPrep = () => {
-  const [selectedDomain, setSelectedDomain] = useState('');
-  const [selectedCompany, setSelectedCompany] = useState('');
+  const [selectedField, setSelectedField] = useState('');
   const [questions, setQuestions] = useState([]);
-  const [companies, setCompanies] = useState([]);
+  const [noQuestionsMessage, setNoQuestionsMessage] = useState('');
 
-  const staticData = {
-    'Web Development': {
-      companies: ['Google', 'Facebook', 'Microsoft'],
-      questions: [
-        { id: 1, text: 'What is a closure in JavaScript?', answer: 'A closure is a function bundled with its lexical environment.', rating: 0, showAnswer: false },
-        { id: 2, text: 'Explain the CSS box model.', answer: 'The box model represents the layout structure: margin, border, padding, and content.', rating: 0, showAnswer: false },
-      ],
-    },
-    'AI/ML': {
-      companies: ['Tesla', 'NVIDIA', 'DeepMind'],
-      questions: [
-        { id: 3, text: 'What is supervised learning?', answer: 'Supervised learning is a type of machine learning where the model is trained on labeled data.', rating: 0, showAnswer: false },
-        { id: 4, text: 'Explain the concept of overfitting.', answer: 'Overfitting happens when a model learns noise in the training data and performs poorly on unseen data.', rating: 0, showAnswer: false },
-      ],
-    },
-    Cloud: {
-      companies: ['Amazon', 'Azure', 'Google Cloud'],
-      questions: [
-        { id: 5, text: 'What is serverless architecture?', answer: 'Serverless architecture allows you to run code without managing servers.', rating: 0, showAnswer: false },
-        { id: 6, text: 'What are the benefits of cloud computing?', answer: 'Cloud computing offers scalability, cost efficiency, and flexibility.', rating: 0, showAnswer: false },
-      ],
-    },
-    Blockchain: {
-      companies: ['IBM', 'Coinbase', 'Ripple'],
-      questions: [
-        { id: 7, text: 'What is a blockchain?', answer: 'A blockchain is a distributed ledger technology where transactions are recorded in blocks.', rating: 0, showAnswer: false },
-        { id: 8, text: 'What is proof of work?', answer: 'Proof of work is a consensus mechanism used to validate transactions in a blockchain network.', rating: 0, showAnswer: false },
-      ],
-    },
-  };
+  const handleFieldSelect = async (field) => {
+    setSelectedField(field);
+    setNoQuestionsMessage(''); 
 
-  const handleDomainSelect = (domain) => {
-    setSelectedDomain(domain);
-    setCompanies(staticData[domain].companies);
-  };
+    try {
+      // Fetch questions filtered by the selected field
+      const response = await axios.get(`http://localhost:5001/interview/getallinterview/${encodeURIComponent(field)}`);
+      console.log("this is the data of questions",response.data)
+      if (response.data.length === 0) {
+        setNoQuestionsMessage(`No questions available for ${field} at this moment.`);
+        setQuestions([]); 
+      } else {
+        setQuestions(response.data);
+      }
 
-  const handleCompanySelect = (company) => {
-    setSelectedCompany(company);
-    setQuestions(staticData[selectedDomain].questions);
+      
+
+    } catch (error) {
+      console.error("Error fetching questions:", error);
+      setNoQuestionsMessage('Error fetching questions. Please try again later.');
+    }
   };
 
   const handleRating = (questionId, rating) => {
-    setQuestions(questions.map((q) => (q.id === questionId ? { ...q, rating } : q)));
+    setQuestions(questions.map((q) => (q._id === questionId ? { ...q, rating } : q)));
   };
 
   return (
     <div className="container mx-auto p-6">
       <h1 className="text-3xl font-bold mb-6">Interview Preparation Questions</h1>
 
-      {/* Domain Selection */}
+      {/* Field Selection */}
       <div className="mb-4">
-        <h2 className="text-xl font-semibold">Select a Domain</h2>
+        <h2 className="text-xl font-semibold">Select a Field</h2>
         <div className="flex space-x-4">
-          <button
-            onClick={() => handleDomainSelect('Web Development')}
-            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 active:bg-blue-700 transition"
-          >
-            Web Development
-          </button>
-          <button
-            onClick={() => handleDomainSelect('AI/ML')}
-            className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 active:bg-green-700 transition"
-          >
-            AI/ML
-          </button>
-          <button
-            onClick={() => handleDomainSelect('Cloud')}
-            className="bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600 active:bg-purple-700 transition"
-          >
-            Cloud
-          </button>
-          <button
-            onClick={() => handleDomainSelect('Blockchain')}
-            className="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 active:bg-yellow-700 transition"
-          >
-            Blockchain
-          </button>
+          {["WebDev",
+  "Blockchain",
+  "Data Science",
+  "AI/ML",
+  "Mobile Development",
+  "Cloud Computing",
+  "Cybersecurity",
+  "DevOps",
+  "Internet of Things (IoT)",
+  "Game Development",
+  "Augmented Reality (AR)",
+  "Virtual Reality (VR)",
+  "Software Engineering",
+  "Big Data",
+  "UI/UX Design",
+  "Embedded Systems",
+  "Computer Vision",
+  "Quantum Computing",
+  "Robotics",
+  "Natural Language Processing (NLP)",
+  "Networking",
+  "Edge Computing",
+  "Generative AI",
+  "AI Ethics",
+  "Explainable AI",
+  "Autonomous Systems",
+  "AI-Powered Automation",
+  "AI in Healthcare",
+  "AI in Finance",
+  "AI in Education",
+  "Deep Learning",
+  "Reinforcement Learning",
+  "Federated Learning",
+  "AI in Cybersecurity",
+  "AI-Driven Personalization",
+  "Speech Recognition",
+  "AI in Manufacturing",
+  "AI in Retail",
+  "AI in Marketing",
+  "AI Governance",
+  "Conversational AI",
+  "AI-Enhanced Creativity",
+  "AI in Drug Discovery",
+  "AI in Climate Science",
+  "Synthetic Data",
+  "AI for Social Good",
+  "AI Regulation and Policy",
+  "AI in Energy Optimization",
+  "Machine Learning",
+  "Supervised Learning",
+  "Unsupervised Learning",
+  "Transfer Learning",
+  "Generative Adversarial Networks (GANs)",
+  "Self-Supervised Learning",
+  "Neural Networks",
+  "Transformer Models",
+  "Natural Language Generation (NLG)",
+  "Prompt Engineering",
+  "Multimodal AI",
+  "AI in Art and Creativity",
+             "AI for Human Augmentation",].map(field => (
+            <button
+              key={field}
+              onClick={() => handleFieldSelect(field)}
+              className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 active:bg-blue-700 transition"
+            >
+              {field}
+            </button>
+          ))}
         </div>
       </div>
 
-      {/* Companies */}
-      {selectedDomain && companies.length > 0 && (
-        <div className="mb-4">
-          <h2 className="text-xl font-semibold">Select a Company</h2>
-          <div className="flex space-x-4">
-            {companies.map((company) => (
-              <button
-                key={company}
-                onClick={() => handleCompanySelect(company)}
-                className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 active:bg-gray-700 transition"
-              >
-                {company}
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
-
       {/* Questions */}
-      {selectedCompany && questions.length > 0 && (
+      {questions.length > 0 && (
         <div className="mt-6">
-          <h2 className="text-xl font-semibold">Questions from {selectedCompany}</h2>
+          <h2 className="text-xl font-semibold">Questions in {selectedField}</h2>
           {questions.map((question, index) => (
-            <div key={question.id} className="bg-gray-100 p-4 mb-4 rounded shadow hover:shadow-lg transition">
+            <div key={question._id} className="bg-gray-100 p-4 mb-4 rounded shadow hover:shadow-lg transition">
               <p className="font-bold">
-                {index + 1}. {question.text}
+                {index + 1}. {question.text} <span className="italic">({question.company})</span>
               </p>
               <p>
                 <strong>Answer:</strong> {question.showAnswer ? question.answer : 'Hidden'}
               </p>
               <button
                 onClick={() =>
-                  setQuestions(questions.map((q) => (q.id === question.id ? { ...q, showAnswer: !q.showAnswer } : q)))
+                  setQuestions(questions.map((q) => (q._id === question._id ? { ...q, showAnswer: !q.showAnswer } : q)))
                 }
                 className="bg-blue-500 text-white px-2 py-1 mt-2 rounded hover:bg-blue-600 active:bg-blue-700 transition"
               >
@@ -130,10 +139,10 @@ const InterviewPrep = () => {
                 <strong>Rating: </strong>
                 {question.rating}
                 <div className="flex mt-2">
-                  {[5, 4, 3, 2, 1].map((rating) => (
+                  {[5, 4, 3, 2, 1].map(rating => (
                     <button
                       key={rating}
-                      onClick={() => handleRating(question.id, rating)}
+                      onClick={() => handleRating(question._id, rating)}
                       className="bg-yellow-400 text-white px-2 py-1 rounded mr-2 hover:bg-yellow-500 active:bg-yellow-600 transition"
                     >
                       {rating} Stars

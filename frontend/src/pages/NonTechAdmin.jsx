@@ -105,10 +105,14 @@
       };
     
       useEffect(() => {
+
         const fetchFields = () => setFields(dummyFields);
+
         const fetchUser = () => setUser(dummyUser);
+
         fetchFields();
         fetchUser();
+        
       }, []);
     
       useEffect(() => {

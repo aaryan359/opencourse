@@ -38,13 +38,25 @@ const userSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Video', // Reference to Video model
   }],
-  
+
 
   // Fields that the user is associated with
   fields: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Field', // Reference to Field model
   }],
+
+
+  //Interview questions Schema
+interview:[
+  {
+    type:mongoose.Schema.Types.ObjectId,
+    ref:'Interview'
+  }
+]
+  
+  
+
 });
 
 
