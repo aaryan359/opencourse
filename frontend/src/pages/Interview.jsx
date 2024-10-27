@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import axios from 'axios';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 // Sample data for storing experiences
 const initialExperiences = [];
@@ -6,6 +9,8 @@ const initialExperiences = [];
 const Interview = () => {
 
     const [experiences, setExperiences] = useState(initialExperiences);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     const [formData, setFormData] = useState({
         companyName: '',
@@ -22,12 +27,54 @@ const Interview = () => {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value});
+        setFormData({ ...formData, [name]: value.toLowerCase()});
     };
 
-    const handleSubmit = (e) => {
+
+    const addQuestions = async () => {
+        try {
+          const response = await axios.post('http://localhost:5001/Interview/addQuestion',formData);
+         
+            console.log("questo add",response);
+            //sadd sucesss toast
+             // Show success toast
+        toast.success('Question added successfully!', {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            draggable: true,
+            progress: undefined,
+        });
+
+          setLoading(false); // Turn off loading indicator
+        } catch (err) {
+          console.error('Error fetching questions:', err);
+
+           // Show error toast
+        toast.error('Failed to add question. Please try again later.', {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            draggable: true,
+            progress: undefined,
+        });
+
+
+          setError('Failed to fetch questions. Please try again later.');
+          setLoading(false);
+        }
+      };
+
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
         setExperiences([...experiences, formData]);
+       await addQuestions();
+         //add  api  to add question question in database
+
+        console.log("formdat is:",formData);
         setFormData({ // Reset form
             companyName: '',
             role: '',
@@ -38,7 +85,7 @@ const Interview = () => {
             questiontype:'',
             questions: '',
             answers: '',
-            additionalNotes: '',
+           
         });
     };
 
@@ -47,6 +94,7 @@ const Interview = () => {
             <h1 className="text-3xl font-bold mb-6 text-center">Interview Experience Submission</h1>
 
             <form onSubmit={handleSubmit} className="bg-white p-8 rounded shadow-md mb-6 max-w-lg mx-auto">
+
                 <div className="mb-4">
                     <label className="block mb-1 font-semibold" htmlFor="companyName">Company Name</label>
                     <input
@@ -116,7 +164,7 @@ const Interview = () => {
                     >
                         
                         <option value="">Select...</option>
-                        <option value="Fresher">Fresher</option>
+                        <option value="fresher">Fresher</option>
                         <option value="1-5">1-3 years of Experienced</option>
                         <option value="5+">5+ years of Experience</option>
                     </select>
@@ -134,9 +182,9 @@ const Interview = () => {
                     >
                         
                         <option value="">Select...</option>
-                        <option value="Easy">Easy</option>
-                        <option value="Medium">Medium</option>
-                        <option value="Hard">Hard</option>
+                        <option value="easy">Easy</option>
+                        <option value="medium">Medium</option>
+                        <option value="hard">Hard</option>
 
                     </select>
                 </div>
@@ -153,9 +201,11 @@ const Interview = () => {
                     >
                         
                         <option value="">Select...</option>
-                        <option value="Easy">Easy</option>
-                        <option value="Medium">Medium</option>
-                        <option value="Hard">Hard</option>
+                        <option value="hr">HR</option>
+                        <option value="system design">System Design</option>
+                        <option value="case study">Case Study</option>
+                        <option value="conceptual">Conceptual</option>
+                        <option value="behavioral">Behavioral</option>
 
                     </select>
                 </div>

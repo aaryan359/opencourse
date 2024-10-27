@@ -1,14 +1,14 @@
 const mongoose = require('mongoose');
 
 const questionSchema = new mongoose.Schema({
-  title: { 
+  questions: { 
     type: String, 
     required: true 
   },
-  description: { 
+  answers: { 
     type: String 
   },
-  company: { 
+  companyName: { 
     type: String,
     default:"unknown"
   },
@@ -16,25 +16,25 @@ const questionSchema = new mongoose.Schema({
     type: String, 
     required: true 
   }, // Example: ['JavaScript', 'Python']
-  industry:{ 
+  Domain:{ 
     type: String, 
     required: true 
   }, // Example: ['Web Development', 'AI/ML']
-  jobRole:{ 
+  role:{ 
     type: String, 
     required: true 
   }, // Example: ['Frontend Developer', 'Data Analyst']
-  questionType: { 
+  questiontype: { 
     type: String, 
-    enum: ['HR', 'System Design', 'Case Study', 'Conceptual', 'Behavioral'] 
+    enum: ['hr', 'system design', 'case study', 'conceptual', 'behavioral'] 
   },
   ExperienceLevel: { 
     type: String, 
-    enum: ['Fresher', '1-5', '5+'] 
+    enum: ['fresher', '1-5', '5+'] 
   },
   difficulty: { 
     type: String, 
-    enum: ['Easy', 'Medium', 'Hard'] 
+    enum: ['easy', 'medium', 'hard'] 
   },
   askedTo: { 
     type: Number, 

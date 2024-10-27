@@ -39,4 +39,6 @@ const addQuestion = async (req, res) => {
       res.status(500).json({ message: 'Error incrementing asked count', error });
     }
   };
-  
+
+
+  module.exports = { addQuestion,incrementAskedTo,getQuestions };
