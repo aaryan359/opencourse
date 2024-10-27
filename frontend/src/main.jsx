@@ -22,6 +22,9 @@ import { Toaster } from "react-hot-toast";
 import rootreducer from './reducer/index.js';
 import TopicPage from './pages/nontechadminparts/NonTechBranch.jsx';
 import SubTopicPage from './pages/nontechadminparts/NonTechSubTopic.jsx';
+import GiveContest from './pages/Interviewsection/GiveContest.jsx';
+import DailyGoals from './pages/Interviewsection/DailyGoals.jsx';
+import StartPrep from './pages/Interviewsection/Startprep.jsx';
 
 
 
@@ -66,6 +69,10 @@ createRoot(document.getElementById('root')).render(
         <Route path="/interview" element={<Interview />} />
 
         <Route path="/interviewprep" element={<InterviewPrep />} />
+
+        <Route path="/interviewprep/StartPrep" element={<StartPrep />} />
+        <Route path="interviewprep/GiveContest" element={<GiveContest />} />
+        <Route path="interviewprep/DailyGoals" element={<DailyGoals />} />
 
         <Route path="/seenontechcourse" element={<NontechSeeCoursePage />} />
 

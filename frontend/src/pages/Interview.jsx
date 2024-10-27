@@ -10,15 +10,19 @@ const Interview = () => {
     const [formData, setFormData] = useState({
         companyName: '',
         role: '',
-        interviewType: '',
+        skill:'',
+        Domain:'',
+        ExperienceLevel: '',
+        difficulty:'',
+        questiontype:'',
         questions: '',
         answers: '',
-        additionalNotes: '',
+        
     });
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
+        setFormData({ ...formData, [name]: value});
     };
 
     const handleSubmit = (e) => {
@@ -27,7 +31,11 @@ const Interview = () => {
         setFormData({ // Reset form
             companyName: '',
             role: '',
-            interviewType: '',
+            skill:'',
+            Domain:'',
+            ExperienceLevel: '',
+            difficulty:'',
+            questiontype:'',
             questions: '',
             answers: '',
             additionalNotes: '',
@@ -42,6 +50,8 @@ const Interview = () => {
                 <div className="mb-4">
                     <label className="block mb-1 font-semibold" htmlFor="companyName">Company Name</label>
                     <input
+                       
+                       placeholder='EX- google/amazon '
                         type="text"
                         name="companyName"
                         id="companyName"
@@ -53,8 +63,9 @@ const Interview = () => {
                 </div>
 
                 <div className="mb-4">
-                    <label className="block mb-1 font-semibold" htmlFor="role">Role</label>
+                    <label className="block mb-1 font-semibold" htmlFor="role"> Job Role</label>
                     <input
+                       placeholder='EX- frontend developer/Data Analyst'
                         type="text"
                         name="role"
                         id="role"
@@ -66,19 +77,86 @@ const Interview = () => {
                 </div>
 
                 <div className="mb-4">
-                    <label className="block mb-1 font-semibold" htmlFor="interviewType">Interview Type</label>
+                    <label className="block mb-1 font-semibold" htmlFor="skill"> Technology/Skill</label>
+                    <input
+                       placeholder='EX- Reactjs/python'
+                        type="text"
+                        name="skill"
+                        id="skill"
+                        value={formData.skill}
+                        onChange={handleChange}
+                        className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        required
+                    />
+                </div>
+
+                <div className="mb-4">
+                    <label className="block mb-1 font-semibold" htmlFor="Domain"> Industry/Domain</label>
+                    <input
+                       placeholder='EX- AI-ML/Blockchain Development'
+                        type="text"
+                        name="Domain"
+                        id="Domain"
+                        value={formData.Domain}
+                        onChange={handleChange}
+                        className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        required
+                    />
+                </div>
+
+                <div className="mb-4">
+                    <label className="block mb-1 font-semibold" htmlFor="interviewType">Experience Level</label>
                     <select
-                        name="interviewType"
-                        id="interviewType"
-                        value={formData.interviewType}
+                        name="ExperienceLevel"
+                        id="ExperienceLevel"
+                        value={formData.ExperienceLevel}
                         onChange={handleChange}
                         className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                         required
                     >
+                        
                         <option value="">Select...</option>
-                        <option value="fresher">Fresher</option>
-                        <option value="experienced">Experienced</option>
-                        <option value="non-tech">Non-Tech/Management</option>
+                        <option value="Fresher">Fresher</option>
+                        <option value="1-5">1-3 years of Experienced</option>
+                        <option value="5+">5+ years of Experience</option>
+                    </select>
+                </div>
+
+                <div className="mb-4">
+                    <label className="block mb-1 font-semibold" htmlFor="interviewType">Difficulty Level </label>
+                    <select
+                        name="difficulty"
+                        id="difficulty"
+                        value={formData.difficulty}
+                        onChange={handleChange}
+                        className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        required
+                    >
+                        
+                        <option value="">Select...</option>
+                        <option value="Easy">Easy</option>
+                        <option value="Medium">Medium</option>
+                        <option value="Hard">Hard</option>
+
+                    </select>
+                </div>
+
+                <div className="mb-4">
+                    <label className="block mb-1 font-semibold" htmlFor="interviewType">Question Type </label>
+                    <select
+                        name="questiontype"
+                        id="questiontype"
+                        value={formData.questiontype}
+                        onChange={handleChange}
+                        className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        required
+                    >
+                        
+                        <option value="">Select...</option>
+                        <option value="Easy">Easy</option>
+                        <option value="Medium">Medium</option>
+                        <option value="Hard">Hard</option>
+
                     </select>
                 </div>
 
@@ -108,17 +186,7 @@ const Interview = () => {
                     />
                 </div>
 
-                <div className="mb-4">
-                    <label className="block mb-1 font-semibold" htmlFor="additionalNotes">Additional Notes</label>
-                    <textarea
-                        name="additionalNotes"
-                        id="additionalNotes"
-                        value={formData.additionalNotes}
-                        onChange={handleChange}
-                        className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        rows="4"
-                    />
-                </div>
+                
 
 
                 <button type="submit" className="bg-blue-600 text-white py-2 px-4 rounded w-full hover:bg-blue-700 transition duration-200">Submit Experience</button>
@@ -131,14 +199,20 @@ const Interview = () => {
 
             
             <div>
-                {experiences.map((exp, index) => (
-                    <div key={index} className="bg-gray-100 p-4 mb-4 rounded shadow">
-                        <h3 className="font-bold text-lg">{exp.companyName} - {exp.role} ({exp.interviewType})</h3>
-                        <p className="mt-2"><strong>Questions:</strong> {exp.questions}</p>
-                        <p className="mt-2"><strong>Answers:</strong> {exp.answers}</p>
-                        <p className="mt-2"><strong>Notes:</strong> {exp.additionalNotes}</p>
-                    </div>
-                ))}
+            {experiences.map((exp, index) => (
+    <div key={index} className="bg-gray-100 p-4 mb-4 rounded shadow">
+            <h3 className="font-bold text-lg">
+                        {exp.companyName} - {exp.role} ({exp.questiontype})
+               </h3>
+                         <p className="mt-2"><strong>Skill:</strong> {exp.skill}</p>
+                         <p className="mt-2"><strong>Domain:</strong> {exp.Domain}</p>
+                         <p className="mt-2"><strong>Experience Level:</strong> {exp.ExperienceLevel}</p>
+                         <p className="mt-2"><strong>Difficulty:</strong> {exp.difficulty}</p>
+                         <p className="mt-2"><strong>Questions:</strong> {exp.questions}</p>
+                          <p className="mt-2"><strong>Answers:</strong> {exp.answers}</p>
+            </div>
+          ))}
+
             </div>
         </div>
     );

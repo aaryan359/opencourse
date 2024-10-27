@@ -8,11 +8,11 @@ const User = require('../models/User')
 
 //tested
 
- const getFields = async (req, res) => {
+//  const getFields = async (req, res) => {
 
 
   
-   try {
+//    try {
 
 const getFields = async (req, res) => {
   try {
