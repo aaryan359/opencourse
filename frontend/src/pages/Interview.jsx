@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useSelector } from 'react-redux';
 
 // Sample data for storing experiences
 const initialExperiences = [];
@@ -11,6 +12,7 @@ const Interview = () => {
     const [experiences, setExperiences] = useState(initialExperiences);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const{sighnupData} =  useSelector(  (state)=>state.auth );
 
     const [formData, setFormData] = useState({
         companyName: '',
@@ -22,6 +24,7 @@ const Interview = () => {
         questiontype:'',
         questions: '',
         answers: '',
+        postedBy:sighnupData ? sighnupData._id : null,
         
     });
 
