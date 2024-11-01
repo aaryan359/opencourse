@@ -6,7 +6,8 @@ const questionSchema = new mongoose.Schema({
     required: true 
   },
   answers: { 
-    type: String 
+    type: String ,
+    required: true 
   },
   companyName: { 
     type: String,
@@ -14,15 +15,15 @@ const questionSchema = new mongoose.Schema({
   },
   skill:{ 
     type: String, 
-    required: true 
+   
   }, // Example: ['JavaScript', 'Python']
   Domain:{ 
     type: String, 
-    required: true 
+    
   }, // Example: ['Web Development', 'AI/ML']
   role:{ 
     type: String, 
-    required: true 
+   
   }, // Example: ['Frontend Developer', 'Data Analyst']
   questiontype: { 
     type: String, 

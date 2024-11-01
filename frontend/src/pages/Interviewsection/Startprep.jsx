@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import  { useEffect, useState } from 'react';
 import axios from 'axios';
+import QuestionTemplate from './Questiontemplate';
 
 const StartPrep = () => {
 
@@ -108,7 +109,7 @@ const StartPrep = () => {
 
 
     return(
-         <div className=' flex flex-col  p-5 '>
+         <div className=' flex flex-col   p-5 '>
                      <h1 className="text-3xl font-bold mb-6 text-center">Welcome to Start Prep Section</h1>
                     
                   
@@ -127,6 +128,7 @@ const StartPrep = () => {
                       value={formData.skill}
                       onChange={handleChange}
                       className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      style={{ maxHeight: '200px', overflowY: 'auto' }}  // Limit height and enable scroll
                       required
                   >
                       
@@ -142,6 +144,7 @@ const StartPrep = () => {
                       id="Domain"
                       value={formData.Domain}
                       onChange={handleChange}
+                      style={{ maxHeight: '200px', overflowY: 'auto' }}  // Limit height and enable scroll
                       className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                       required
                   >
@@ -159,6 +162,7 @@ const StartPrep = () => {
                       value={formData.companyName}
                       onChange={handleChange}
                       className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      style={{ maxHeight: '200px', overflowY: 'auto' }}  // Limit height and enable scroll
                       required
                   >
                       
@@ -176,6 +180,7 @@ const StartPrep = () => {
                       onChange={handleChange}
                       className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                       required
+                      style={{ maxHeight: '200px', overflowY: 'auto' }}  // Limit height and enable scroll
                   >
                       
                       <option value="">Select...</option>
@@ -247,19 +252,21 @@ const StartPrep = () => {
                  <h2 className="text-2xl font-semibold mb-4 text-center">Filtered questions</h2>
 
             
-            <div>
+            <div className=' flex flex-col  justify-start items-center'>
             {filteredQuestions.map((exp, index) => (
-    <div key={index} className="bg-gray-100 p-4 mb-4 rounded shadow">
-            <h3 className="font-bold text-lg">
-                        {exp.companyName} - {exp.role} ({exp.questiontype})
-               </h3>
-                         <p className="mt-2"><strong>Skill:</strong> {exp.skill}</p>
-                         <p className="mt-2"><strong>Domain:</strong> {exp.Domain}</p>
-                         <p className="mt-2"><strong>Experience Level:</strong> {exp.ExperienceLevel}</p>
-                         <p className="mt-2"><strong>Difficulty:</strong> {exp.difficulty}</p>
-                         <p className="mt-2"><strong>Questions:</strong> {exp.questions}</p>
-                          <p className="mt-2"><strong>Answers:</strong> {exp.answers}</p>
-            </div>
+
+                <QuestionTemplate key={index}  exp = {exp} />
+            // <div key={index} className="bg-gray-100 p-4 mb-4 rounded shadow">
+            // <h3 className="font-bold text-lg">
+            //             {exp.companyName} - {exp.role} ({exp.questiontype})
+            //    </h3>
+            //              <p className="mt-2"><strong>Skill:</strong> {exp.skill}</p>
+            //              <p className="mt-2"><strong>Domain:</strong> {exp.Domain}</p>
+            //              <p className="mt-2"><strong>Experience Level:</strong> {exp.ExperienceLevel}</p>
+            //              <p className="mt-2"><strong>Difficulty:</strong> {exp.difficulty}</p>
+            //              <p className="mt-2"><strong>Questions:</strong> {exp.questions}</p>
+            //               <p className="mt-2"><strong>Answers:</strong> {exp.answers}</p>
+            // </div>
           ))}
 
             </div>

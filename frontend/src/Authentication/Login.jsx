@@ -33,7 +33,8 @@ const Login = () => {
            console.log("response is:",response.data.data.user);
         dispatch(setSignupData(response.data.data.user));
         dispatch(setToken(Cookies.get('accessToken')));
-       
+       // Store signup data in local storage
+  localStorage.setItem('signupData', JSON.stringify(response.data.data.user));
         navigate('/');
         
       } else {

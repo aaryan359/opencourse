@@ -7,9 +7,9 @@ const InterviewPrep = () => {
     {
       title: 'Start PREP',
       points: [
-        'Plan your interview journey',
+        'Start practice  interview questions',
         'Identify core skills',
-        'Practice coding problems',
+        'Practice interview problems',
         'Focus on communication',
         'Track your progress'
       ],
