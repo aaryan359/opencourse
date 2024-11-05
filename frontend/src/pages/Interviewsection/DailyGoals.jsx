@@ -66,17 +66,12 @@ const DailyGoals = () => {
                                     console.log(" response 2 is : ",response2);
 
                                     if(response2.data.message ==="Less than 24 hours since last fetch."){
-                                          toast.error('New Question will come after 6:00 AM everyday', {
-                                                position: "top-right",
-                                                autoClose: 3000,
-                                                hideProgressBar: false,
-                                                closeOnClick: true,
-                                                draggable: true,
-                                                progress: undefined,
-                                            });
+                                           
                                     }else{
                                            
                                           localStorage.setItem('DailyQuestions', JSON.stringify(response2.data.questions));
+
+                                        
                                     }
                                    
                                     

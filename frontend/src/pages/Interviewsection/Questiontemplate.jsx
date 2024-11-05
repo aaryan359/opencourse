@@ -9,6 +9,10 @@ import { useState } from "react";
 const QuestionTemplate = ({exp}) => {
 
     const[showanswer,setshowanswer] = useState(false);
+    const exp1 = {
+      answers: "Functional programming is based on mathematical functions and avoids changing-state and mutable data.",
+      questions: "What are the key differences between functional and object-oriented programming?",
+    };
 
       return(
         <div  className=" w-[95%]  flex flex-row bg-yellow-50 p-4 mb-4 rounded-lg shadow">
@@ -33,8 +37,12 @@ const QuestionTemplate = ({exp}) => {
                               <FaEye className=" text-2xl"  />{ showanswer ? 'CLOSE ANSWER':'SEE ANSWER'}
                            </div>
 
-                           <Link
-                                  to='/practiceinterviewanswer'
+                           <Link        
+                                    to={{
+                                      pathname:'/practiceinterviewanswer',
+                                      state: { exp2: { questions: "What is the capital of France?", answers: "Paris" } }
+                                    }}
+                                
                             style={{ textDecoration: 'none' }} // Ensure no underline
                                className= "  flex items-center  bg-orange-500 hover:bg-orange-600 text-white py-3 px-8 rounded-lg shadow-lg transition-transform transform hover:scale-105  hover:text-white focus:outline-none active:bg-orange-700" >
                             <CgSandClock className=" text-2xl"  /> PRACTICE ANSWER

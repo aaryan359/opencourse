@@ -99,7 +99,7 @@ const Interview = () => {
             <form onSubmit={handleSubmit} className="bg-white p-8 rounded shadow-md mb-6 max-w-lg mx-auto">
 
                 <div className="mb-4">
-                    <label className="block mb-1 font-semibold" htmlFor="companyName">Company Name</label>
+                    <label className="block mb-1 font-semibold" htmlFor="companyName">Company Name (optional)</label>
                     <input
                        
                        placeholder='EX- google/amazon '
@@ -109,12 +109,12 @@ const Interview = () => {
                         value={formData.companyName}
                         onChange={handleChange}
                         className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        required
+                        
                     />
                 </div>
 
                 <div className="mb-4">
-                    <label className="block mb-1 font-semibold" htmlFor="role"> Job Role</label>
+                    <label className="block mb-1 font-semibold" htmlFor="role"> Job Role  (optional)</label>
                     <input
                        placeholder='EX- frontend developer/Data Analyst'
                         type="text"
@@ -123,12 +123,12 @@ const Interview = () => {
                         value={formData.role}
                         onChange={handleChange}
                         className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        required
+                       
                     />
                 </div>
 
                 <div className="mb-4">
-                    <label className="block mb-1 font-semibold" htmlFor="skill"> Technology/Skill</label>
+                    <label className="block mb-1 font-semibold" htmlFor="skill"> Technology/Skill  (mandatory)</label>
                     <input
                        placeholder='EX- Reactjs/python'
                         type="text"
@@ -137,12 +137,12 @@ const Interview = () => {
                         value={formData.skill}
                         onChange={handleChange}
                         className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        required
+                       required
                     />
                 </div>
 
                 <div className="mb-4">
-                    <label className="block mb-1 font-semibold" htmlFor="Domain"> Industry/Domain</label>
+                    <label className="block mb-1 font-semibold" htmlFor="Domain"> Industry/Domain (optional)</label>
                     <input
                        placeholder='EX- AI-ML/Blockchain Development'
                         type="text"
@@ -151,19 +151,19 @@ const Interview = () => {
                         value={formData.Domain}
                         onChange={handleChange}
                         className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        required
+                       
                     />
                 </div>
 
                 <div className="mb-4">
-                    <label className="block mb-1 font-semibold" htmlFor="interviewType">Experience Level</label>
+                    <label className="block mb-1 font-semibold" htmlFor="interviewType">Experience Level  (mandatory)</label>
                     <select
                         name="ExperienceLevel"
                         id="ExperienceLevel"
                         value={formData.ExperienceLevel}
                         onChange={handleChange}
                         className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        required
+                       required
                     >
                         
                         <option value="">Select...</option>
@@ -174,7 +174,7 @@ const Interview = () => {
                 </div>
 
                 <div className="mb-4">
-                    <label className="block mb-1 font-semibold" htmlFor="interviewType">Difficulty Level </label>
+                    <label className="block mb-1 font-semibold" htmlFor="interviewType">Difficulty Level  (mandatory)</label>
                     <select
                         name="difficulty"
                         id="difficulty"
@@ -193,7 +193,7 @@ const Interview = () => {
                 </div>
 
                 <div className="mb-4">
-                    <label className="block mb-1 font-semibold" htmlFor="interviewType">Question Type </label>
+                    <label className="block mb-1 font-semibold" htmlFor="interviewType">Question Type  (mandatory)</label>
                     <select
                         name="questiontype"
                         id="questiontype"

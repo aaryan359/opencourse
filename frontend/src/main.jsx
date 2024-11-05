@@ -26,6 +26,7 @@ import GiveContest from './pages/Interviewsection/GiveContest.jsx';
 import DailyGoals from './pages/Interviewsection/DailyGoals.jsx';
 import StartPrep from './pages/Interviewsection/Startprep.jsx';
 import Practiceinterview from './pages/Interviewsection/practiceinterviewanswer.jsx';
+import CheckAnswer from './pages/Interviewsection/CheckAnswer.jsx';
 
 
 
@@ -74,7 +75,7 @@ createRoot(document.getElementById('root')).render(
         <Route path="/interviewprep/StartPrep" element={<StartPrep />} />
         <Route path="/interviewprep/GiveContest" element={<GiveContest />} />
         <Route path="/interviewprep/DailyGoals" element={<DailyGoals />} />
-        <Route   path='/practiceinterviewanswer' element={<Practiceinterview/>}  ></Route>
+        <Route   path='/practiceinterviewanswer' element={ <CheckAnswer/>  }  ></Route>
 
         <Route path="/seenontechcourse" element={<NontechSeeCoursePage />} />
 
