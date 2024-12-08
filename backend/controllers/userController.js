@@ -101,7 +101,10 @@ const loginUser = async (req, res) => {
     path: '/' // The cookie is available within the entire site
 };
   
-  console.log("option si",options);
+
+
+  console.log("options ",options);
+
   
 
   return res
@@ -109,7 +112,7 @@ const loginUser = async (req, res) => {
   .cookie("accessToken", accessToken, options)
   .cookie("refreshToken", refreshToken, options)
   .json({
-    status: 200, // HTTP status code
+    status: 200, 
     data: {
       user,
       accessToken,

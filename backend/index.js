@@ -2,6 +2,7 @@
 const express = require('express');
 const cors = require('cors');
 const session = require('express-session');
+const cookieParser = require('cookie-parser');
 const passport = require('passport');
 const connectDB = require('./config/db');
 const userRoutes = require('./routes/userRoutes');
@@ -16,6 +17,7 @@ require('./config/passport-setup'); // Import passport setup
 
 const app = express();
 
+app.use(cookieParser());
 
 // Middleware
 app.use(cors({
@@ -23,9 +25,15 @@ app.use(cors({
   credentials: true // Allow cookies to be sent
 }));
 
+
+
+
 app.use(express.json());
 
+
+
 app.use(express.urlencoded({ extended: true }));
+
 
 // MongoDB connection
 connectDB();
@@ -40,9 +48,13 @@ app.use(session({
 
 
 
+
+
 // Passport middleware
 app.use(passport.initialize());
 app.use(passport.session());
+
+
 
 
 
@@ -56,6 +68,19 @@ app.use('/user',field);
 app.use('/nontech',nontechfieldroutes );
 
 app.use('/interview',interviewRoutes)
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

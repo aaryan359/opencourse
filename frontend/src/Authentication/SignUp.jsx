@@ -54,11 +54,6 @@ const SignUp = () => {
   };
 
 
-
-
-
-
-
   return (
     <div className="flex items-center justify-center h-screen bg-gradient-to-r from-blue-200 to-indigo-200">
 

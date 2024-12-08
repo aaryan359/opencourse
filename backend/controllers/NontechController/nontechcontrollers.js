@@ -24,10 +24,12 @@ const AddNonTechvideos = async (req, res) => {
         userId:userid  // Assuming you store the user who uploads the video
     });
 
+
+
     // 2. Check and update/create NonTechField entry
     const updatedField = await NonTechField.findOneAndUpdate(
       {
-         fieldname: NontechFieldname,
+        fieldname: NontechFieldname,
         branchname: NontechBranchname,
        subtopicname: NonTechSubTopicname,
        userId:userid

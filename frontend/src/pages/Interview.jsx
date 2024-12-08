@@ -72,11 +72,12 @@ const Interview = () => {
     role: "",
     interviewType: "",
     field: "",
-    questions: "",
-    answers: "",
+    questions: [{ question: "", answer: "" }],
+  
     additionalNotes: "",
   });
 
+  
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -84,6 +85,22 @@ const Interview = () => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
+
+
+  const handleQuestionChange = (index, e) => {
+    const { name, value } = e.target;
+    const updatedQuestions = [...formData.questions];
+    updatedQuestions[index][name] = value;
+    setFormData({ ...formData, questions: updatedQuestions });
+  };
+
+  const addQuestion = () => {
+    setFormData({
+      ...formData,
+      questions: [...formData.questions, { question: "", answer: "" }],
+    });
+  };
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -109,8 +126,8 @@ const Interview = () => {
         role: "",
         interviewType: "",
         field: "",
-        questions: "",
-        answers: "",
+        questions: [{ question: "", answer: "" }],
+        
         additionalNotes: "",
       });
     } catch (error) {
@@ -207,40 +224,45 @@ const Interview = () => {
           </select>
         </div>
 
-        <div className="mb-4">
-          <label
-            htmlFor="questions"
-            className="block text-gray-700 font-bold mb-2"
-          >
-            Interview Questions
-          </label>
-          <textarea
-            name="questions"
-            value={formData.questions}
-            onChange={handleChange}
-            rows="4"
-            className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
-            required
-          />
-        </div>
+        
+        {formData.questions.map((qa, index) => (
+          <div key={index} className="mb-4">
+            <label className="block text-gray-700 font-bold mb-2">
+              Interview Question {index + 1}
+            </label>
+            <textarea
+              name="question"
+              value={qa.question}
+              onChange={(e) => handleQuestionChange(index, e)}
+              rows="2"
+              className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400 mb-2"
+              placeholder="Enter the question"
+              required
+            />
+            <label className="block text-gray-700 font-bold mb-2">
+              Your Answer {index + 1}
+            </label>
+            <textarea
+              name="answer"
+              value={qa.answer}
+              onChange={(e) => handleQuestionChange(index, e)}
+              rows="2"
+              className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400 mb-2"
+              placeholder="Enter your answer"
+              required
+            />
+          </div>
+        ))}
+        
+        <button
+          type="button"
+          onClick={addQuestion}
+          className="bg-green-500 text-white font-bold py-2 px-4 rounded w-full mb-4 hover:bg-green-600 transition ease-in-out duration-150"
+        >
+          Add Another Question
+        </button>
 
-        <div className="mb-4">
-          <label
-            htmlFor="answers"
-            className="block text-gray-700 font-bold mb-2"
-          >
-            Your Answers
-          </label>
-          <textarea
-            name="answers"
-            value={formData.answers}
-            onChange={handleChange}
-            rows="4"
-            className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
-            required
-          />
-        </div>
-
+        
         <div className="mb-4">
           <label
             htmlFor="additionalNotes"

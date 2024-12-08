@@ -13,25 +13,21 @@ const interviewSchema = new mongoose.Schema({
     interviewType: {
         type: String,
         required: true,
-         // restrict the values to these options
-        enum: ['fresher', 'experienced', 'non-tech'] 
-        
+        enum: ['fresher', 'experienced', 'non-tech']
     },
     field: {
         type: String,
         required: true
     },
-    questions: {
-        type: String,
-        required: true
-    },
-    answers: {
-        type: String,
-        required: true
-    },
+    questions: [
+        {
+            question: { type: String, required: true },
+            answer: { type: String, required: true }
+        }
+    ],
     additionalNotes: {
         type: String,
-        default: '' 
+        default: ''
     },
     createdAt: {
         type: Date,
