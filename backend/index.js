@@ -7,6 +7,7 @@ const connectDB = require('./config/db');
 const userRoutes = require('./routes/userRoutes');
 const field = require('./routes/fieldsRoutes');
 const nontechfieldroutes   = require('./routes/NontechRouting/nontechRoutes')
+const Interviewroutes   = require('./routes/InterviewSectionRouting/InterviewRouting')
 
 const authMiddleware = require('./middlewares/authMiddlewares');
 
@@ -54,6 +55,8 @@ app.use('/auth', userRoutes);
 
 app.use('/user',field);
 app.use('/nontech',nontechfieldroutes );
+app.use('/Interview',Interviewroutes );
+
 
 app.use('/interview',interviewRoutes)
 

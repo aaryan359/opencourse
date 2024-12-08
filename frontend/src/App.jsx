@@ -97,7 +97,7 @@ function App() {
               <Link
                 to="/interviewprep"
                 className="bg-blue-500 hover:bg-blue-600 text-white py-3 px-8 rounded-lg shadow-lg transition-transform transform hover:scale-105 hover:no-underline hover:text-white focus:outline-none active:bg-blue-700" >
-                Interview Questions
+                Interview practice Section
               </Link>
             </div>
           </div>

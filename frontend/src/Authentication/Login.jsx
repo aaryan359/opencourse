@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate,Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { setToken } from '../reducer/slice/authSlice';
+import { setToken,setSignupData } from '../reducer/slice/authSlice';
 import Cookies from 'js-cookie'
 
 const Login = () => {
@@ -30,8 +30,11 @@ const Login = () => {
       );
           
       if (response) {
+           console.log("response is:",response.data.data.user);
+        dispatch(setSignupData(response.data.data.user));
         dispatch(setToken(Cookies.get('accessToken')));
-       
+       // Store signup data in local storage
+  localStorage.setItem('signupData', JSON.stringify(response.data.data.user));
         navigate('/');
         
       } else {
