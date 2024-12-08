@@ -10,10 +10,10 @@
   }
   
   button {
-    margin: 5px;
-    padding: 10px 20px;
-    font-size: 16px;
-    font-weight: bold;
+    margin: 5px !important;
+    padding: 10px 20px !important;
+    font-size: 16px !important;
+    font-weight: bold !important;
   }
   
   .timeline {
@@ -89,28 +89,28 @@
     border-radius: 5px;
   }
   button {
-  background: linear-gradient(135deg, #42a5f5, #4a56e2);
-  color: white;
-  font-size: 16px;
-  font-weight: bold;
-  padding: 12px 24px;
-  border: none;
-  border-radius: 50px;
-  cursor: pointer;
-  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  display: inline-block;
-  text-align: center;
+  background: linear-gradient(135deg, #42a5f5, #4a56e2) !important;
+  color: white !important;
+  font-size: 16px !important  ;
+  font-weight: bold !important;
+  padding: 12px 24px !important;
+  border: none !important;
+  border-radius: 50px !important;
+  cursor: pointer !important;
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1) !important;
+  transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+  display: inline-block !important;
+  text-align: center !important  ;
 }
 
 button:hover {
-  transform: scale(1.05);
-  box-shadow: 0 12px 20px rgba(0, 0, 0, 0.2);
-  background: linear-gradient(135deg, #4a56e2, #42a5f5); /* Reverse gradient on hover */
+  transform: scale(1.05) !important;
+  box-shadow: 0 12px 20px rgba(0, 0, 0, 0.2) !important;
+  background: linear-gradient(135deg, #4a56e2, #42a5f5) !important; /* Reverse gradient on hover */
 }
 
 button:focus {
-  outline: none;
+  outline: none !important;
 }
 
 .flex {
@@ -122,8 +122,8 @@ button:focus {
 
 @media (max-width: 600px) {
   button {
-    font-size: 14px;
-    padding: 10px 20px;
+    font-size: 14px !important;
+    padding: 10px 20px !important;
   }
 }
 
@@ -141,4 +141,6 @@ button:focus {
       max-width: 100%;
     }
   }
+  
+
   

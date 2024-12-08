@@ -4,16 +4,17 @@ const NonTechVideo = require('../../models/nonTechModels/NontechVideo');
 
 
 
+
 const AddNonTechvideos = async (req, res) => {
 
   try {
 
-    const { NontechFieldname, NontechBranchname, NonTechSubTopicname, TitleofVideo, url } = req.body;
+    const { NontechFieldname, NontechBranchname, NonTechSubTopicname, TitleofVideo, url,qaPair } = req.body;
     const userid = req.user._id;
 
     // Validate input
    
-    if (!NontechFieldname || !NontechBranchname || !NonTechSubTopicname || !TitleofVideo || !url) {
+    if (!NontechFieldname || !NontechBranchname || !NonTechSubTopicname || !TitleofVideo || !url || !qaPair ) {
       return res.status(403).json({ error: 'Please send all the details' });
     }
 
@@ -35,6 +36,7 @@ const AddNonTechvideos = async (req, res) => {
        userId:userid
       },
       {
+         qaPairs:qaPair,
         $push: { nonTechvideo: newVideo._id }, // Push the video reference to the array
       },
       { new: true, upsert: true } // Create a new document if it doesn't exist (upsert)

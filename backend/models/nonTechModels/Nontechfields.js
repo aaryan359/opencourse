@@ -31,8 +31,10 @@ const nontechfieldSchema = new mongoose.Schema({
       type: mongoose.Schema.Types.ObjectId, 
       ref: 'NonTechVideo', 
     }
+
   ] 
-  
+ 
+
 });
 
 const NonTechField = mongoose.model("NonTechField", nontechfieldSchema);
