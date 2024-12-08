@@ -11,6 +11,8 @@ const Interviewroutes   = require('./routes/InterviewSectionRouting/InterviewRou
 
 const authMiddleware = require('./middlewares/authMiddlewares');
 
+const interviewRoutes = require('./routes/interviewRoutes')
+
 require('./config/passport-setup'); // Import passport setup
 
 const app = express();
@@ -18,10 +20,12 @@ const app = express();
 
 // Middleware
 app.use(cors({
-  origin: 'http://localhost:5173', // Change to your frontend URL
+  origin: 'http://localhost:5173', 
   credentials: true // Allow cookies to be sent
 }));
+
 app.use(express.json());
+
 app.use(express.urlencoded({ extended: true }));
 
 // MongoDB connection
@@ -53,6 +57,8 @@ app.use('/user',field);
 app.use('/nontech',nontechfieldroutes );
 app.use('/Interview',Interviewroutes );
 
+
+app.use('/interview',interviewRoutes)
 
 
 

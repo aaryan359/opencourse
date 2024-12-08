@@ -7,15 +7,20 @@ const UserPanel = () => {
   // Store fields and subtopics
   const [fieldData, setFieldData] = useState([]); 
 
-
   // Track selected field
   const [selectedField, setSelectedField] = useState(null); 
 
    // Track selected subtopic
   const [selectedSubtopic, setSelectedSubtopic] = useState(null); 
 
+
  // Store videos for selected subtopic
   const [videos, setVideos] = useState([]);
+
+
+  
+
+
 
   // Fetch fields and subtopics when the component mounts
   useEffect(() => {
@@ -36,20 +41,28 @@ const UserPanel = () => {
   // Fetch videos for the selected subtopic
 
   const fetchVideosForSubtopic = async (fieldId, subtopicName) => {
+
     console.log("field id and subtopic name is",fieldId,subtopicName);
+
     try {
       const response = await axios.get(`http://localhost:5001/user/fields/${fieldId}/subtopic/${subtopicName}/videos`);
+
       console.log("video  by subtopic ,",response)
-      setVideos(response.data); // Set the videos for the selected subtopic
+     // Set the videos for the selected subtopic
+      setVideos(response.data); 
+
     } catch (error) {
       console.error('Error fetching videos:', error);
     }
   };
 
-    console.log(" video according to suntopic",videos)
+
+    console.log(" video according to subtopic",videos)
+
 
 
   const handleFieldSelect = (field) => {
+
     setSelectedField(field);
 
      // Reset subtopic when a new field is selected
@@ -102,22 +115,29 @@ const UserPanel = () => {
      
         {selectedSubtopic && (
             <div className="mb-8">
+
               <h3 className="text-2xl font-semibold mb-4 text-gray-800">Videos for {selectedSubtopic}</h3>
+
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+
                 {videos.map((video) => (
                   <div key={video._id} className="bg-white shadow-xl rounded-lg p-6 flex flex-col">
                     <h3 className="text-xl font-semibold mb-2 text-gray-800">{video.title}</h3>
                     <iframe
                       width="100%"
                       height="215"
+                      loading='lazy'
                       src={`https://www.youtube.com/embed/${getYoutubeVideoId(video.url)}`}
                       title={video.title}
                       frameBorder="0"
                       allowFullScreen
                       className="rounded-lg"
                     ></iframe>
+
                   </div>
+
                 ))}
+
               </div>
             </div>
           )}
@@ -126,7 +146,7 @@ const UserPanel = () => {
   );
 };
 
-// Helper function to extract YouTube video ID
+//  function to extract video url 
 const getYoutubeVideoId = (url) => {
   const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
   const match = url.match(regExp);

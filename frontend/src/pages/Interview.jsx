@@ -1,13 +1,86 @@
+
 import React, { useState } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useSelector } from 'react-redux';
 
-// Sample data for storing experiences
-const initialExperiences = [];
+
+const predefinedFields = [
+  "WebDev",
+  "Blockchain",
+  "Data Science",
+  "AI/ML",
+  "Mobile Development",
+  "Cloud Computing",
+  "Cybersecurity",
+  "DevOps",
+  "Internet of Things (IoT)",
+  "Game Development",
+  "Augmented Reality (AR)",
+  "Virtual Reality (VR)",
+  "Software Engineering",
+  "Big Data",
+  "UI/UX Design",
+  "Embedded Systems",
+  "Computer Vision",
+  "Quantum Computing",
+  "Robotics",
+  "Natural Language Processing (NLP)",
+  "Networking",
+  "Edge Computing",
+  "Generative AI",
+  "AI Ethics",
+  "Explainable AI",
+  "Autonomous Systems",
+  "AI-Powered Automation",
+  "AI in Healthcare",
+  "AI in Finance",
+  "AI in Education",
+  "Deep Learning",
+  "Reinforcement Learning",
+  "Federated Learning",
+  "AI in Cybersecurity",
+  "AI-Driven Personalization",
+  "Speech Recognition",
+  "AI in Manufacturing",
+  "AI in Retail",
+  "AI in Marketing",
+  "AI Governance",
+  "Conversational AI",
+  "AI-Enhanced Creativity",
+  "AI in Drug Discovery",
+  "AI in Climate Science",
+  "Synthetic Data",
+  "AI for Social Good",
+  "AI Regulation and Policy",
+  "AI in Energy Optimization",
+  "Machine Learning",
+  "Supervised Learning",
+  "Unsupervised Learning",
+  "Transfer Learning",
+  "Generative Adversarial Networks (GANs)",
+  "Self-Supervised Learning",
+  "Neural Networks",
+  "Transformer Models",
+  "Natural Language Generation (NLG)",
+  "Prompt Engineering",
+  "Multimodal AI",
+  "AI in Art and Creativity",
+  "AI for Human Augmentation",
+];
 
 const Interview = () => {
+  const [experiences, setExperiences] = useState([]);
+  const [formData, setFormData] = useState({
+    companyName: "",
+    role: "",
+    interviewType: "",
+    field: "",
+    questions: "",
+    answers: "",
+    additionalNotes: "",
+  });
 
     const [experiences, setExperiences] = useState(initialExperiences);
     const [loading, setLoading] = useState(true);
@@ -78,6 +151,7 @@ const Interview = () => {
          //add  api  to add question question in database
 
         console.log("formdat is:",formData);
+      
         setFormData({ // Reset form
             companyName: '',
             role: '',
@@ -267,8 +341,14 @@ const Interview = () => {
           ))}
 
             </div>
+
+
+
         </div>
-    );
+      )}
+    </div>
+  );
 };
+
 
 export default Interview;

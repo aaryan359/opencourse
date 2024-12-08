@@ -69,6 +69,7 @@ const registerUser = async (req, res) => {
 
 
 
+
 // tested api 
 // Login a user
 const loginUser = async (req, res) => {
@@ -147,8 +148,6 @@ const getUserProfile = async (req, res) => {
 
 
 
-
-
 // Update user profile
 const updateUserProfile = async (req, res) => {
     // taking is updated input form user 
@@ -180,8 +179,6 @@ const updateUserProfile = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
-
-
 
 
 

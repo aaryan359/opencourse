@@ -102,10 +102,14 @@ import { useNavigate } from 'react-router-dom';
      
     
       useEffect(() => {
+
         const fetchFields = () => setFields(dummyFields);
+
         const fetchUser = () => setUser(dummyUser);
+
         fetchFields();
         fetchUser();
+        
       }, []);
 
       const handleFieldClick = (field) => {

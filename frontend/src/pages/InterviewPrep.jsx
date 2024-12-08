@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -65,8 +66,16 @@ const InterviewPrep = () => {
                 INTERVIEW CONTEST
               </Link>
 
-                              
+
+
+   
+
+      
+
+
+                       
                   </div>
+
 
 
           <div className="flex flex-wrap justify-center pt-10 gap-8">
@@ -86,10 +95,11 @@ const InterviewPrep = () => {
           
         </div>
       ))}
-            </div>
-     
-     
+
      </div>
+     
+     
+
   )
 };
 
