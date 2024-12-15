@@ -145,32 +145,12 @@ To run this project locally, you will need the following:
 
    
 
-
- 
-
-
 # nontechmodels
 ## nontechfields
 ### branch of fields
 #### subtopics of that branch
 
-  // const [selectedTopic, setSelectedTopic] = useState(null);
-      // const [selectedSubtopic, setSelectedSubtopic] = useState(null);
-      // const [videoURL, setVideoURL] = useState('');
-      // const [qaPairs, setQAPairs] = useState([{ question: '', answer: '' }]);
-         // const [successMessage, setSuccessMessage] = useState('');
-              // const [videos, setVideos] = useState([]);
-               // const dummyVideos = {
-      //   'Thermodynamics': ['https://video1.com', 'https://video2.com'],
-      //   'Fluid Mechanics': ['https://fluid1.com'],
-      // };
-       // useEffect(() => {
-      //   if (selectedSubtopic) {
-      //     const fetchVideos = () => setVideos(dummyVideos[selectedSubtopic] || []);
-      //     fetchVideos();
-      //   }
-      // }, [selectedSubtopic]);
-    
+  
       // const handleAddQA = () => setQAPairs([...qaPairs, { question: '', answer: '' }]);
     
       // const handleQAChange = (index, field, value) => {
