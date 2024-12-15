@@ -145,36 +145,5 @@ To run this project locally, you will need the following:
 
    
 
-# nontechmodels
-## nontechfields
-### branch of fields
-#### subtopics of that branch
 
-  
-      // const handleAddQA = () => setQAPairs([...qaPairs, { question: '', answer: '' }]);
-    
-      // const handleQAChange = (index, field, value) => {
-      //   const newQAPairs = [...qaPairs];
-      //   newQAPairs[index][field] = value;
-      //   setQAPairs(newQAPairs);
-      // };
-    
-      // const handleUpload = () => {
-      //   if (!videoURL || !qaPairs[0].question || !qaPairs[0].answer) {
-      //     setError('Please provide a valid video URL and at least one question-answer pair.');
-      //     return;
-      //   }
-    
-      //   if (videos.length >= 5) {
-      //     setError('You have reached the maximum upload limit of 5 videos for this topic.');
-      //     return;
-      //   }
-    
-      //   setVideos([...videos, videoURL]);
-      //   setSuccessMessage('Video and Q&A uploaded successfully!');
-      //   setVideoURL('');
-      //   setQAPairs([{ question: '', answer: '' }]);
-      // };
-     {/* {error && <div className="bg-red-500 text-white p-4 rounded-md">{error}</div>}
-          {successMessage && <div className="bg-green-500 text-white p-4 rounded-md">{successMessage}</div>} */}
 
