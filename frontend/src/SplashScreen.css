@@ -1,0 +1,76 @@
+/* SplashScreen.css */
+.splash-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #0e0f1f; /* Dark background for the splash screen */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 1;
+    transition: opacity 1s ease-out;
+    z-index: 9999; /* Ensure splash screen is above other content */
+    animation: backgroundAnimation 1.5s infinite;
+}
+
+.splash-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    text-align: center;
+}
+
+.splash-title {
+    font-size: 3rem;
+    color: lightgray;
+    text-transform: uppercase;
+    font-weight: bolder;
+    animation: fadeInOut 1.5s ease-in-out infinite;
+}
+
+
+@keyframes fadeInOut {
+    0% {
+        opacity: 0;
+        transform: scale(0.6);
+    }
+    25% {
+        opacity: 0.3;
+        transform: scale(0.8);
+    }
+    50% {
+        opacity: 0.6;
+        transform: scale(1);
+    }
+    75% {
+        opacity: 0.9;
+        transform: scale(1.2);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1.3);
+    }
+}
+
+/* Smooth scaling effect for the splash title */
+@keyframes scaleInOut {
+    0% {
+        transform: scale(0.6);
+    }
+    25% {
+        transform: scale(0.8);
+    }
+    50% {
+        transform: scale(1);
+    }
+    75% {
+        transform: scale(1.2);
+    }
+    100% {
+        transform: scale(1.3);
+    }
+}
+

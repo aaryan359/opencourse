@@ -63,35 +63,67 @@ function Header() {
   return (
     
 
-  <header className="bg-blue-600 text-white py-4 flex items-center justify-between px-6">
-  <Link to="/" className="text-4xl font-bold no-underline text-gray-800 hover:text-gray-600 hover:no-underline transition-colors duration-300">
-  Open Course
-  </Link>
-
-
-    {/* Buttons */}
-
-
-    {  isexpired &&
-               
-               <div className="flex space-x-4">
-               <Link to='/signup' className="bg-white text-blue-600 py-2 px-4 rounded hover:bg-blue-500 hover:no-underline hover:text-white transition-all">
-         
-                 Sign Up
-                 
-               </Link>
-         
-               <Link to='/login' className="bg-white text-blue-600 py-2 px-4 rounded hover:bg-blue-500 hover:no-underline hover:text-white transition-all">
-                 Login
-               </Link>
-         
-             </div>
-    }
-
-   
-
-    <Link to='/#' className='  font-bold no-underline text-xl text-gray-200 py-2 px-4 rounded hover:bg-gray-500 hover:no-underline hover:text-white transition-all'>Community Support</Link>
+    <header className="bg-bg-dark text-white py-4 flex items-center justify-between px-28">
+    {/* Logo */}
+    <Link 
+      to="/" 
+      className="text-4xl font-bold no-underline  flex items-center text-white hover:text-gray-300 hover:no-underline   "
+    >
+      Open Course
+    </Link>
+  
+    {/* Navigation Links */}
+    <nav className="hidden md:flex space-x-6">
+      <Link 
+        to="/#"
+        className="text-xl font-bold no-underline text-gray-300 hover:text-white hover:underline transition-colors hover:scale-105 duration-150"
+      >
+        Roadmap
+      </Link>
+      <Link 
+        to="/#"
+        className="text-xl font-bold no-underline text-gray-300 hover:text-white hover:underline transition-colors hover:scale-105 duration-150"
+      >
+        Interview
+      </Link>
+      <Link 
+        to="/#"
+        className="text-xl font-bold no-underline text-gray-300 hover:text-white hover:underline transition-colors hover:scale-105 duration-150"
+      >
+        About Us
+      </Link>
+      <Link 
+        to="/#"
+        className="text-xl font-bold no-underline text-gray-300 hover:text-white hover:underline transition-colors duration-150"
+      >
+        Community
+      </Link>
+    </nav>
+  
+    {/* Sign Up and Login Buttons */}
+    {isexpired && (
+      <div className="flex space-x-4">
+        <Link 
+          to="/signup" 
+          className="bg-white text-blue-600 py-2 px-4 rounded hover:bg-blue-500 hover:text-white transition-all"
+        >
+          Sign Up
+        </Link>
+        <Link 
+          to="/login" 
+          className="bg-white text-blue-600 py-2 px-4 rounded hover:bg-blue-500 hover:text-white transition-all"
+        >
+          Login
+        </Link>
+      </div>
+    )}
+  
+    {/* Mobile Menu Toggle (Optional) */}
+    <div className="md:hidden">
+      {/* Add a hamburger menu or dropdown toggle for mobile if needed */}
+    </div>
   </header>
+  
 
 
   )
