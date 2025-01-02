@@ -16,7 +16,7 @@ const NonTechvideoSchema = new mongoose.Schema({
 
     userId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User', 
+        ref: 'User', // Reference to the user who uploaded the video
         
       }
 });

@@ -29,8 +29,8 @@ import Practiceinterview from './pages/Interviewsection/practiceinterviewanswer.
 import CheckAnswer from './pages/Interviewsection/CheckAnswer.jsx';
 
 
-
-
+import Dummynontech from './pages/nontechadminparts/Dummynontech.jsx';
+import Addsubtopicnontech from './pages/nontechadminparts/Addsubtopic.jsx';
 
   
    
@@ -78,6 +78,13 @@ createRoot(document.getElementById('root')).render(
         <Route   path='/practiceinterviewanswer' element={ <CheckAnswer/>  }  ></Route>
 
         <Route path="/seenontechcourse" element={<NontechSeeCoursePage />} />
+
+
+      
+        <Route path="/dummynontechcourse" element={<Dummynontech/>} />  
+        <Route path="/addnontechsub" element={  <Addsubtopicnontech/>} />
+
+
 
 
       </Routes>

@@ -6,7 +6,7 @@ import { TextGenerateEffect } from "../src/Components/components/ui/text-generat
 import GlowCursor from "../src/Components/GlowCursor.jsx";
 import "./App.css";
 import "./index.css";
-import './card.css';
+import "./card.css";
 
 import "./GradientBubbles.css";
 import React, { useEffect, useState } from "react";
@@ -607,43 +607,85 @@ function App() {
 					<GlowCursor>
 						<div className="flex flex-row  justify-evenly space-x-4 mt-24 ">
 							<div className=" bg-dark-500  ">
-								<h2 className="font-serif text-center ">
-									100+courses
-								</h2>
-								
+
+
+								<div class="outer-a">
+									<div className="dot-a"></div>
+									<div className="card-a">
+										<div className="ray-a"></div>
+										<div className="text-a">
+											750k
+										</div>
+										<div>
+											Views
+										</div>
+										<div className="line-a topl-a"></div>
+										<div className="line-a leftl-a"></div>
+										<div className="line-a bottoml-a"></div>
+										<div className="line-a rightl-a"></div>
+									</div>
+
+								</div>
+
+
 							</div>
 
 							<div>
-								<h2 className="font-serif text-center ">
-									500+ contributers
-								</h2>
-							
+							<div class="outer-a">
+									<div className="dot-a"></div>
+									<div className="card-a">
+										<div className="ray-a"></div>
+										<div className="text-a">
+											200+
+										</div>
+										<div>
+											courses
+										</div>
+										<div className="line-a topl-a"></div>
+										<div className="line-a leftl-a"></div>
+										<div className="line-a bottoml-a"></div>
+										<div className="line-a rightl-a"></div>
+									</div>
+
+								</div>
 							</div>
 
 							<div>
-								<h2 className="font-serif text-center ">
-									3000+ learns
-								</h2>
-								
+							<div class="outer-a">
+									<div className="dot-a"></div>
+									<div className="card-a">
+										<div className="ray-a"></div>
+										<div className="text-a">
+											30K
+										</div>
+										<div>
+											learners
+										</div>
+										<div className="line-a topl-a"></div>
+										<div className="line-a leftl-a"></div>
+										<div className="line-a bottoml-a"></div>
+										<div className="line-a rightl-a"></div>
+									</div>
+
+								</div>
 							</div>
 						</div>
 					</GlowCursor>
 				</div>
 
 				<div className="  flex  justify-center items-center p-6 mt-14 ">
-
 					<div class="cards">
 						<div className="card red">
 							<p className="tip">
-							        Web Roadmap
-							             </p>
-							            {/* <p className="second-text">
+								Web Roadmap
+							</p>
+							{/* <p className="second-text">
 							             Best Courses of Every contributer
 							            </p> */}
-						 </div>
+						</div>
 						<div className="card blue">
 							<p class="tip">
-							Blockchain
+								Blockchain
 							</p>
 							{/* <p className="second-text">
 							Best Courses of Every contributer
@@ -651,7 +693,7 @@ function App() {
 						</div>
 						<div className="card green">
 							<p class="tip">
-							Android Roadmap
+								Android Roadmap
 							</p>
 							{/* <p className="second-text">
 							Best Courses of Every contributer
@@ -660,24 +702,18 @@ function App() {
 
 						<div className="card blue">
 							<p class="tip">
-							Blockchain
+								Blockchain
 							</p>
 							{/* <p className="second-text">
 							Best Courses of Every contributer
 							</p> */}
 						</div>
-
 					</div>
 				</div>
 
-
-
-              <div className="bg-bg-dark mt-16">
-
-			  <Footer/>
-			  </div>
-            
-
+				<div className="bg-bg-dark mt-16">
+					<Footer />
+				</div>
 			</div>
 		</>
 	);

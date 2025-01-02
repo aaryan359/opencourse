@@ -1,8 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 import Cookies from 'js-cookie'
+
 const initialState = {
              
-    sighnupData: localStorage.getItem('signupData') ? JSON.parse(localStorage.getItem('signupData')) : null,
+        sighnupData: localStorage.getItem('signupData') ? JSON.parse(localStorage.getItem('signupData')) : null,
 
          loading:false,
          token: Cookies.get('accessToken') || null,
@@ -14,18 +15,20 @@ const authSlice  = createSlice({
           
     name: 'auth',
     initialState,
+
     reducers:{
              
                  setSignupData(state,action){
+
                          state.sighnupData = action.payload;
                  },
 
                  setLoading(state,action){
-                     
+                    
                      state.loading = action.payload;
                  },
-                 setToken(state,action){
-                     
+
+                 setToken(state,action){ 
                     state.token = action.payload;
                  },
                  logout(state) {
