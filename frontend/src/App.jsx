@@ -14,7 +14,11 @@ import React, { useEffect, useState } from "react";
 import SplashScreen from "../src/Components/SplashScreen.jsx";
 import Footer from "./Components/Footer.jsx";
 
+
+
+
 function App() {
+	
 	const [isSplashVisible, setSplashVisible] = useState(false);
 
 	const handleSplashComplete = () => {

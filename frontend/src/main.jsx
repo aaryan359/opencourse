@@ -6,12 +6,12 @@ import SignUp from './Authentication/SignUp.jsx';
 import './index.css'
 import Login from './Authentication/Login.jsx';
 import Admin from './pages/Admin.jsx';
-import NonTechAdmin from './pages/NonTechAdmin.jsx';
+
 import UserPanel from './pages/UserPanel.jsx';
 import Header from './Components/Header.jsx';
 import Interview from './pages/Interview.jsx';
 import InterviewPrep from './pages/InterviewPrep.jsx';
-import NontechSeeCoursePage from './pages/NontechSeeCoursePage.jsx';
+
 import { ToastContainer } from 'react-toastify';
 
 import { Provider, useSelector } from "react-redux";
@@ -62,7 +62,7 @@ createRoot(document.getElementById('root')).render(
   
         <Route path="/admin" element={<Admin />} />
 
-        <Route path="/nontech" element={<NonTechAdmin />} />
+      
         <Route path="/nontech/:fieldname" element={<TopicPage/>} /> 
         <Route path="/nontech/:fieldname/:topicname" element={  <SubTopicPage/> } />
 
@@ -75,12 +75,9 @@ createRoot(document.getElementById('root')).render(
         <Route path="/interviewprep/StartPrep" element={<StartPrep />} />
         <Route path="/interviewprep/GiveContest" element={<GiveContest />} />
         <Route path="/interviewprep/DailyGoals" element={<DailyGoals />} />
-        <Route   path='/practiceinterviewanswer' element={ <CheckAnswer/>  }  ></Route>
+        <Route path='/practiceinterviewanswer' element={ <CheckAnswer/>  }  ></Route>
 
-        <Route path="/seenontechcourse" element={<NontechSeeCoursePage />} />
-
-
-      
+        
         <Route path="/dummynontechcourse" element={<Dummynontech/>} />  
         <Route path="/addnontechsub" element={  <Addsubtopicnontech/>} />
 

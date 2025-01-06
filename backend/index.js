@@ -12,7 +12,7 @@ const Interviewroutes   = require('./routes/InterviewSectionRouting/InterviewRou
 
 const authMiddleware = require('./middlewares/authMiddlewares');
 
-const interviewRoutes = require('./routes/interviewRoutes')
+const interviewRoutes = require('./routes/Roadmap/interviewRoutes')
 
 require('./config/passport-setup'); // Import passport setup
 

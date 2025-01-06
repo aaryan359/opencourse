@@ -1,4 +1,4 @@
-const User = require('../models/User');
+const User = require('../models/TechSection/User');
 const jwt = require('jsonwebtoken');
 
 

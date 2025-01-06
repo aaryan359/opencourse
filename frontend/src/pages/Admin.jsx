@@ -117,8 +117,6 @@ function Admin() {
 
 
 
-
-
   const fetchFields = async () => {
     try {
       const response = await axios.get("http://localhost:5001/user/getfields");
