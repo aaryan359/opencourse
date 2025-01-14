@@ -2,6 +2,7 @@ import React, { useState,useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { FaChevronDown } from "react-icons/fa";
+import { CiCirclePlus } from "react-icons/ci";
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
@@ -78,7 +79,7 @@ const Addsubtopicnontech = () => {
         // Send API request to add subtopic contributions
         const response = await axios.post('http://localhost:5001/nontech/addNonTechSubtopic', payload, {
           headers: {
-            Authorization: Bearer `${token}`, // Include authentication token
+            Authorization: `Bearer ${token}`, // Include authentication token
           },
         });
   
@@ -119,19 +120,23 @@ const Addsubtopicnontech = () => {
       
   
     return (
+
+      <div className=' bg-bg-dark' >
       <div className="text-4xl pl-16 pr-16 w-[100%] mt-40">
-        <div className="flex flex-col justify-center">
+        <div className="flex flex-col items-center justify-center">
           {/* Section Header */}
           
             
-
-            <div >
+          <p className=' mt-4 mb-3  font-medium text-white'> Course Name : {field.branchname}</p>
+           
 
                  {/* form to add new subtopic */}
-                  <form onSubmit={handleSubmit} className="p-4  mt-5  bg-white rounded-lg shadow-md">
+                  <form onSubmit={handleSubmit} className="  w-[75%] bg-gray-800 border rounded-lg  shadow-md">
                  
-                        <div className=' flex flex-row  justify-between items-center  w-full p-2 border rounded-lg focus:outline-none focus:ring-2' ><h2 className="text-2xl font-bold mb-4"> Add New Subtopic</h2> <button type='button' onClick={ ()=>{setseefullform(!seefullform)}}><FaChevronDown /></button> </div> 
-                           { seefullform &&
+                    <div className=' flex flex-row p-2 pl-3   justify-between items-center  w-full   rounded-lg focus:outline-none focus:ring-2' >
+                                         <h2 className=" text-center text-xl text-white font-light  mb-2">Add New Subtopic</h2> 
+                                          <CiCirclePlus className=' hover:text-yellow-400 cursor-pointer mr-4 text-2xl text-white' onClick={ ()=>{setseefullform(!seefullform)}} /> 
+                          </div>   { seefullform &&
                            <div className="p-4 w-[100%] ">
                  
                          
@@ -139,7 +144,7 @@ const Addsubtopicnontech = () => {
                  
                          {/* Subtopic Input */}
                          <div className="mb-2">
-                           <label className="block text-lg font-medium mb-2">Add Subtopic</label>
+                           <label className="block text-white text-lg font-medium mb-2">Add Subtopic</label>
                            <input
                              type="text"
                              value={NonTechSubTopicname}
@@ -150,7 +155,7 @@ const Addsubtopicnontech = () => {
                          </div>
                  
                          {/* Video Title and URL Input */}
-                         <label className="block text-lg font-medium mb-2">Title and URL of Video</label>
+                         <label className="block text-lg text-white font-medium mb-2">Title and URL of Video</label>
                          {videos.map((video, index) => (
                            <div key={index} className="flex flex-col md:flex-row gap-4 mb-4">
                              {/* Video Title */}
@@ -183,7 +188,7 @@ const Addsubtopicnontech = () => {
                  
                          {/* Questions and Answers */}
                          <div className="mt-6">
-                           <label className="block text-xl font-medium mb-4">Upload Questions and Answers</label>
+                           <label className="block text-white text-xl font-medium mb-4">Upload Questions and Answers</label>
                            {qaPairs.map((qa, index) => (
 
                              <div key={index} className="flex flex-col md:flex-row gap-4 mb-4">
@@ -231,10 +236,9 @@ const Addsubtopicnontech = () => {
                  
                  </form>
 
-            </div>
 
             
-          <p className=' mt-4 font-semibold text-black'>Contribute in pre-existing subtopic with your own video</p>
+          <p className=' mt-4 mb-3 font-medium text-white'>Contribute in pre-existing subtopic with your own video</p>
   
           {/* Iterate over subtopics passed from state */}
           {field?.subtopic?.map(sub => (
@@ -247,6 +251,8 @@ const Addsubtopicnontech = () => {
 
           ))}
         </div>
+      </div>
+
       </div>
     );
   };

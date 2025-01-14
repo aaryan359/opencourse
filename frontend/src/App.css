@@ -2,11 +2,29 @@
     padding: 20px;
     margin: auto;
   }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  html, body {
+    height: 100%;
+  }
+
+  
+
+#root{
+  background-color: #0e0f1f;
+  height: 100%;
+  
+}
   
   h1 {
     font-family: 'Poppins', sans-serif;
     color: #4a56e2;
     text-align: center;
+    background-color: #ffffff0b;
   }
   
   button {

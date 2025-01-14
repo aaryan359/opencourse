@@ -101,8 +101,10 @@ const addNonTechSubtopic = async (req, res) => {
 
     // Check if the subtopic already exists (if valid ObjectId is provided)
     let subtopic;
+    console.log("NonTechSubTopicnameid:",NonTechSubTopicnameid);
     if (NonTechSubTopicnameid) {
-      subtopic = await NonTechFieldsub.findById(validSubTopicId);
+      subtopic = await NonTechFieldsub.findById(NonTechSubTopicnameid);
+      console.log("subtopic:",subtopic);
     }
             
       if (!subtopic) {
@@ -138,7 +140,9 @@ const addNonTechSubtopic = async (req, res) => {
               { new: true } // Returns the updated document
             );
           }
-      } else {
+      }
+
+      else {
 
         const videoIds = [];
         for (let i = 0; i < Videos.length; i++) {
@@ -155,15 +159,19 @@ const addNonTechSubtopic = async (req, res) => {
           videoIds.push(newVideo._id);
         }
           // Add new videos and QA pairs to the existing subtopic
-          let NonTechFieldsub = await NonTechFieldsub.findByIdAndUpdate(
+          let NonTechFieldsub1 = await NonTechFieldsub.findByIdAndUpdate(
             NonTechSubTopicnameid, 
-            { $push: { subtopic: { $each: videoIds } } },
+           
+            {  $push: { 
+              qaPairs: { $each: qaPair }, // Add QA pairs
+              nonTechvideo: { $each: videoIds } // Add videos
+            } },
             { new: true } // Returns the updated document
           );
+          console.log("nontopicsubtopicnamed:",NonTechFieldsub1);
       }
 
-      // Save the subtopic
-      await subtopic.save();
+      
 
       res.status(201).json({ success: true, message: 'Subtopic added successfully.', data: subtopic });
   } catch (error) {

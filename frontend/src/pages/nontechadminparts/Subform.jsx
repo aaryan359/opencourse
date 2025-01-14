@@ -2,6 +2,7 @@ import React, { useState,useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { FaChevronDown } from "react-icons/fa";
+import { CiCirclePlus } from "react-icons/ci";
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
@@ -11,7 +12,10 @@ import axios from 'axios';
 const  Subform = ({sub})=>{
 
            const { token } = useSelector((state) => state.auth);
-    const [NonTechSubTopicnameid, setSelectedSubtopicid] = useState(''); // ID of the selected subtopic
+           console.log("sub name is:",sub._id);
+           const NonTechSubTopicnameid = sub._id;
+           // ID of the selected subtopic
+    console.log("NonTechSubTopicnameid name is:",NonTechSubTopicnameid);
         const [qaPairs, setQAPairs] = useState([{ question: '', answer: '' }]); // Array for QA pairs
         const [videos, setVideos] = useState([{ title: '', url: '' }]); // Array for videos with title and URL
         const [seefullform2, setseefullform2] = useState(false); // Toggle visibility of the form
@@ -62,9 +66,10 @@ const  Subform = ({sub})=>{
                  const loadingToast = toast.loading('Uploading videos & QA...');
         try {
           // Send API request to add subtopic contributions
+          
           const response = await axios.post('http://localhost:5001/nontech/addNonTechSubtopic', payload, {
             headers: {
-              Authorization: Bearer `${token}`, // Include authentication token
+              Authorization: `Bearer ${token}`, // Include authentication token
             },
           });
     
@@ -79,7 +84,7 @@ const  Subform = ({sub})=>{
                         autoClose: 5000,
                       });
               setSelectedSubtopic('');
-            setSelectedSubtopicid('');
+             
             setVideos([{ title: '', url: '' }]);
             setQAPairs([{ question: '', answer: '' }]);
           }
@@ -99,29 +104,27 @@ const  Subform = ({sub})=>{
 
 
 
- <div  className="flex flex-col gap-4">
+ <div  className="flex flex-col w-[75%] mb-4 gap-4">
              
   
               {/* Form for adding video and QA contributions */}
               <form
                 onSubmit={(e) => {
-                  setSelectedSubtopicid(sub.id); // Set the ID of the subtopic before form submission
+                 
                   handleSubmit(e); // Handle form submission
                 }}
-                className=" w-[100%] bg-white mb-4 border rounded-lg "
+                className="  w-[100%] bg-gray-800 border rounded-lg  shadow-md"
               >
-                <div className="flex flex-row  justify-between items-center w-full p-2  rounded-lg">
-                  <h2 className="text-2xl font-bold mb-4">{sub.subtopicname}</h2>
-                  <button type="button" onClick={() => setseefullform2(!seefullform2)}>
-                    <FaChevronDown /> {/* Toggle full form visibility */}
-                  </button>
-                </div>
+                <div className=' flex flex-row p-2 pl-3   justify-between items-center  w-full   rounded-lg focus:outline-none focus:ring-2' >
+                                <h2 className=" text-center text-xl text-white font-light  mb-2">Subtopic Name : {sub.subtopicname}</h2> 
+                                <CiCirclePlus className=' hover:text-yellow-400 cursor-pointer mr-4 text-2xl text-white' onClick={ ()=>{setseefullform2(!seefullform2)}} /> 
+                   </div>
   
                 {/* Conditional rendering of the form */}
                 {seefullform2 && (
                   <div className="p-6 w-[100%]">
                     {/* Video Input Section */}
-                    <label className="block text-lg font-medium mb-2">Title and URL of Video</label>
+                    <label className="block text-white text-lg font-medium mb-2">Title and URL of Video</label>
                     {videos.map((video, index) => (
                       <div key={index} className="flex flex-col md:flex-row gap-4 mb-4">
                          {/* Video Title */}
@@ -155,7 +158,7 @@ const  Subform = ({sub})=>{
                  
                          {/* Questions and Answers */}
                          <div className="mt-6">
-                           <label className="block text-xl font-medium mb-4">Upload Questions and Answers</label>
+                           <label className="block text-white text-xl font-medium mb-4">Upload Questions and Answers</label>
                            {qaPairs.map((qa, index) => (
 
                              <div key={index} className="flex flex-col md:flex-row gap-4 mb-4">
@@ -198,7 +201,8 @@ const  Subform = ({sub})=>{
                   </div>
                 )}
               </form>
-            </div>
+
+      </div>
 
 
 

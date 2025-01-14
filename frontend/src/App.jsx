@@ -199,7 +199,7 @@ function App() {
 
 						{/* link for non tech contribution */}
 						<Link
-							to="/nontech"
+							to="/dummynontechcourse"
 							className="bg-blue-400 hover:bg-blue-300 text-black font-extrabold py-3 px-8 rounded-lg shadow-lg transition-transform transform hover:scale-105 hover:no-underline hover:text-gray-700 focus:outline-none active:bg-blue-300">
 							Non Tech
 						</Link>

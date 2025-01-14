@@ -2,6 +2,7 @@ import React, { useState,useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { FaChevronDown } from "react-icons/fa";
+import { CiCirclePlus } from "react-icons/ci";
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
@@ -86,7 +87,7 @@ const Dummynontech = () => {
       // Make the API request to the backend
       const response = await axios.post('http://localhost:5001/nontech/addnontechVideo', payload, {
         headers: {
-          Authorization: Bearer `${token}`, // Include the token in Authorization header
+          Authorization: `Bearer ${token}`, // Include the token in Authorization header
         },
       });
   
@@ -145,7 +146,9 @@ const Dummynontech = () => {
 
 
   return (
-    <div className="flex flex-col justify-center items-center mt-40">
+
+          <div className=' bg-bg-dark'>
+    <div className="flex flex-col   justify-center items-center mt-20  ">
 
           
 
@@ -155,29 +158,32 @@ const Dummynontech = () => {
 
 
       {/* Initialize new course */}
-      <form onSubmit={handleSubmit} className="p-6 w-[75%] bg-white rounded-lg shadow-md">
+      <form onSubmit={handleSubmit} className="  w-[75%] bg-gray-800 border rounded-lg  shadow-md">
 
-       <div className=' flex flex-row  justify-between items-center  w-full p-3 border rounded-lg focus:outline-none focus:ring-2' ><h2 className="text-2xl font-bold mb-4">Initialize course & Start contributing</h2> <button onClick={ ()=>{setseefullform(!seefullform)}}><FaChevronDown /></button> </div> 
+       <div className=' flex flex-row p-2 pl-3   justify-between items-center  w-full   rounded-lg focus:outline-none focus:ring-2' >
+                     <h2 className=" text-center text-xl text-white font-light  mb-2">Initialize course & Start contributing</h2> 
+                      <CiCirclePlus className=' hover:text-yellow-400 mr-4 text-2xl text-white' onClick={ ()=>{setseefullform(!seefullform)}} /> 
+      </div> 
           { seefullform &&
           <div className="p-6 w-[100%] ">
 
         
         {/* Category Name */}
-        <div className="mb-4">
-          <label className="block text-lg font-medium mb-2">Category Name</label>
+        <div className="mb-4  ">
+          <label className="block text-lg text-white font-medium mb-2">Category Name</label>
           <input
             type="text"
             value={NontechFieldname}
             onChange={(e) => setNontechFieldname(e.target.value)}
             placeholder="Enter Category Name"
-            className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+            className="w-full p-3   border  rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
             required
           />
         </div>
 
         {/* Course Name */}
         <div className="mb-4">
-          <label className="block text-lg font-medium mb-2">Course Name</label>
+          <label className="block text-white text-lg font-medium mb-2">Course Name</label>
           <input
             type="text"
             value={NontechBranchname}
@@ -190,7 +196,7 @@ const Dummynontech = () => {
 
         {/* Subtopic Input */}
         <div className="mb-4">
-          <label className="block text-lg font-medium mb-2">Add Subtopic</label>
+          <label className="block text-white text-lg font-medium mb-2">Add Subtopic</label>
           <input
             type="text"
             value={NonTechSubTopicname}
@@ -202,7 +208,7 @@ const Dummynontech = () => {
         </div>
 
         {/* Video Title and URL Input */}
-        <label className="block text-lg font-medium mb-2">Title and URL of Video</label>
+        <label className="block text-lg font-medium text-white mb-2">Title and URL of Video</label>
         {videos.map((video, index) => (
           <div key={index} className="flex flex-col md:flex-row gap-4 mb-4">
             {/* Video Title */}
@@ -235,7 +241,7 @@ const Dummynontech = () => {
 
         {/* Questions and Answers */}
         <div className="mt-6">
-          <label className="block text-xl font-medium mb-4">Upload Questions and Answers</label>
+          <label className="block text-xl text-white font-medium mb-4">Upload Questions and Answers</label>
           {qaPairs.map((qa, index) => (
             <div key={index} className="flex flex-col md:flex-row gap-4 mb-4">
               <input
@@ -290,9 +296,10 @@ const Dummynontech = () => {
       {courses.map((course) => (
         <EducationCardnon field={course} key={course._id} />
       ))}
+        </div>
+
+
     </div>
-
-
     </div>
   );
 };
