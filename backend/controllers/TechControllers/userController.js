@@ -1,6 +1,6 @@
-const User = require('../models/TechSection/User');
+const User = require('../../models/TechSection/User');
 
-const bcrypt = require('bcryptjs');
+const bcrypt = require('bcrypt');
 
 const jwt = require('jsonwebtoken');
 
@@ -28,12 +28,15 @@ const generateAccessAndRefreshTokens = async (userId) => {
 
 // Register a new user
 // tested api
+
 const registerUser = async (req, res) => {
   const { username, email, password, expertise, experience, portfolio } = req.body;
 
   try {
+
     // Check if user already exists
     const existingUser = await User.findOne({ email });
+
     
     if (existingUser) {
       return res.status(400).json({ error: 'User already exists with this email' });
@@ -41,7 +44,9 @@ const registerUser = async (req, res) => {
 
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
+   
 
+     
     // Create new user
     const user = new User({
       username,
@@ -55,19 +60,23 @@ const registerUser = async (req, res) => {
     // Save the user to the database
     await user.save();
 
+ 
 
     // Generate JWT token
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1d' });
+    const token = jwt.sign(
+      { id: user._id },
+       process.env.JWT_SECRET,
+        { expiresIn: '1d' });
 
+       
     // Send token to client
     res.status(201).json({ token });
+
 
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
-
-
 
 
 
@@ -77,9 +86,13 @@ const loginUser = async (req, res) => {
 
   const { email, password } = req.body;
 
+
+  
   try {
     // Find user by email
     const user = await User.findOne({ email });
+
+
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }

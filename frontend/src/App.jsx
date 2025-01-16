@@ -203,7 +203,7 @@ function App() {
 
 						{/* link for non tech contribution */}
 						<Link
-							to="/nontech"
+							to="/dummynontechcourse"
 							className="bg-blue-400 hover:bg-blue-300 text-black font-extrabold py-3 px-8 rounded-lg shadow-lg transition-transform transform hover:scale-105 hover:no-underline hover:text-gray-700 focus:outline-none active:bg-blue-300">
 							Non Tech
 						</Link>
@@ -228,9 +228,15 @@ function App() {
 							</p>
 
 							<div className="flex flex-row justify-start items-center text-white bg-pink-600 p-1 m-1 rounded-lg hover:scale-105 cursor-pointer duration-200">
-								<span className=" font-semibold ">
+							   
+								<span className=" font-semibold text-white  text-lg no-underline p-1">
+								<Link to='/admin'
+								className="no-underline">
 									Contribute
+							    </Link>
+									
 								</span>
+								
 
 								<span className=" font-semibold ">
 									<FaArrowRight />
@@ -254,8 +260,11 @@ function App() {
 							</p>
 
 							<div className="flex flex-row justify-start items-center text-white bg-pink-600 p-1 m-1 rounded-lg hover:scale-105 cursor-pointer duration-200">
-								<span className=" font-semibold ">
+								<span className="  font-semibold text-white  text-lg no-underline p-1">
+								<Link to='/admin'
+								className="no-underline">
 									Contribute
+							    </Link>
 								</span>
 
 								<span className=" font-semibold ">
@@ -282,8 +291,11 @@ function App() {
 							</p>
 
 							<div className="flex flex-row justify-start items-center text-white bg-pink-600 p-1 m-1 rounded-lg hover:scale-105 cursor-pointer duration-200">
-								<span className=" font-semibold ">
+								<span className="  font-semibold text-white  text-lg no-underline p-1">
+								<Link to='/admin'
+								className="no-underline">
 									Contribute
+							    </Link>
 								</span>
 
 								<span className=" font-semibold ">
@@ -307,8 +319,11 @@ function App() {
 							</p>
 
 							<div className="flex flex-row justify-start items-center text-white bg-pink-600 p-1 m-1 rounded-lg hover:scale-105 cursor-pointer duration-200">
-								<span className=" font-semibold ">
+								<span className="  font-semibold text-white  text-lg no-underline p-1">
+								<Link to='/admin'
+								className="no-underline">
 									Contribute
+							    </Link>
 								</span>
 
 								<span className=" font-semibold ">
@@ -330,8 +345,11 @@ function App() {
 								What is Python?
 							</p>
 							<div className="flex flex-row justify-start items-center text-white bg-pink-600 p-1 m-1 rounded-lg hover:scale-105 cursor-pointer duration-200">
-								<span className=" font-semibold ">
+								<span className="  font-semibold text-white  text-lg no-underline p-1">
+								<Link to='/admin'
+								className="no-underline">
 									Contribute
+							    </Link>
 								</span>
 
 								<span className=" font-semibold ">
@@ -354,8 +372,11 @@ function App() {
 							</p>
 
 							<div className="flex flex-row justify-start items-center text-white bg-pink-600 p-1 m-1 rounded-lg hover:scale-105 cursor-pointer duration-200">
-								<span className=" font-semibold ">
+								<span className="  font-semibold text-white  text-lg no-underline p-1">
+								<Link to='/admin'
+								className="no-underline">
 									Contribute
+							    </Link>
 								</span>
 
 								<span className=" font-semibold ">
@@ -425,7 +446,7 @@ function App() {
 
 									{/* link for non tech contribution */}
 									<Link
-										to="/seenontechcourse"
+										to="/dummynontechcourse"
 										className="bg-blue-400 hover:bg-blue-300 text-black font-extrabold py-3 px-8 rounded-lg shadow-lg transition-transform transform hover:scale-105 hover:no-underline hover:text-gray-700 focus:outline-none active:bg-blue-300">
 										NonTech
 									</Link>
@@ -439,7 +460,7 @@ function App() {
 									/>
 								</div>
 								<h6 className="text-gray-50">
-									70,000+
+									7000+
 									Happy
 									Students
 								</h6>
@@ -484,7 +505,7 @@ function App() {
 				</div>
 
 				<div className="flex  flex-row   mt-24 justify-center items-center  p-8  ">
-					<div className=" w-[70%]  flex flex-row justify-center items-center gap-6">
+					<div className=" w-[60%]  flex flex-row justify-center items-center gap-6">
 						{/* link for the interview contribute section  */}
 						<div className="group cursor-pointer bg-[#fa6b6b33] hover:bg-[#f38383cc]  w-[45%] mb-12 flex flex-col justify-evenly items-start opacity-80 text-white py-6 px-6 gap-4 rounded-xl  hover:scale-105 duration-300 hover:no-underline focus:outline-none">
 							<span className=" flex justify-start items-start relative ">
@@ -546,7 +567,7 @@ function App() {
 						</div>
 
 						{/* link for the interview practice section  */}
-						<div className=" group bg-[#54d38e33] cursor-pointer   w-[45%] mb-12 flex flex-col justify-evenly items-start  opacity-90 text-gray-50 py-6 px-6 gap-4 rounded-xl hover:bg-[#4b8a67] hover:scale-105 duration-300 hover:no-underline focus:outline-none">
+						<div className=" group bg-[#54d38e33] cursor-pointer   w-[50%] mb-12 flex flex-col justify-evenly items-start  opacity-90 text-gray-50 py-6 px-6 gap-4 rounded-xl hover:bg-[#4b8a67] hover:scale-105 duration-300 hover:no-underline focus:outline-none">
 							<span className=" flex justify-start items-start relative ">
 								<svg
 									width="54"
@@ -617,10 +638,10 @@ function App() {
 									<div className="dot-a"></div>
 									<div className="card-a">
 										<div className="ray-a"></div>
-										<div className="text-a">
+										<div className="text-a text-4xl">
 											750k
 										</div>
-										<div>
+										<div className="text-2xl">
 											Views
 										</div>
 										<div className="line-a topl-a"></div>
@@ -639,10 +660,10 @@ function App() {
 									<div className="dot-a"></div>
 									<div className="card-a">
 										<div className="ray-a"></div>
-										<div className="text-a">
+										<div className="text-a text-4xl">
 											200+
 										</div>
-										<div>
+										<div className="text-2xl">
 											courses
 										</div>
 										<div className="line-a topl-a"></div>
@@ -659,10 +680,10 @@ function App() {
 									<div className="dot-a"></div>
 									<div className="card-a">
 										<div className="ray-a"></div>
-										<div className="text-a">
+										<div className="text-a text-4xl">
 											30K
 										</div>
-										<div>
+										<div className="text-">
 											learners
 										</div>
 										<div className="line-a topl-a"></div>

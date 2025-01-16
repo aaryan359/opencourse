@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { useSelector } from "react-redux";
+
 
 function Admin() {
   const [fields, setFields] = useState([]);
@@ -23,10 +25,7 @@ function Admin() {
     description: ""
   });
 
-
-
-  
-
+  const { token } = useSelector((state) => state.auth);
 
 
   const predefinedFields = [
@@ -113,13 +112,18 @@ function Admin() {
   // Fetch all fields with topics and videos
   useEffect(() => {
     fetchFields();
+    fetchvideos();
   }, []);
 
 
 
   const fetchFields = async () => {
     try {
-      const response = await axios.get("http://localhost:5001/user/getfields");
+      const response = await axios.get("http://localhost:5001/user/getfields",{
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       const data = response.data;
 
       setFields(data); // Store full field objects
@@ -133,26 +137,48 @@ function Admin() {
         }));
       });
       setTopics(topicsMap);
-
-      console.log("complete data is",data);
-
-
-      // Fetch user videos and set them
-      const videoList = data.flatMap(field =>
-        field.subtopic.flatMap(sub => sub.videos.map(video => ({
-          title: video.title,
-          field: field.name,
-          url:video.url
-        })))
-      );
-      console.log("video map is",videoList);
-      setMyVideos(videoList);
+     
+      // // Fetch user videos and set them
+      // const videoList = data.flatMap(field =>
+      //   field.subtopic.flatMap(sub => sub.videos.map(video => ({
+      //     title: video.title,
+      //     field: field.name,
+      //     url:video.url
+      //   })))
+      // );
+     
+      // setMyVideos(videoList);
 
     } catch (error) {
       console.error("Failed to fetch fields", error);
     }
   };
 
+  const fetchvideos = async()=>{
+    try {
+      const response = await axios.get("http://localhost:5001/user/getvideos",{
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const Videos = response.data;
+
+    //  Fetch user videos and set them
+    const videoList = Videos.map(video => ({
+      title: video.title,
+      url: video.url,
+      description: video.description,
+      createdAt: video.createdAt,
+    }));
+    console.log("Video list is",videoList);
+     
+      setMyVideos(videoList);
+      console.log(" videos is ",Videos);
+
+    } catch (error) {
+      console.error("Failed to fetch fields", error);
+    }
+  }
 
 
 
@@ -206,8 +232,8 @@ function Admin() {
 
 
           // Only log selectedField._id
-      //console.log("Field ID is:", selectedField._id);
-      
+         //console.log("Field ID is:", selectedField._id);
+       
       try {
         const response = await axios.post(`http://localhost:5001/user/fields/${selectedField._id}/subtopics`, {
           subtopicName: newTopic.trim()
@@ -243,9 +269,6 @@ function Admin() {
   
 
 
-
-
-
   const handleUploadVideo = (topic) => {
     setSelectedTopic(topic); // Open form for the selected topic
   };
@@ -265,8 +288,14 @@ function Admin() {
     if (title && url && description && selectedTopic) {
       try {
         const response = await axios.post(
-          `http://localhost:5001/user/subtopics/${selectedTopic.id}/videos`, // Use selectedTopic.id here
-          { title, url, description }
+          `http://localhost:5001/user/subtopics/${selectedTopic.id}/videos`,
+           // Use selectedTopic.id here
+          { title, url, description },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            }, 
+          }
         );
   
         if (response.status === 200) {

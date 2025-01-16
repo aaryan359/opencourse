@@ -8,10 +8,10 @@ const subTopicSchema = new mongoose.Schema({
   },
   videos: [{
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Video' // Reference to the Video model
+    ref: 'Video' 
   }]
 });
 
-const SubTopic = mongoose.model("SubTopic", subTopicSchema); // Ensure "SubTopic" is registered
+const SubTopic = mongoose.model("SubTopic", subTopicSchema); 
 
 module.exports = SubTopic;

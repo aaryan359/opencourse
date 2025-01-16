@@ -1,13 +1,47 @@
-const Field = require('../models/Field');
-const SubTopic = require('../models/Topics');
-const Video = require('../models/Video');
-const User = require('../models/User')
+const Field = require('../../models/TechSection/Field');
+const SubTopic = require('../../models/TechSection/Topics');
+const Video = require('../../models/TechSection/Video');
+const User = require('../../models/TechSection/User')
+
+
+
+
+const getUserVideos = async (req, res) => {
+  try {
+    // Get the authenticated user's ID from the request
+    const userId = req.user._id;
+    console.log("User ID from middleware:", userId);
+
+    // Fetch the user and populate the 'videos' field
+    const user = await User.findById(userId)
+      .populate({
+        path: 'videos',  // Ensure this path corresponds to the 'videos' field in the user model
+        select: 'title url description createdAt',  // Include specific fields from the Video schema
+      })
+      .lean();  // Use .lean() if you don't need Mongoose documents, this can improve performance
+      
+    // Check if user exists
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    // Return the populated videos associated with the user
+    return res.json({
+      videos: user.videos || [],  // Handle the case when there are no videos
+    });
+  } catch (error) {
+    console.error('Error fetching user videos:', error);
+    return res.status(500).json({ error: 'Failed to fetch user videos' });
+  }
+};
 
 
 
 
 const getFields = async (req, res) => {
   try {
+       
+    // const userId = req.user._id;
 
     // Fetch the fields without populate first
     const fields = await Field.find();
@@ -44,6 +78,8 @@ const getFields = async (req, res) => {
 const addField = async (req, res) => {
 
   const { name } = req.body;
+  
+
 
   // Validate input: check if name is provided
   if (!name || name.trim() === "") {
@@ -141,8 +177,10 @@ const addSubtopic = async (req, res) => {
 //tested
 const addVideoToSubtopic = async (req, res) => {
   const { subtopicId } = req.params;
-  const { title, url, description, userId } = req.body; // Add userId to body if needed
+  const { title, url, description } = req.body; // Add userId to body if needed
 
+    const userId = req.user._id;
+   
   try {
     // Find the subtopic by ID and populate its videos
     const subtopic = await SubTopic.findById(subtopicId).populate('videos');
@@ -160,7 +198,7 @@ const addVideoToSubtopic = async (req, res) => {
       title,
       url,
       description,
-      // userId, // Uncomment if you pass userId from the body
+      userId, 
     });
 
     // Save the video
@@ -253,6 +291,7 @@ module.exports = {
   addField,
   addSubtopic,
   addVideoToSubtopic,
-  getVideosBySubtopic
+  getVideosBySubtopic,
+  getUserVideos
 };
 

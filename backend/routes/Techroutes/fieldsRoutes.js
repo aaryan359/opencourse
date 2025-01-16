@@ -1,20 +1,23 @@
 const express = require('express');
-const { getFields, addField, addSubtopic, addVideoToSubtopic ,getVideosBySubtopic} = require('../controllers/fieldController');
+const { getFields, addField, addSubtopic, addVideoToSubtopic ,getVideosBySubtopic,getUserVideos} = require('../../controllers/TechControllers/fieldController');
 const router = express.Router();
 
-const { verifyJWT} = require("../middlewares/authMiddlewares")
+const { verifyJWT} = require("../../middlewares/authMiddlewares")
 
 // Get all fields with subtopics and videos
 router.get('/getfields', getFields);
 
+// get all videos by user
+router.get('/getvideos',verifyJWT, getUserVideos);
+
 // Add a new field
-router.post('/fields',addField);
+router.post('/fields', verifyJWT , addField);
 
 // Add a new subtopic to a specific field
-router.post('/fields/:fieldId/subtopics', addSubtopic);
+router.post('/fields/:fieldId/subtopics',  addSubtopic);
 
 // Add a new video to a specific subtopic
-router.post('/subtopics/:subtopicId/videos',addVideoToSubtopic);
+router.post('/subtopics/:subtopicId/videos',verifyJWT,addVideoToSubtopic);
 
 
 // Get all the videos of particular field with his particular topic like webde then select css and more topic and get all the videos on that topic 

@@ -1,5 +1,5 @@
 const express = require('express');
-const { registerUser, loginUser, getUserProfile } = require('../controllers/userController');
+const { registerUser, loginUser, getUserProfile } = require('../controllers/TechControllers/userController');
 
 const {verifyJWT} = require('../middlewares/authMiddlewares');
 

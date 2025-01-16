@@ -88,30 +88,7 @@
     border-left: 3px solid #4a56e2;
     border-radius: 5px;
   }
-  button {
-  background: linear-gradient(135deg, #42a5f5, #4a56e2) !important;
-  color: white !important;
-  font-size: 16px !important  ;
-  font-weight: bold !important;
-  padding: 12px 24px !important;
-  border: none !important;
-  border-radius: 50px !important;
-  cursor: pointer !important;
-  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1) !important;
-  transition: transform 0.3s ease, box-shadow 0.3s ease !important;
-  display: inline-block !important;
-  text-align: center !important  ;
-}
 
-button:hover {
-  transform: scale(1.05) !important;
-  box-shadow: 0 12px 20px rgba(0, 0, 0, 0.2) !important;
-  background: linear-gradient(135deg, #4a56e2, #42a5f5) !important; /* Reverse gradient on hover */
-}
-
-button:focus {
-  outline: none !important;
-}
 
 .flex {
   display: flex;

@@ -3,7 +3,7 @@ import Cookies from 'js-cookie'
 
 const initialState = {
              
-        sighnupData: localStorage.getItem('signupData') ? JSON.parse(localStorage.getItem('signupData')) : null,
+         sighnupData: localStorage.getItem('signupData') ? JSON.parse(localStorage.getItem('signupData')) : null,
 
          loading:false,
          token: Cookies.get('accessToken') || null,

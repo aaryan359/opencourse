@@ -7,27 +7,41 @@ const userSchema = new mongoose.Schema({
 
   username: {
     type: String,
-    required: true,
+    required: [true, "Username is required"],
     trim: true,
+    maxlength: [50, "Username cannot exceed 50 characters"],
   },
 
   email: {
     type: String,
-    required: true,
-    trim: true,
-    unique: true, 
+      required: [true, "Email is required"],
+      trim: true,
+      unique: true,
+      match: [/^\S+@\S+\.\S+$/, "Please use a valid email address"],
   },
 
   password: { 
     type: String,
-    required: [true, "Password is necessary"], 
+      required: [true, "Password is required"],
+      minlength: [8, "Password must be at least 8 characters long"], 
   },
 
-  expertise: String,
+  expertise: {
+    type: String,
+    trim: true,
+  },
+ 
 
-  experience: String,
+  experience: { 
+    type: String,
+    trim: true,
+  },
 
-  portfolio: String,
+
+  portfolio: {
+    type: String,
+    trim: true,
+  },
   
 
   googleId: String, // For Google OAuth
@@ -36,14 +50,14 @@ const userSchema = new mongoose.Schema({
   // Videos that the user has uploaded
   videos: [{
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Video', // Reference to Video model
+    ref: 'Video', 
   }],
 
 
   // Fields that the user is associated with
   fields: [{
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Field', // Reference to Field model
+    ref: 'Field', 
   }],
 
 
@@ -54,7 +68,6 @@ interview:[
     ref:'Interview'
   }
 ]
-  
   
 
 });

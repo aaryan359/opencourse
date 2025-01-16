@@ -6,10 +6,8 @@ const UserPanel = () => {
 
   // Store fields and subtopics
   const [fieldData, setFieldData] = useState([]); 
-
   // Track selected field
   const [selectedField, setSelectedField] = useState(null); 
-
    // Track selected subtopic
   const [selectedSubtopic, setSelectedSubtopic] = useState(null); 
 
@@ -36,10 +34,6 @@ const UserPanel = () => {
   }, []);
 
 
-
-
-  // Fetch videos for the selected subtopic
-
   const fetchVideosForSubtopic = async (fieldId, subtopicName) => {
 
     console.log("field id and subtopic name is",fieldId,subtopicName);
@@ -55,11 +49,6 @@ const UserPanel = () => {
       console.error('Error fetching videos:', error);
     }
   };
-
-
-    console.log(" video according to subtopic",videos)
-
-
 
   const handleFieldSelect = (field) => {
 
@@ -86,11 +75,10 @@ const UserPanel = () => {
 
 
   return (
-    <div className="container mx-auto p-6 bg-gray-50 min-h-screen">
-      <h1 className="text-4xl font-bold text-center text-gray-800 mb-8">Explore Tech Courses</h1>
-
+    <div className="container mx-auto p-10  min-h-screen flex justify-between bg-bg-dark">
+      
       {/* Field Selection */}
-      <div className="mb-6 text-center">
+      <div className="mb-6 text-center  ">
         {fieldData.map((field) => (
           <button
             key={field._id}
@@ -102,10 +90,11 @@ const UserPanel = () => {
         ))}
       </div>
 
+
       {/* Roadmap Section */}
       {selectedField && (
-        <div className="mb-8">
-          <h2 className="text-2xl font-semibold mb-4 text-gray-800">Course Roadmap for {selectedField.name}</h2>
+        <div className="mb-8 mr-28">
+          <h2 className="text-2xl font-semibold mb-4 text-gray-200">Course Roadmap for {selectedField.name}</h2>
 
           <Timeline1  data={selectedField.subtopic.map((subtopic) => subtopic.name)} onSubtopicClick={handleSubtopicSelect} />
         </div>
@@ -116,7 +105,7 @@ const UserPanel = () => {
         {selectedSubtopic && (
             <div className="mb-8">
 
-              <h3 className="text-2xl font-semibold mb-4 text-gray-800">Videos for {selectedSubtopic}</h3>
+              <h3 className="text-2xl font-semibold mb-4 text-gray-200">Videos for {selectedSubtopic}</h3>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
 
