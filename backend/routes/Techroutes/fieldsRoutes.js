@@ -11,7 +11,7 @@ router.get('/getfields', getFields);
 router.get('/getvideos',verifyJWT, getUserVideos);
 
 // Add a new field
-router.post('/fields', verifyJWT , addField);
+router.post('/fields' , addField);
 
 // Add a new subtopic to a specific field
 router.post('/fields/:fieldId/subtopics',  addSubtopic);

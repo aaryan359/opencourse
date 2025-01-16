@@ -6,6 +6,8 @@ import SignUp from './Authentication/SignUp.jsx';
 import './index.css'
 import Login from './Authentication/Login.jsx';
 import Admin from './pages/Admin.jsx';
+import About from './pages/About/About.jsx';
+import ComingSoon from './pages/Community/ComingSoon.jsx';
 
 import UserPanel from './pages/UserPanel.jsx';
 import Header from './Components/Header.jsx';
@@ -61,6 +63,9 @@ createRoot(document.getElementById('root')).render(
         <Route path="/login" element={<Login />} />
   
         <Route path="/admin" element={<Admin />} />
+
+        <Route path='/about' element={<About />}/>
+        <Route path='/community' element={<ComingSoon/>} />
 
       
         <Route path="/nontech/:fieldname" element={<TopicPage/>} /> 

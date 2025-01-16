@@ -75,30 +75,39 @@ function Header() {
   
     {/* Navigation Links */}
     <nav className="hidden md:flex space-x-6">
+
       <Link 
         to="/#"
         className="text-xl font-bold no-underline text-gray-300 hover:text-white hover:underline transition-colors hover:scale-105 duration-150"
       >
         Roadmap
       </Link>
+
+
       <Link 
-        to="/#"
+        to="/InterviewPrep"
         className="text-xl font-bold no-underline text-gray-300 hover:text-white hover:underline transition-colors hover:scale-105 duration-150"
       >
         Interview
       </Link>
+
+
       <Link 
-        to="/#"
+        to="/about"
         className="text-xl font-bold no-underline text-gray-300 hover:text-white hover:underline transition-colors hover:scale-105 duration-150"
       >
         About Us
       </Link>
+
+
       <Link 
-        to="/#"
+        to="/community"
         className="text-xl font-bold no-underline text-gray-300 hover:text-white hover:underline transition-colors duration-150"
       >
         Community
       </Link>
+
+
     </nav>
   
     {/* Sign Up and Login Buttons */}

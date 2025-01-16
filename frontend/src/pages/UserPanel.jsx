@@ -75,10 +75,10 @@ const UserPanel = () => {
 
 
   return (
-    <div className="container mx-auto p-10  min-h-screen flex justify-between bg-bg-dark">
+    <div className="container mx-auto p-10  min-h-screen  bg-bg-dark">
       
       {/* Field Selection */}
-      <div className="mb-6 text-center  ">
+      <div className="mb-6 text-start  ">
         {fieldData.map((field) => (
           <button
             key={field._id}
@@ -92,6 +92,7 @@ const UserPanel = () => {
 
 
       {/* Roadmap Section */}
+      <div className='flex-row'>
       {selectedField && (
         <div className="mb-8 mr-28">
           <h2 className="text-2xl font-semibold mb-4 text-gray-200">Course Roadmap for {selectedField.name}</h2>
@@ -101,7 +102,6 @@ const UserPanel = () => {
       )}
 
       {/* Videos Section */}
-     
         {selectedSubtopic && (
             <div className="mb-8">
 
@@ -130,6 +130,7 @@ const UserPanel = () => {
               </div>
             </div>
           )}
+       </div>
       
     </div>
   );

@@ -131,7 +131,6 @@ function Admin() {
 
       data.forEach(field => {
         topicsMap[field.name] = field.subtopic.map(sub => ({
-          
           name: sub.name,
           id: sub._id // Store subtopicId
         }));
@@ -154,6 +153,7 @@ function Admin() {
     }
   };
 
+
   const fetchvideos = async()=>{
     try {
       const response = await axios.get("http://localhost:5001/user/getvideos",{
@@ -161,7 +161,8 @@ function Admin() {
           Authorization: `Bearer ${token}`,
         },
       });
-      const Videos = response.data;
+      const Videos = response.data.videos;
+      console.log(" vides form user is",Videos);
 
     //  Fetch user videos and set them
     const videoList = Videos.map(video => ({
@@ -203,6 +204,7 @@ function Admin() {
         });
 
         const data = response.data;
+        console.log(" field data is",data);
         setFields([...fields, data]); // Add full field object
         setTopics({ ...topics, [newField]: [] });
         setNewField(""); // Reset the input
