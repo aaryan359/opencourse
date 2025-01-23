@@ -23,6 +23,4 @@ router.post('/login', loginUser);
 router.get('/profile', verifyJWT, getUserProfile);
 
 
-
-
 module.exports = router;

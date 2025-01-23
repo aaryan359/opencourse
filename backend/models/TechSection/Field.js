@@ -13,7 +13,12 @@ const fieldSchema = new mongoose.Schema({
       type: mongoose.Schema.Types.ObjectId, 
       ref: 'SubTopic', 
     }
-  ]
+  ],
+  userId: {
+         type: mongoose.Schema.Types.ObjectId,
+         ref: 'User', 
+         
+       }
 });
 
 const Field = mongoose.model("Field", fieldSchema);

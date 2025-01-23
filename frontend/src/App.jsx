@@ -126,7 +126,7 @@ function App() {
 								{" "}
 								Contribute
 							</span>
-							<br />
+							
 						</h1>
 
 						<h1 className="text-7xl font-extrabold mb-4 mt-2 text-start">
@@ -135,7 +135,7 @@ function App() {
 							</span>
 						</h1>
 
-						<br />
+						
 						<p className="text-lg font-semibold font-sans ">
 							<TextGenerateEffect
 								words={
@@ -153,15 +153,15 @@ function App() {
 
 						<div className="flex justify-start items-start p-5">
 							<Link
-								to="/admin"
+								to="/userpanel"
 								className="bg-c_tech_color hover:bg-pink-300 text-black font-extrabold py-3 pl-24 px-8 rounded-lg shadow-lg transition-transform transform hover:scale-105 hover:no-underline hover:text-gray-700 focus:outline-none active:bg-c_tech_color">
-								Contribute
+								Tech Courses
 							</Link>
 
 							<Link
 								to="/userpanel"
 								className="bg-blue-400 hover:bg-blue-300 text-black font-extrabold py-3 px-8 rounded-lg shadow-lg transition-transform transform hover:scale-105 hover:no-underline hover:text-gray-700 focus:outline-none active:bg-blue-300">
-								Courses
+								Non Tech Courses
 							</Link>
 						</div>
 					</div>
@@ -205,10 +205,13 @@ function App() {
 						<Link
 							to="/dummynontechcourse"
 							className="bg-blue-400 hover:bg-blue-300 text-black font-extrabold py-3 px-8 rounded-lg shadow-lg transition-transform transform hover:scale-105 hover:no-underline hover:text-gray-700 focus:outline-none active:bg-blue-300">
-							Non Tech
+							Non Tech 
 						</Link>
 					</div>
 				</div>
+
+
+
 
 				<div className="overflow-x-auto scrollbar-hide">
 					<div className="flex justify-start items-start space-x-4 p-6 ml-16 w-max  ">
@@ -227,11 +230,15 @@ function App() {
 								JavaScript?
 							</p>
 
-							<div className="flex flex-row justify-start items-center text-white bg-pink-600 p-1 m-1 rounded-lg hover:scale-105 cursor-pointer duration-200">
+							<div className="flex flex-row justify-start items-center text-white bg-pink-600 p-1 m-1 rounded-lg hover:scale-105 cursor-pointer duration-200"
+							style={{ textDecoration: 'none' }}>
 							   
-								<span className=" font-semibold text-white  text-lg no-underline p-1">
+								<span className=" font-semibold text-white  text-lg no-underline p-1"
+								style={{ textDecoration: 'none' }}
+								>
 								<Link to='/admin'
-								className="no-underline">
+								className="no-underline"
+								style={{ textDecoration: 'none' }} >
 									Contribute
 							    </Link>
 									
@@ -259,10 +266,10 @@ function App() {
 								What is Python?
 							</p>
 
-							<div className="flex flex-row justify-start items-center text-white bg-pink-600 p-1 m-1 rounded-lg hover:scale-105 cursor-pointer duration-200">
+							<div className="flex flex-row justify-start items-center text-white bg-pink-600 p-1 m-1 rounded-lg hover:scale-105 cursor-pointer hover:text-gray-200 duration-200 no-underline">
 								<span className="  font-semibold text-white  text-lg no-underline p-1">
 								<Link to='/admin'
-								className="no-underline">
+								className="no-underline text-gray-200 hover:text-light-200">
 									Contribute
 							    </Link>
 								</span>
@@ -347,7 +354,8 @@ function App() {
 							<div className="flex flex-row justify-start items-center text-white bg-pink-600 p-1 m-1 rounded-lg hover:scale-105 cursor-pointer duration-200">
 								<span className="  font-semibold text-white  text-lg no-underline p-1">
 								<Link to='/admin'
-								className="no-underline">
+								className="no-underline"
+								style={{ textDecoration: 'none' }} >
 									Contribute
 							    </Link>
 								</span>
@@ -374,7 +382,8 @@ function App() {
 							<div className="flex flex-row justify-start items-center text-white bg-pink-600 p-1 m-1 rounded-lg hover:scale-105 cursor-pointer duration-200">
 								<span className="  font-semibold text-white  text-lg no-underline p-1">
 								<Link to='/admin'
-								className="no-underline">
+								className="no-underline"
+								style={{ textDecoration: 'none' }} >
 									Contribute
 							    </Link>
 								</span>
@@ -420,7 +429,7 @@ function App() {
 									OpenCourse
 								</h2>
 
-								<p className="font-semibold text-gray-100 text-end mr-1">
+								<p className="font-semibold text-gray-100 dark:text-light-50 text-end mr-1">
 									<TextGenerateEffect
 										words={
 											"Master the art of coding, tackle real-world problems, and transform ideas into innovative solutions."
@@ -627,6 +636,7 @@ function App() {
 						</div>
 					</div>
 				</div>
+{/* 
 
 				<div className="bg-bg-dark mt-10  w-[88%] h-[300px] ml-20 text-gray-100  flex justify-center items-center  rounded-3xl z-50  ">
 					<GlowCursor>
@@ -697,6 +707,8 @@ function App() {
 						</div>
 					</GlowCursor>
 				</div>
+ */}
+
 
 				<div className="  flex  justify-center items-center p-6 mt-14 ">
 					<div class="cards">

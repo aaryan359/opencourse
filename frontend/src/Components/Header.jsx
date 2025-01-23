@@ -20,13 +20,18 @@ function Header() {
   const verifyAccessToken = (token)=>{
               
     try {
-      const decoded = jwtDecode(token); // Decode the token
-      const currentTime = Math.floor(Date.now() / 1000); // Current time in seconds
+      // Decode the token
+      const decoded = jwtDecode(token); 
+
+
+      // Current time in seconds
+      const currentTime = Math.floor(Date.now() / 1000); 
 
       if (decoded.exp < currentTime) {
              
             setisexpired(true);
-               dispatch(logout()) ; // Logout if the token is expired
+            // Logout if the token is expired
+            dispatch(logout()) ; 
       } else {
          setisexpired(false);
         // console.log('Token is valid');
@@ -39,32 +44,36 @@ function Header() {
 
   }
 
+
  // useEffect to verify the token when the component mounts
  useEffect(() => {
   if (accesstoken) {
-    // console.log("if access",accesstoken);
-    verifyAccessToken(accesstoken); // Verify token on component load
+    // Verify token on component load
+    verifyAccessToken(accesstoken); 
 
   } else {
     const tokenFromCookie = Cookies.get('accessToken');
     // console.log("else access",tokenFromCookie);
-    if (tokenFromCookie) {
-      // console.log(" if else  access",tokenFromCookie);
-      // console.log("fnjnfjn",document.cookie);
 
-      verifyAccessToken(tokenFromCookie); // Verify token from cookies if not in Redux state
+    if (tokenFromCookie) {
+      // Verify token from cookies if not in Redux state
+      verifyAccessToken(tokenFromCookie);
+    
     }else{
-      // console.log("fnjnfjn:",document.cookie);
-      // console.log(" if else else  access",tokenFromCookie);
       setisexpired(true);   
     }
   }
 }, [accesstoken]); // Runs when accessToken changes
 
-  return (
-    
+const handleLogout = () => {
+  dispatch(logout())
+  navigate('/'); 
+  toast.success('You have successfully logged out');
+};
 
-    <header className="bg-bg-dark text-white py-4 flex items-center justify-between px-28">
+
+  return (
+      <header className="bg-bg-dark text-white py-4 flex items-center justify-between px-28">
     {/* Logo */}
     <Link 
       to="/" 
@@ -107,6 +116,17 @@ function Header() {
         Community
       </Link>
 
+  {/* Conditionally Render Logout Button */}
+  {!isexpired && accesstoken && (
+          <Link
+            to="/#"
+            onClick={handleLogout}
+            className="bg-red-700 text-white py-2 px-4 rounded inline-block hover:bg-red-800 hover:text-white transition-all"
+          >
+            Logout
+          </Link>
+        )}
+
 
     </nav>
   
@@ -135,6 +155,8 @@ function Header() {
   </header>
   
 
+
+  
 
   )
 }

@@ -78,7 +78,9 @@ const getFields = async (req, res) => {
 const addField = async (req, res) => {
 
   const { name } = req.body;
-  
+
+  const userId = req.user._id;
+  console.log("User ID from middleware:", userId);
 
 
   // Validate input: check if name is provided
@@ -86,7 +88,9 @@ const addField = async (req, res) => {
     return res.status(400).json({ error: 'Field name is required' });
   }
 
+
   try {
+    
     // Normalize the field name (optional: lowercase or trim)
     const normalizedFieldName = name.trim();
 
