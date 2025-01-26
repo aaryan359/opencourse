@@ -7,6 +7,10 @@ import './index.css'
 import Login from './Authentication/Login.jsx';
 import Admin from './pages/Admin.jsx';
 
+import About from './pages/About/About.jsx';
+import ComingSoon from './pages/Community/ComingSoon.jsx';
+
+
 import UserPanel from './pages/UserPanel.jsx';
 import Header from './Components/Header.jsx';
 import Interview from './pages/Interview.jsx';
@@ -65,8 +69,15 @@ createRoot(document.getElementById('root')).render(
   
         <Route path="/admin" element={<Admin />} />
 
+
         
        
+
+        <Route path='/about' element={<About />}/>
+        <Route path='/community' element={<ComingSoon/>} />
+
+      
+      
 
         <Route path="/userpanel" element={<UserPanel />} />
 
@@ -77,12 +88,9 @@ createRoot(document.getElementById('root')).render(
         <Route path="/interviewprep/StartPrep" element={<StartPrep />} />
         <Route path="/interviewprep/GiveContest" element={<GiveContest />} />
         <Route path="/interviewprep/DailyGoals" element={<DailyGoals />} />
-        <Route   path='/practiceinterviewanswer' element={ <CheckAnswer/>  }  ></Route>
-
-       
+        <Route path='/practiceinterviewanswer' element={ <CheckAnswer/>  }  ></Route>
 
 
-      
         <Route path="/dummynontechcourse" element={<Dummynontech/>} />  
         <Route path="/addnontechsub" element={  <Addsubtopicnontech/>} />
 

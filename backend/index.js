@@ -6,13 +6,13 @@ const cookieParser = require('cookie-parser');
 const passport = require('passport');
 const connectDB = require('./config/db');
 const userRoutes = require('./routes/userRoutes');
-const field = require('./routes/fieldsRoutes');
+const field = require('./routes/Techroutes/fieldsRoutes');
 const nontechfieldroutes   = require('./routes/NontechRouting/nontechRoutes')
 const Interviewroutes   = require('./routes/InterviewSectionRouting/InterviewRouting')
 
 const authMiddleware = require('./middlewares/authMiddlewares');
 
-const interviewRoutes = require('./routes/interviewRoutes')
+const interviewRoutes = require('./routes/InterviewSectionRouting/interviewRoutes')
 
 require('./config/passport-setup'); // Import passport setup
 

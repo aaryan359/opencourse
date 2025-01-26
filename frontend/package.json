@@ -12,6 +12,7 @@
   "dependencies": {
     "@reduxjs/toolkit": "^2.3.0",
     "axios": "^1.7.7",
+    "framer-motion": "^12.0.1",
     "js-cookie": "^3.0.5",
     "jwt-decode": "^4.0.0",
     "react": "^18.3.1",
@@ -26,7 +27,8 @@
     "react-spring": "^9.7.4",
     "react-toastify": "^10.0.6",
     "react-treebeard": "^3.2.4",
-    "rsuite": "^5.72.0"
+    "rsuite": "^5.72.0",
+    "tailwind-merge": "^2.6.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.11.1",
