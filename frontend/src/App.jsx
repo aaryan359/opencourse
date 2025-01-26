@@ -149,15 +149,15 @@ function App() {
 
 						<div className="flex justify-start items-start p-5">
 							<Link
-								to="/seenontechcourse"
+								to="/userpanel"
 								className="bg-c_tech_color hover:bg-pink-300 text-center text-black font-extrabold py-3  px-8 rounded-lg shadow-lg transition-transform transform hover:scale-105 hover:no-underline hover:text-gray-700 focus:outline-none active:bg-c_tech_color">
-								Non tech Courses
+								 tech Courses
 							</Link>
 
 							<Link
-								to="/userpanel"
+								to="/seenontechcourse"
 								className="bg-blue-400 hover:bg-blue-300 text-black font-extrabold py-3 px-8 rounded-lg shadow-lg transition-transform transform hover:scale-105 hover:no-underline hover:text-gray-700 focus:outline-none active:bg-blue-300">
-								Courses
+									Non tech Courses
 							</Link>
 						</div>
 					</div>
