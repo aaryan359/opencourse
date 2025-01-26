@@ -31,8 +31,8 @@ const ExplorenontechCourse = () => {
         const response = await axios.post('http://localhost:5001/nontech/getnontechsubtopic',{NonTechSubTopicnameid});
   
         if (response.data) {
-          setCourses(response.data.data[0].videos); // Store the courses in state
-          console.log(response);
+          setCourses(response.data.data); // Store the courses in state
+          console.log(response.data.data);
           setloading(false);
         }
       } catch (error) {
@@ -152,26 +152,40 @@ const ExplorenontechCourse = () => {
                
            
                ):(
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                {courses.map((video) => (
-                    <div key={video._id} className="bg-white shadow-xl rounded-lg p-6 flex flex-col">
-                      <h3 className="text-xl font-semibold mb-2 text-gray-800">{video.title}</h3>
-                      <iframe
-                        width="100%"
-                        height="215"
-                        loading='lazy'
-                        src={`https://www.youtube.com/embed/${getYoutubeVideoId(video.url)}`}
-                        title={video.title}
-                        frameBorder="0"
-                        allowFullScreen
-                        className="rounded-lg"
-                      ></iframe>
-  
+   
+                 
+                  
+                  courses.map((user,index)=>(
+
+                    <div key={index} className=" flex flex-col gap-4" >
+                     
+                    <h3 className="  text-white pl-4  border-b-2 border-cyan-900 ">Contributed by : {user.user}</h3>
+                      
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {user.videos.map((video) => (
+                <div key={video._id} className="bg-white shadow-xl rounded-lg p-2 flex flex-col">
+                  <h3 className=" text-sm font-semibold  text-gray-800">{video.title}</h3>
+                  <iframe
+                    width="100%"
+                    height="215"
+                    loading='lazy'
+                    src={`https://www.youtube.com/embed/${getYoutubeVideoId(video.url)}`}
+                    title={video.title}
+                    frameBorder="0"
+                    allowFullScreen
+                    className="rounded-lg"
+                  ></iframe>
+
+                </div>
+
+              ))}
                     </div>
-  
-                  ))}
+
+
                     </div>
-               )
+
+                  ))  
+                )
                
                
                }
