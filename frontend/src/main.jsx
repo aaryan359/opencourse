@@ -31,6 +31,10 @@ import CheckAnswer from './pages/Interviewsection/CheckAnswer.jsx';
 import Dummynontech from './pages/nontechadminparts/Dummynontech.jsx';
 import Addsubtopicnontech from './pages/nontechadminparts/Addsubtopic.jsx';
 
+
+import Seencourse from './pages/nontechshowcourseparts/Seencourse.jsx';
+import ExplorenontechCourse from './pages/nontechshowcourseparts/Explorenoncourse.jsx';
+
   
    
  const store =  configureStore({
@@ -81,6 +85,9 @@ createRoot(document.getElementById('root')).render(
       
         <Route path="/dummynontechcourse" element={<Dummynontech/>} />  
         <Route path="/addnontechsub" element={  <Addsubtopicnontech/>} />
+
+        <Route  path = "/seenontechcourse" element = {<Seencourse/>}   />
+        <Route  path='/explorenontech' element = {<ExplorenontechCourse/>} />
 
 
 
