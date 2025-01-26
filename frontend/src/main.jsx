@@ -9,7 +9,7 @@ import Admin from './pages/Admin.jsx';
 
 import UserPanel from './pages/UserPanel.jsx';
 import Header from './Components/Header.jsx';
-import Interview from './pages/Interview.jsx';
+import Interview from './pages/Interviewsection/Interview.jsx';
 import InterviewPrep from './pages/InterviewPrep.jsx';
 
 import { ToastContainer } from 'react-toastify';
@@ -70,7 +70,7 @@ createRoot(document.getElementById('root')).render(
 
         <Route path="/userpanel" element={<UserPanel />} />
 
-        <Route path="/interview" element={<Interview />} />
+        <Route path="/contributeinterview" element={<Interview />} />
 
         <Route path="/interviewprep" element={<InterviewPrep />} />
 

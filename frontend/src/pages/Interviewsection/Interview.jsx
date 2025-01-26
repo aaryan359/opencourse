@@ -73,7 +73,7 @@ const predefinedFields = [
 const Interview = () => {
  
 
-    const [experiences, setExperiences] = useState(initialExperiences);
+    const [experiences, setExperiences] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const{sighnupData} =  useSelector(  (state)=>state.auth );

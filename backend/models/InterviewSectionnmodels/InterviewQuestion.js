@@ -15,14 +15,17 @@ const questionSchema = new mongoose.Schema({
   },
   skill:{ 
     type: String, 
+    default:"unknown"
    
   }, // Example: ['JavaScript', 'Python']
   Domain:{ 
     type: String, 
+    default:"unknown"
     
   }, // Example: ['Web Development', 'AI/ML']
   role:{ 
     type: String, 
+    default:"unknown"
    
   }, // Example: ['Frontend Developer', 'Data Analyst']
   questiontype: { 

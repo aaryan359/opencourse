@@ -512,7 +512,7 @@ function App() {
 							</span>
 
 							<Link
-								to="/interview"
+								to="/contributeinterview"
 								className="text-lg flex items-center hover:no-underline no-underline  space-x-2 bg-[#f98080] px-4 py-2 rounded-lg group-hover:text-white font-semibold text-black">
 								<span>
 									Contribute
