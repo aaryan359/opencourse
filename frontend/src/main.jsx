@@ -6,8 +6,10 @@ import SignUp from './Authentication/SignUp.jsx';
 import './index.css'
 import Login from './Authentication/Login.jsx';
 import Admin from './pages/Admin.jsx';
+
 import About from './pages/About/About.jsx';
 import ComingSoon from './pages/Community/ComingSoon.jsx';
+
 
 import UserPanel from './pages/UserPanel.jsx';
 import Header from './Components/Header.jsx';
@@ -22,8 +24,7 @@ import { configureStore} from "@reduxjs/toolkit"
 
 import { Toaster } from "react-hot-toast";
 import rootreducer from './reducer/index.js';
-import TopicPage from './pages/nontechadminparts/NonTechBranch.jsx';
-import SubTopicPage from './pages/nontechadminparts/NonTechSubTopic.jsx';
+
 import GiveContest from './pages/Interviewsection/GiveContest.jsx';
 import DailyGoals from './pages/Interviewsection/DailyGoals.jsx';
 import StartPrep from './pages/Interviewsection/Startprep.jsx';
@@ -33,6 +34,10 @@ import CheckAnswer from './pages/Interviewsection/CheckAnswer.jsx';
 
 import Dummynontech from './pages/nontechadminparts/Dummynontech.jsx';
 import Addsubtopicnontech from './pages/nontechadminparts/Addsubtopic.jsx';
+
+
+import Seencourse from './pages/nontechshowcourseparts/Seencourse.jsx';
+import ExplorenontechCourse from './pages/nontechshowcourseparts/Explorenoncourse.jsx';
 
   
    
@@ -64,12 +69,15 @@ createRoot(document.getElementById('root')).render(
   
         <Route path="/admin" element={<Admin />} />
 
+
+        
+       
+
         <Route path='/about' element={<About />}/>
         <Route path='/community' element={<ComingSoon/>} />
 
       
-        <Route path="/nontech/:fieldname" element={<TopicPage/>} /> 
-        <Route path="/nontech/:fieldname/:topicname" element={  <SubTopicPage/> } />
+      
 
         <Route path="/userpanel" element={<UserPanel />} />
 
@@ -82,9 +90,12 @@ createRoot(document.getElementById('root')).render(
         <Route path="/interviewprep/DailyGoals" element={<DailyGoals />} />
         <Route path='/practiceinterviewanswer' element={ <CheckAnswer/>  }  ></Route>
 
-        
+
         <Route path="/dummynontechcourse" element={<Dummynontech/>} />  
         <Route path="/addnontechsub" element={  <Addsubtopicnontech/>} />
+
+        <Route  path = "/seenontechcourse" element = {<Seencourse/>}   />
+        <Route  path='/explorenontech' element = {<ExplorenontechCourse/>} />
 
 
 

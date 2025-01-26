@@ -2,11 +2,30 @@
     padding: 20px;
     margin: auto;
   }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+
+  }
+  html, body {
+    height: 100%;
+  }
+
+  
+
+#root{
+  background-color: #0e0f1f;
+  height: 100%;
+  
+}
   
   h1 {
     font-family: 'Poppins', sans-serif;
     color: #4a56e2;
     text-align: center;
+    background-color: #ffffff0b;
   }
   
   button {
@@ -238,4 +257,29 @@
 }
 
 
+.truncated-text {
+  display: -webkit-box;        /* Creates a flexible box for multi-line truncation */
+  -webkit-box-orient: vertical; /* Specifies vertical orientation */
+  overflow: hidden;            /* Hides overflowing content */
+  -webkit-line-clamp: 2;       /* Limits text to 2 lines */
+  text-overflow: ellipsis;     /* Adds "..." at the end of truncated text */
+  background-color: #25273d
+           
+;
+/* <SkeletonTheme baseColor="#202020" highlightColor="#444">  */
+}
 
+@keyframes marquee {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+.animate-marquee {
+  display: inline-block;
+  white-space: nowrap;
+  animation: marquee 15s linear infinite;
+}

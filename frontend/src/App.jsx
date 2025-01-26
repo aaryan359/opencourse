@@ -154,14 +154,18 @@ function App() {
 						<div className="flex justify-start items-start p-5">
 							<Link
 								to="/userpanel"
-								className="bg-c_tech_color hover:bg-pink-300 text-black font-extrabold py-3 pl-24 px-8 rounded-lg shadow-lg transition-transform transform hover:scale-105 hover:no-underline hover:text-gray-700 focus:outline-none active:bg-c_tech_color">
-								Tech Courses
+
+								className="bg-c_tech_color hover:bg-pink-300 text-center text-black font-extrabold py-3  px-8 rounded-lg shadow-lg transition-transform transform hover:scale-105 hover:no-underline hover:text-gray-700 focus:outline-none active:bg-c_tech_color">
+								 tech Courses
+
 							</Link>
 
 							<Link
-								to="/userpanel"
+								to="/seenontechcourse"
 								className="bg-blue-400 hover:bg-blue-300 text-black font-extrabold py-3 px-8 rounded-lg shadow-lg transition-transform transform hover:scale-105 hover:no-underline hover:text-gray-700 focus:outline-none active:bg-blue-300">
-								Non Tech Courses
+
+									Non tech Courses
+
 							</Link>
 						</div>
 					</div>
@@ -405,11 +409,11 @@ function App() {
 										item,
 										index
 									) => (
-										<Link className="no-underline">
+										<Link key={
+											index
+										} className="no-underline">
 											<div
-												key={
-													index
-												}
+												
 												className=" cursor-pointer bg-gradient-to-br from-blue-500 to-indigo-500 text-white p-4 rounded-xl text-center text-lg font-bold shadow-lg transform transition-transform duration-300 hover:scale-105">
 												{
 													item

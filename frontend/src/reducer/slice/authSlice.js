@@ -35,7 +35,7 @@ const authSlice  = createSlice({
                     state.token = null; // Clear the token from Redux state
                     Cookies.remove('accessToken'); // Optional: Remove the token cookie on logout
                     Cookies.remove('refreshToken'); // Clear refresh token if applicable
-                    
+
                   },
     }
 }) ;

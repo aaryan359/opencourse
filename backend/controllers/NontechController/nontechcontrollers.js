@@ -69,10 +69,7 @@ const AddNonTechCourse = async (req, res) => {
   try{
     const  nontechcourses = await  NonTechField.find().populate({
       path: 'subtopic', // Populate the subtopic array
-      populate: {
-        path: 'nonTechvideo', // Populate videos within the subtopic
-        select: 'title url', // Include only specific fields for videos
-      },
+      select: 'subtopicname ',
     });
     return res.status(200).json({
                
@@ -101,8 +98,10 @@ const addNonTechSubtopic = async (req, res) => {
 
     // Check if the subtopic already exists (if valid ObjectId is provided)
     let subtopic;
+    console.log("NonTechSubTopicnameid:",NonTechSubTopicnameid);
     if (NonTechSubTopicnameid) {
-      subtopic = await NonTechFieldsub.findById(validSubTopicId);
+      subtopic = await NonTechFieldsub.findById(NonTechSubTopicnameid);
+      console.log("subtopic:",subtopic);
     }
             
       if (!subtopic) {
@@ -138,7 +137,9 @@ const addNonTechSubtopic = async (req, res) => {
               { new: true } // Returns the updated document
             );
           }
-      } else {
+      }
+
+      else {
 
         const videoIds = [];
         for (let i = 0; i < Videos.length; i++) {
@@ -155,15 +156,19 @@ const addNonTechSubtopic = async (req, res) => {
           videoIds.push(newVideo._id);
         }
           // Add new videos and QA pairs to the existing subtopic
-          let NonTechFieldsub = await NonTechFieldsub.findByIdAndUpdate(
+          let NonTechFieldsub1 = await NonTechFieldsub.findByIdAndUpdate(
             NonTechSubTopicnameid, 
-            { $push: { subtopic: { $each: videoIds } } },
+           
+            {  $push: { 
+              qaPairs: { $each: qaPair }, // Add QA pairs
+              nonTechvideo: { $each: videoIds } // Add videos
+            } },
             { new: true } // Returns the updated document
           );
+          console.log("nontopicsubtopicnamed:",NonTechFieldsub1);
       }
 
-      // Save the subtopic
-      await subtopic.save();
+      
 
       res.status(201).json({ success: true, message: 'Subtopic added successfully.', data: subtopic });
   } catch (error) {
@@ -172,4 +177,46 @@ const addNonTechSubtopic = async (req, res) => {
   }
 };
 
-module.exports = { AddNonTechCourse,getallcourse,addNonTechSubtopic};
+
+const getNonTechSubtopic = async (req, res) => {
+  try {
+    const { NonTechSubTopicnameid } = req.body;
+
+    // Fetch the subtopic by ID and populate only the required fields
+    const subtopic = await NonTechFieldsub.findById(NonTechSubTopicnameid)
+      .populate({
+        path: 'nonTechvideo',
+        populate: {
+          path: 'userId', // Populate the userId of the videos
+          select: 'username', // Only include the firstname field
+        },
+      })
+      .exec();
+
+    if (!subtopic) {
+      return res.status(404).json({ message: 'Subtopic not found' });
+    }
+
+    // Group videos by userId
+    const groupedVideos = subtopic.nonTechvideo.reduce((acc, video) => {
+      const userId = video.userId?._id.toString(); // Get the user ID
+      if (!acc[userId]) {
+        acc[userId] = { user: video.userId?.username || 'Unknown', videos: [] };
+      }
+      acc[userId].videos.push(video); // Add the video to the user's group
+      return acc;
+    }, {});
+
+    // Convert grouped videos into an array and limit to two groups
+    const result = Object.values(groupedVideos).slice(0, 2);
+
+    // Send the response
+    res.status(200).json({ success: true, data: result });
+  } catch (error) {
+    console.error('Error in getNonTechSubtopic:', error);
+    res.status(500).json({ success: false, message: 'Server error', error });
+  }
+};
+
+
+module.exports = { AddNonTechCourse,getallcourse,addNonTechSubtopic,getNonTechSubtopic};
