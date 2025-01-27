@@ -14,7 +14,6 @@
   }
 
   
-
 #root{
   background-color: #0e0f1f;
   height: 100%;
@@ -25,7 +24,7 @@
     font-family: 'Poppins', sans-serif;
     color: #4a56e2;
     text-align: center;
-    background-color: #ffffff0b;
+    
   }
   
   button {
@@ -116,6 +115,7 @@
   justify-content: center;
 }
 
+
 @media (max-width: 600px) {
   button {
     font-size: 14px !important;
@@ -136,10 +136,15 @@
     .timeline-content, .subtimeline-content {
       max-width: 100%;
     }
+
+
+
+    
   }
   
 
   /* Hide scrollbar for modern browsers */
+
 .overflow-x-auto {
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none; /* Internet Explorer 10+ */
@@ -147,10 +152,10 @@
 
 .overflow-x-auto::-webkit-scrollbar {
   display: none; /* Chrome, Safari, Edge */
-}
+} 
 
 
-  
+/*   
 .outer-a {
   width: 270px;
   height: 150px;
@@ -158,9 +163,9 @@
   padding: 1px;
   background: radial-gradient(circle 230px at 0% 0%, #ffffff, #0c0d0d);
   position: relative;
-}
+} */
 
-.dot-a {
+/* .dot-a {
   width: 5px;
   aspect-ratio: 1;
   position: absolute;
@@ -171,9 +176,9 @@
   right: 10%;
   top: 10%;
   animation: moveDot 6s linear infinite;
-}
+} */
 
-@keyframes moveDot {
+/* @keyframes moveDot {
   0%,
   100% {
     top: 10%;
@@ -191,7 +196,7 @@
     top: calc(100% - 30px);
     right: 10%;
   }
-}
+} */
 
 .card-a {
   z-index: 1;
@@ -283,3 +288,39 @@
   white-space: nowrap;
   animation: marquee 15s linear infinite;
 }
+/* In your styles.css or a custom CSS file */
+.oswald-600 {
+  font-family: "Oswald", sans-serif;
+  font-optical-sizing: auto;
+
+  font-style: normal;
+}
+
+
+.oswald-700 {
+  font-family: "Oswald", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
+}
+
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for Firefox */
+.no-scrollbar {
+  scrollbar-width: none;
+}
+
+/* Optional: Ensure smooth scrolling */
+.no-scrollbar {
+  -webkit-overflow-scrolling: touch;
+}
+
+
+
+
+
+

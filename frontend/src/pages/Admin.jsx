@@ -29,7 +29,10 @@ function Admin() {
 
 
   const predefinedFields = [
-    "WebDev",
+    "frontend",
+    "backend",
+    "python",
+    "c++",
     "Blockchain",
     "Data Science",
     "AI/ML",
@@ -39,57 +42,25 @@ function Admin() {
     "DevOps",
     "Internet of Things (IoT)",
     "Game Development",
-    "Augmented Reality (AR)",
-    "Virtual Reality (VR)",
+  
     "Software Engineering",
-    "Big Data",
+
     "UI/UX Design",
-    "Embedded Systems",
-    "Computer Vision",
+    
     "Quantum Computing",
-    "Robotics",
-    "Natural Language Processing (NLP)",
+
     "Networking",
     "Edge Computing",
     "Generative AI",
-    "AI Ethics",
-    "Explainable AI",
-    "Autonomous Systems",
-    "AI-Powered Automation",
-    "AI in Healthcare",
-    "AI in Finance",
-    "AI in Education",
+    
     "Deep Learning",
     "Reinforcement Learning",
-    "Federated Learning",
-    "AI in Cybersecurity",
-    "AI-Driven Personalization",
-    "Speech Recognition",
-    "AI in Manufacturing",
-    "AI in Retail",
-    "AI in Marketing",
-    "AI Governance",
-    "Conversational AI",
-    "AI-Enhanced Creativity",
-    "AI in Drug Discovery",
-    "AI in Climate Science",
-    "Synthetic Data",
-    "AI for Social Good",
-    "AI Regulation and Policy",
-    "AI in Energy Optimization",
+
     "Machine Learning",
     "Supervised Learning",
     "Unsupervised Learning",
-    "Transfer Learning",
-    "Generative Adversarial Networks (GANs)",
-    "Self-Supervised Learning",
-    "Neural Networks",
-    "Transformer Models",
-    "Natural Language Generation (NLG)",
-    "Prompt Engineering",
-    "Multimodal AI",
-    "AI in Art and Creativity",
-    "AI for Human Augmentation"
+    
+    "Natural Language Processing (NLP)",
   ];
   
 

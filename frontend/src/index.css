@@ -1,3 +1,5 @@
+
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -14,6 +16,23 @@
       @apply bg-green-600 hover:bg-green-700;
     }
   }
+
+
+
+  /* Hide scrollbar for WebKit-based browsers (Chrome, Safari, Edge) */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for Firefox */
+.no-scrollbar {
+  scrollbar-width: none;
+}
+
+/* Optional: Ensure smooth scrolling */
+.no-scrollbar {
+  -webkit-overflow-scrolling: touch;
+}
 
 
  

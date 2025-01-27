@@ -4,6 +4,7 @@ import { FaArrowRight } from "react-icons/fa";
 import { AnimatedTooltip } from "../src/Components/components/ui/animated-tooltip.jsx";
 import { TextGenerateEffect } from "../src/Components/components/ui/text-generate-effect.jsx";
 import GlowCursor from "../src/Components/GlowCursor.jsx";
+
 import "./App.css";
 import "./index.css";
 import "./card.css";
@@ -54,31 +55,31 @@ function App() {
 		{
 			id: 1,
 			name: "Aryan Meena",
-			designation: "CEO",
+			// designation: "CEO",
 			image: "../public/h1.jpeg",
 		},
 		{
 			id: 2,
 			name: "Vikas Pal",
-			designation: "CTO",
+			// designation: "CTO",
 			image: "../public/h2.jpeg",
 		},
 		{
 			id: 3,
 			name: "Anurag Sing",
-			designation: "CMO",
+			// designation: "CMO",
 			image: "../public/h3.jpeg",
 		},
 		{
 			id: 4,
 			name: "Manroop Sing",
-			designation: "DESIGNING HEAD",
+			// designation: "DESIGNING HEAD",
 			image: "../public/h4.jpeg",
 		},
 		{
 			id: 5,
 			name: "Ayush Nagar",
-			designation: "Black V Man",
+			// designation: "Black V Man",
 			image: "../public/h5.jpeg",
 		},
 		{
@@ -95,104 +96,99 @@ function App() {
 		"Tutorials",
 		"Operating System",
 		"Dev Ops",
-		"Interview Experiences",
+		"Interview Preperation",
 		"DSA",
 		"Core CS Subjects",
 	];
+
 	return isSplashVisible ? (
 		<SplashScreen onLoadComplete={handleSplashComplete} />
 	) : (
 		<>
 			<div className="min-h-screen bg-bg-dark ">
-				<div className="flex flex-row bg-custom-gradient justify-around  ">
-					<div className=" text-white ml-20">
-						<h1 className=" font-bold mb-4 text-start ">
-							<br />
-							<br />
-							<span className="font-Montserrat font-extrabold text-6xl ">
+				<div className="flex flex-col md:flex-row bg-custom-gradient justify-around items-center md:justify-between p-5">
+					<div className="text-white text-center md:text-left ml-8">
+						<h1 className="oswald-600 mb-4 text-start">
+							<span className="font-extrabold text-5xl md:text-7xl font-oswald">
 								Learn
 							</span>{" "}
-							and
-							<span className="font-extrabold  text-6xl ">
-								{" "}
+							and{" "}
+							<span className="font-extrabold text-5xl md:text-7xl font-oswald">
 								Contribute
 							</span>
 						</h1>
 
-						<h1 className="text-7xl font-extrabold mb-4 mt-2 text-start">
-							<span className=" text-transparent bg-gradient-to-r from-green-400 via-green-400 to-blue-500 bg-clip-text">
+						<h1 className="oswald-700 text-6xl md:text-8xl font-extrabold mb-4 mt-2 text-start">
+							<span className="text-transparent bg-gradient-to-r from-green-400 via-green-400 to-blue-500 bg-clip-text">
 								Together
 							</span>
 						</h1>
 
-						<p className="text-lg font-semibold font-sans ">
-							<TextGenerateEffect
-								words={
-									"Describe what you want from a course, and if you have knowledge then contribute "
-								}
-							/>
-
-							{/* contribute with your own
-							topics. */}
-
-							<span className="text-transparent bg-gradient-to-r from-green-400 via-green-400 to-blue-500 bg-clip-text">
+						<p className="text-lg md:text-xl font-semibold font-sans">
+							<TextGenerateEffect words="Decentralized and borderless platform worldwide users can collectively learn, teach" />
+							<span className="text-transparent text-start bg-gradient-to-r from-green-400 via-green-400 to-blue-500 bg-clip-text">
 								Grow Together!
 							</span>
 						</p>
 
-						<div className="flex justify-start items-start p-5">
+						<div className="flex flex-col md:flex-row justify-center md:justify-start items-center md:items-start mt-5 space-y-3 md:space-y-0">
 							<Link
 								to="/userpanel"
-								className="bg-c_tech_color hover:bg-pink-300 text-center text-black font-extrabold py-3  px-8 rounded-lg shadow-lg transition-transform transform hover:scale-105 hover:no-underline hover:text-gray-700 focus:outline-none active:bg-c_tech_color">
-								tech Courses
+								className="bg-c_tech_color text-lg hover:bg-pink-500 text-center text-black font-extrabold py-3 px-8 rounded-lg shadow-lg transition-transform transform hover:scale-105 hover:no-underline hover:text-black focus:outline-none active:bg-pink-500">
+								Tech Courses
 							</Link>
 
 							<Link
 								to="/seenontechcourse"
-								className="bg-blue-400 hover:bg-blue-300 text-black font-extrabold py-3 px-8 rounded-lg shadow-lg transition-transform transform hover:scale-105 hover:no-underline hover:text-gray-700 focus:outline-none active:bg-blue-300">
-								Non tech Courses
+								className="bg-blue-500 text-lg hover:bg-blue-400 text-black hover:text-black font-extrabold py-3 px-8 rounded-lg shadow-lg transition-transform transform hover:scale-105 hover:no-underline focus:outline-none active:bg-blue-400">
+								Non-tech Courses
 							</Link>
 						</div>
 					</div>
 
-					<div className="flex justify-end items-end mr-10">
+
+					<div className="flex justify-center items-center mt-10 md:mt-0">
 						<img
-							className="  mb-14 "
+							className="w-2/3 md:w-auto mb-14"
 							src="../public/hero_section_img.png"
-							alt=""
+							alt="Hero Section"
 						/>
 					</div>
 				</div>
 
 				{/* Contribution section */}
-				<div className="flex flex-col items-center justify-center h-[300px] md:h-[400px] lg:h-[600px] bg-black text-white px-4">
+				<div className="flex flex-col items-center justify-center h-auto md:h-[400px] lg:h-[600px] bg-black text-white px-4 py-8">
 					<div className="w-full px-6 py-12 text-center">
-						<h1 className="text-3xl sm:text-4xl font-bold leading-tight mb-4">
+						<h1 className="text-4xl sm:text-5xl font-bold leading-tight mb-4">
 							Together, we can make a
+							<br />
 							difference
 						</h1>
-						<p className="text-lg  sm:text-xl">
-							The time is now for it
-							to be okay to be great.
-							For being a bright
-							color. For standing out.
+						<p className="text-lg sm:text-xl md:text-2xl">
+							Together, we can create
+							changes. Now is the time
+							to be great, to shine,
+							and to stand out.
 						</p>
-						<div className="relative">
+						<div className="relative mt-6">
 							<img
-								src="../src/assets/laptop-1.jpg" 
+								src="../src/assets/laptop-3.jpg"
 								alt="Laptop"
-								className="w-full max-w-xl mx-auto object-cover rounded-lg"
+								className="w-full max-w-lg mx-auto object-cover rounded-lg"
 							/>
-							<div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 bg-black bg-opacity-50 px-8 py-4 rounded-full space-x-4 sm:flex">
+							<div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 bg-black bg-opacity-50 px-6 py-4 rounded-full w-[90%] sm:w-auto flex flex-col sm:flex-row sm:space-x-4 space-y-4 sm:space-y-0">
 								<Link
 									to="/admin"
-									className="text-gray-950 no-underline rounded-md bg-white p-3 font-semibold hover:bg-gray-200 hover:text-gray-950 transition duration-300">
-									Contribute in Tech
+									className="text-gray-950 text-lg no-underline rounded-md bg-white p-3 font-semibold hover:bg-gray-200 hover:text-gray-950 transition duration-300 w-full sm:w-auto text-center">
+									Contribute
+									in Tech
 								</Link>
 								<Link
 									to="/dummynontechcourse"
-									className="text-gray-950 no-underline rounded-md bg-white p-3 font-semibold hover:bg-gray-200 hover: hover:text-gray-950 transition duration-300">
-									Contribute in NonTech
+									className="text-gray-950 text-lg no-underline rounded-md bg-white p-3 font-semibold hover:bg-gray-200 hover:text-gray-950 transition duration-300 w-full sm:w-auto text-center">
+									Contribute
+									in
+									NonTech
 								</Link>
 							</div>
 						</div>
@@ -281,9 +277,6 @@ function App() {
 						</div>
 					</div>
 
-
-
-
 					{/* Card 1 */}
 					<div className="p-5 m-2 rounded-md w-56 bg-gray-900 shadow-lg cursor-pointer">
 						<img
@@ -310,7 +303,6 @@ function App() {
 							</span>
 						</div>
 					</div>
-
 
 					{/* Card 4 */}
 					<div className="p-5 m-2 rounded-md w-56 bg-gray-900 shadow-lg cursor-pointer">
@@ -342,7 +334,7 @@ function App() {
 
 				<div className="relative flex justify-center items-center w-11/12 mx-auto p-2 h-[300px] md:h-[400px] lg:h-[500px] rounded-3xl overflow-hidden bg-gradient-to-br from-gray-900 via-gray-950 to-black">
 					<div className="absolute bg-transparent top-0 left-0 flex flex-col lg:flex-row items-center justify-between w-full h-full z-30">
-						<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-4 ml-4 md:ml-10 mt-6">
+						<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-4 ml-4 md:ml-10 mt-6 ">
 							{items.map(
 								(
 									item,
@@ -387,17 +379,19 @@ function App() {
 									Course
 									to="/userpanel"
 									className="bg-c_tech_color hover:bg-pink-300 text-black font-extrabold py-2 sm:py-3 px-6 sm:px-8 rounded-lg shadow-lg transition-transform transform hover:scale-105 hover:no-underline hover:text-gray-700 focus:outline-none active:bg-c_tech_color">
-									Tech Course
+									Tech
+									Course
 								</Link>
 
 								<Link
 									to="/dummynontechcourse"
 									className="bg-blue-400 hover:bg-blue-300 text-black font-extrabold py-2 sm:py-3 px-6 sm:px-8 rounded-lg shadow-lg transition-transform transform hover:scale-105 hover:no-underline hover:text-gray-700 focus:outline-none active:bg-blue-300">
-									NonTech Course
+									NonTech
+									Course
 								</Link>
 							</div>
 
-							<div className="flex justify-center lg:justify-end mt-4">
+							<div className="flex justify-center  lg:justify-end mt-4">
 								<AnimatedTooltip
 									items={
 										people
@@ -438,11 +432,6 @@ function App() {
 					<div
 						className="w-full h-full relative"
 						style={{ filter: "url(#goo)" }}>
-						<div className="absolute g1"></div>
-						<div className="absolute g2"></div>
-						<div className="absolute g3"></div>
-						<div className="absolute g4"></div>
-						<div className="absolute g5 rounded-[50%]"></div>
 						<div className="absolute interactive"></div>
 					</div>
 				</div>
@@ -479,7 +468,7 @@ function App() {
 						</span>
 
 						<Link
-							to="/interview"
+							to="/contributeinterview"
 							className="text-lg flex items-center hover:no-underline space-x-2 bg-[#f98080] px-4 py-2 rounded-lg group-hover:text-white font-semibold text-black">
 							<span>Contribute</span>
 							<svg
@@ -497,7 +486,7 @@ function App() {
 							</svg>
 						</Link>
 
-						<span className="text-sm font-light group-hover:text-white text-gray-600">
+						<span className="text-sm font-light group-hover:text-white text-gray-200">
 							Share your knowledge and
 							help others prepare for
 							their interviews
@@ -556,7 +545,7 @@ function App() {
 								/>
 							</svg>
 						</Link>
-						<span className="text-sm font-light group-hover:text-white text-gray-600">
+						<span className="text-sm font-light group-hover:text-white text-gray-200">
 							Practice with real-world
 							interview questions and
 							scenarios
@@ -610,6 +599,7 @@ function App() {
 					<Footer />
 				</div>
 			</div>
+			
 		</>
 	);
 }

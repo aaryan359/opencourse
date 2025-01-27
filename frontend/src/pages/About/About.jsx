@@ -2,9 +2,9 @@ import React from 'react';
 
 const About = () => {
   return (
-    <div className="bg-gray-50 text-gray-800 font-sans">
+    <div className="bg-bg-dark text-gray-50 font-sans">
       {/* Header Section */}
-      <div className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white py-20">
+      <div className=" text-white py-20">
         <div className="max-w-7xl mx-auto px-6 text-center">
           <h1 className="text-5xl font-extrabold mb-6">About Us</h1>
           <p className="text-lg max-w-3xl mx-auto">
@@ -17,13 +17,13 @@ const About = () => {
       <div className="max-w-7xl mx-auto px-6 py-20">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           <div>
-            <h2 className="text-3xl font-bold mb-4 text-blue-600">Our Mission</h2>
+            <h2 className="text-3xl font-bold mb-4 ">Our Mission</h2>
             <p className="text-lg leading-relaxed text-gray-600">
               To make education accessible to everyone by providing free, open, and high-quality courses that cater to diverse learning needs and empower individuals globally.
             </p>
           </div>
           <div>
-            <h2 className="text-3xl font-bold mb-4 text-indigo-600">Our Vision</h2>
+            <h2 className="text-3xl font-bold mb-4 ">Our Vision</h2>
             <p className="text-lg leading-relaxed text-gray-600">
               A world where knowledge is not a privilege but a right. We aim to create an environment that enables everyone to achieve their fullest potential through equal access to education.
             </p>
@@ -32,7 +32,7 @@ const About = () => {
       </div>
 
       {/* Team Section */}
-      <div className="bg-gray-100 py-20">
+      <div className=" py-20">
         <div className="max-w-7xl mx-auto px-6 text-center">
           <h2 className="text-4xl font-bold mb-12 text-gray-800">Meet the Team</h2>
           {/* <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12">
@@ -55,13 +55,13 @@ const About = () => {
       </div>
 
       {/* Call-to-Action Section */}
-      <div className="bg-gradient-to-r from-indigo-500 to-purple-600 text-white py-20">
+      <div className=" py-20">
         <div className="max-w-7xl mx-auto px-6 text-center">
           <h2 className="text-4xl font-extrabold mb-6">Join Us on Our Journey</h2>
           <p className="text-lg mb-8 max-w-3xl mx-auto">
             Whether you're a learner or an educator, become a part of our mission to make education free and accessible to all.
           </p>
-          <button className="bg-white text-indigo-600 px-8 py-3 rounded-full font-bold shadow-md hover:bg-gray-100 transition">
+          <button className="px-8 py-3 rounded-full font-bold shadow-md  transition">
             Learn More
           </button>
         </div>

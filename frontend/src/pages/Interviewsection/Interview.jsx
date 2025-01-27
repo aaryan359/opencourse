@@ -1,363 +1,368 @@
-
-import React, { useState } from 'react';
-import axios from 'axios';
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import { useSelector } from 'react-redux';
-
-
-const predefinedFields = [
-  "WebDev",
-  "Blockchain",
-  "Data Science",
-  "AI/ML",
-  "Mobile Development",
-  "Cloud Computing",
-  "Cybersecurity",
-  "DevOps",
-  "Internet of Things (IoT)",
-  "Game Development",
-  "Augmented Reality (AR)",
-  "Virtual Reality (VR)",
-  "Software Engineering",
-  "Big Data",
-  "UI/UX Design",
-  "Embedded Systems",
-  "Computer Vision",
-  "Quantum Computing",
-  "Robotics",
-  "Natural Language Processing (NLP)",
-  "Networking",
-  "Edge Computing",
-  "Generative AI",
-  "AI Ethics",
-  "Explainable AI",
-  "Autonomous Systems",
-  "AI-Powered Automation",
-  "AI in Healthcare",
-  "AI in Finance",
-  "AI in Education",
-  "Deep Learning",
-  "Reinforcement Learning",
-  "Federated Learning",
-  "AI in Cybersecurity",
-  "AI-Driven Personalization",
-  "Speech Recognition",
-  "AI in Manufacturing",
-  "AI in Retail",
-  "AI in Marketing",
-  "AI Governance",
-  "Conversational AI",
-  "AI-Enhanced Creativity",
-  "AI in Drug Discovery",
-  "AI in Climate Science",
-  "Synthetic Data",
-  "AI for Social Good",
-  "AI Regulation and Policy",
-  "AI in Energy Optimization",
-  "Machine Learning",
-  "Supervised Learning",
-  "Unsupervised Learning",
-  "Transfer Learning",
-  "Generative Adversarial Networks (GANs)",
-  "Self-Supervised Learning",
-  "Neural Networks",
-  "Transformer Models",
-  "Natural Language Generation (NLG)",
-  "Prompt Engineering",
-  "Multimodal AI",
-  "AI in Art and Creativity",
-  "AI for Human Augmentation",
-];
+import React, { useState } from "react";
+import axios from "axios";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useSelector } from "react-redux";
 
 const Interview = () => {
- 
+	const [experiences, setExperiences] = useState([]);
+	const { sighnupData } = useSelector((state) => state.auth);
 
-    const [experiences, setExperiences] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const{sighnupData} =  useSelector(  (state)=>state.auth );
+	const [formData, setFormData] = useState({
+		companyName: "",
+		role: "",
+		skill: "",
+		Domain: "",
+		ExperienceLevel: "",
+		difficulty: "",
+		questiontype: "",
+		questions: "",
+		answers: "",
+		postedBy: sighnupData ? sighnupData._id : null,
+	});
 
-    const [formData, setFormData] = useState({
-        companyName: '',
-        role: '',
-        skill:'',
-        Domain:'',
-        ExperienceLevel: '',
-        difficulty:'',
-        questiontype:'',
-        questions: '',
-        answers: '',
-        postedBy:sighnupData ? sighnupData._id : null,
-        
-    });
+	const handleChange = (e) => {
+		const { name, value } = e.target;
+		setFormData({ ...formData, [name]: value.toLowerCase() });
+	};
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value.toLowerCase()});
-    };
+	const addQuestions = async () => {
+		try {
+			await axios.post(
+				"http://localhost:5001/Interview/addQuestion",
+				formData
+			);
 
+			toast.success("Question added successfully!", {
+				position: "top-right",
+				autoClose: 3000,
+				hideProgressBar: false,
+				closeOnClick: true,
+				draggable: true,
+				progress: undefined,
+			});
+		} catch (err) {
+			console.error("Error fetching questions:", err);
 
-    const addQuestions = async () => {
-        try {
-          const response = await axios.post('http://localhost:5001/Interview/addQuestion',formData);
-         
-            console.log("questo add",response);
-            //sadd sucesss toast
-             // Show success toast
-        toast.success('Question added successfully!', {
-            position: "top-right",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            draggable: true,
-            progress: undefined,
-        });
+			// Show error toast
+			toast.error(
+				"Failed to add question. Please try again later.",
+				{
+					position: "top-right",
+					autoClose: 3000,
+					hideProgressBar: false,
+					closeOnClick: true,
+					draggable: true,
+					progress: undefined,
+				}
+			);
+		}
+	};
 
-          setLoading(false); // Turn off loading indicator
-        } catch (err) {
-          console.error('Error fetching questions:', err);
+	const handleSubmit = async (e) => {
+		e.preventDefault();
 
-           // Show error toast
-        toast.error('Failed to add question. Please try again later.', {
-            position: "top-right",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            draggable: true,
-            progress: undefined,
-        });
+		setExperiences([...experiences, formData]);
 
+		await addQuestions();
+		//add  api  to add question question in database
 
-          setError('Failed to fetch questions. Please try again later.');
-          setLoading(false);
-        }
-      };
+		setFormData({
+			// Reset form
+			companyName: "",
+			role: "",
+			skill: "",
+			Domain: "",
+			ExperienceLevel: "",
+			difficulty: "",
+			questiontype: "",
+			questions: "",
+			answers: "",
+		});
+	};
 
+	return (
+		<div className="bg-bg-dark">
+			<div className="container w-full sm:w-[90%] md:w-[80%]  mx-auto p-6">
+				<h1 className="text-4xl font-bold mb-6 bg-bg-dark text-white text-center">
+					Interview Experience Submission
+				</h1>
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setExperiences([...experiences, formData]);
-       await addQuestions();
-         //add  api  to add question question in database
+				<form
+					onSubmit={handleSubmit}
+					className=" border-2 border-purple-500 p-11  rounded-xl grid grid-cols-1 sm:grid-cols-2 gap-8 mt-10">
+					{/* Left Column */}
+					<div>
 
-        console.log("formdat is:",formData);
-      
-        setFormData({ // Reset form
-            companyName: '',
-            role: '',
-            skill:'',
-            Domain:'',
-            ExperienceLevel: '',
-            difficulty:'',
-            questiontype:'',
-            questions: '',
-            answers: '',
-           
-        });
-    };
+						{/* Company Name */}
+						<div className="relative z-0 w-full mb-6 group">
+							<input
+								type="text"
+								name="companyName"
+								id="companyName"
+								placeholder=" "
+								value={
+									formData.companyName
+								}
+								onChange={
+									handleChange
+								}
+								className="block py-4 px-0 w-full text-xl text-white bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+							/>
+							<label
+								htmlFor="companyName"
+								className="peer-focus:font-medium absolute text-lg text-gray-50 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:text-blue-400 peer-focus:scale-75 peer-focus:-translate-y-6">
+								Company Name
+								(optional)
+							</label>
+						</div>
 
-    return (
+						{/* Job Role */}
+						<div className="relative z-0 w-full mb-6 group">
+							<input
+								type="text"
+								name="role"
+								id="role"
+								placeholder=" "
+								value={
+									formData.role
+								}
+								onChange={
+									handleChange
+								}
+								className="block py-4 px-0 w-full text-xl text-white bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+							/>
+							<label
+								htmlFor="role"
+								className="peer-focus:font-medium absolute text-lg text-gray-50 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+								job Role
+								(optional)
+							</label>
+						</div>
 
-        <div className=' bg-bg-dark'>
+						{/* Skill */}
+						<div className="relative z-0 w-full mb-6 group">
+							<input
+								type="text"
+								name="skill"
+								id="skill"
+								placeholder=" "
+								value={
+									formData.skill
+								}
+								onChange={
+									handleChange
+								}
+								className="block py-4 px-0 w-full text-xl text-white bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+								required
+							/>
+							<label
+								htmlFor="skill"
+								className="peer-focus:font-medium absolute text-lg text-gray-50 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+								Technology/Skill
+								(mandatory)
+							</label>
+						</div>
 
-        
-        <div className="container w-[75%]  mx-auto p-6">
-            <h1 className="text-3xl font-bold mb-6 bg-bg-dark text-white text-center">Interview Experience Submission</h1>
+						{/* Domain */}
+						<div className="relative z-0 w-full mb-6 group">
+							<input
+								type="text"
+								name="Domain"
+								id="Domain"
+								placeholder=" "
+								value={
+									formData.Domain
+								}
+								onChange={
+									handleChange
+								}
+								className="block py-4 px-0 w-full text-xl text-white bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+							/>
+							<label
+								htmlFor="Domain"
+								className="peer-focus:font-medium absolute text-lg text-gray-50 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+								Industry/Domain
+								(optional)
+							</label>
+						</div>
 
-            <form onSubmit={handleSubmit} className="border-2 border-cyan-500 text-white bg-slate-900 p-8 w-full rounded shadow-md mb-6  ">
+						{/* Experience Level */}
+						<div className="relative z-0 w-full mb-6 group">
+							<select
+								name="ExperienceLevel"
+								id="ExperienceLevel"
+								value={
+									formData.ExperienceLevel
+								}
+								onChange={
+									handleChange
+								}
+								className="block py-4 px-0 w-full text-xl text-gray-400 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+								required>
+								<option value="">
+									Select...
+								</option>
+								<option value="fresher">
+									Fresher
+								</option>
+								<option value="1-5">
+									1-3
+									years of
+									Experience
+								</option>
+								<option value="5+">
+									5+ years
+									of
+									Experience
+								</option>
+							</select>
+							<label
+								htmlFor="ExperienceLevel"
+								className="peer-focus:font-medium absolute text-lg text-gray-50 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:text-blue-400 peer-focus:scale-75 peer-focus:-translate-y-6">
+								Experience Level
+								(mandatory)
+							</label>
+						</div>
+					</div>
 
-              <div className=' flex flex-col sm:flex-row justify-around '>
-                             
-              <div className=" sm:w-[40%] mb-4">
-                    <label className="block mb-1 font-semibold" htmlFor="companyName">Company Name (optional)</label>
-                    <input
-                       
-                       placeholder='EX- google/amazon '
-                        type="text"
-                        name="companyName"
-                        id="companyName"
-                        value={formData.companyName}
-                        onChange={handleChange}
-                        className="w-full text-black border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        
-                    />
-                </div>
+					{/* Right Column */}
+					<div>
+						{/* Difficulty */}
+						<div className="relative z-0 w-full mb-6 group">
+							<select
+								name="difficulty"
+								id="difficulty"
+								value={
+									formData.difficulty
+								}
+								onChange={
+									handleChange
+								}
+								className="block py-4 px-0 w-full text-xl text-gray-400 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+								required>
+								<option value="">
+									Select...
+								</option>
+								<option value="easy">
+									Easy
+								</option>
+								<option value="medium">
+									Medium
+								</option>
+								<option value="hard">
+									Hard
+								</option>
+							</select>
+							<label
+								htmlFor="difficulty"
+								className="peer-focus:font-medium absolute text-lg text-gray-50 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+								Difficulty Level
+								(mandatory)
+							</label>
+						</div>
 
-                <div className="  sm:w-[40%] mb-4">
-                    <label className="block mb-1 font-semibold" htmlFor="role"> Job Role  (optional)</label>
-                    <input
-                       placeholder='EX- frontend developer/Data Analyst'
-                        type="text"
-                        name="role"
-                        id="role"
-                        value={formData.role}
-                        onChange={handleChange}
-                        className="w-full text-black border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                       
-                    />
-                </div>
+						{/* Question Type */}
+						<div className="relative z-0 w-full mb-6 group">
+							<select
+								name="questiontype"
+								id="questiontype"
+								value={
+									formData.questiontype
+								}
+								onChange={
+									handleChange
+								}
+								className="block py-4 px-0 w-full text-xl text-gray-400 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+								required>
+								<option value="">
+									Select...
+								</option>
+								<option value="hr">
+									HR
+								</option>
+								<option value="system design">
+									System
+									Design
+								</option>
+								<option value="case study">
+									Case
+									Study
+								</option>
+								<option value="technical">
+									Technical
+								</option>
+								<option value="behavioral">
+									Behavioral
+								</option>
+							</select>
+							<label
+								htmlFor="questiontype"
+								className="peer-focus:font-medium absolute text-lg text-gray-50 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+								Question Type
+								(mandatory)
+							</label>
+						</div>
 
-              </div>
-                
-              <div className=' flex flex-col sm:flex-row justify-around '>
-                <div className=" sm:w-[40%] mb-4">
-                    <label className="block mb-1 font-semibold" htmlFor="skill"> Technology/Skill  (mandatory)</label>
-                    <input
-                       placeholder='EX- Reactjs/python'
-                        type="text"
-                        name="skill"
-                        id="skill"
-                        value={formData.skill}
-                        onChange={handleChange}
-                        className="w-full text-black border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                       required
-                    />
-                </div>
+						{/* Interview Questions */}
+						<div className="relative z-0 w-full mb-6 group">
+							<textarea
+								name="questions"
+								id="questions"
+								value={
+									formData.questions
+								}
+								onChange={
+									handleChange
+								}
+								className="block py-4 px-0 w-full text-xl text-white bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+								rows="2"
+								required
+							/>
+							<label
+								htmlFor="questions"
+								className="peer-focus:font-medium absolute text-lg text-gray-50 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+								Interview
+								Questions
+							</label>
+						</div>
 
-                <div className= " sm:w-[40%] mb-4">
-                    <label className="block mb-1 font-semibold" htmlFor="Domain"> Industry/Domain (optional)</label>
-                    <input
-                       placeholder='EX- AI-ML/Blockchain Development'
-                        type="text"
-                        name="Domain"
-                        id="Domain"
-                        value={formData.Domain}
-                        onChange={handleChange}
-                        className="w-full text-black border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                       
-                    />
-                </div>
+						{/* Your Answers */}
+						<div className="relative z-0 w-full mb-6 group">
+							<textarea
+								name="answers"
+								id="answers"
+								value={
+									formData.answers
+								}
+								onChange={
+									handleChange
+								}
+								className="block py-4 px-0 w-full text-xl text-white bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+								rows="3"
+								required
+							/>
+							<label
+								htmlFor="answers"
+								className="peer-focus:font-medium absolute text-lg text-gray-50 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+								Your Answers
+							</label>
+						</div>
+					</div>
 
-              </div>
-
-           
-              <div className=' flex flex-col sm:flex-row justify-around '>
-                <div className=" sm:w-[40%] mb-4">
-                    <label className="block mb-1 font-semibold" htmlFor="interviewType">Experience Level  (mandatory)</label>
-                    <select
-                        name="ExperienceLevel"
-                        id="ExperienceLevel"
-                        value={formData.ExperienceLevel}
-                        onChange={handleChange}
-                        className="w-full text-black border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                       required
-                    >
-                        
-                        <option value="">Select...</option>
-                        <option value="fresher">Fresher</option>
-                        <option value="1-5">1-3 years of Experienced</option>
-                        <option value="5+">5+ years of Experience</option>
-                    </select>
-                </div>
-
-                <div className=" sm:w-[40%] mb-4">
-                    <label className="block mb-1 font-semibold" htmlFor="interviewType">Difficulty Level  (mandatory)</label>
-                    <select
-                        name="difficulty"
-                        id="difficulty"
-                        value={formData.difficulty}
-                        onChange={handleChange}
-                        className="w-full text-black border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        required
-                    >
-                        
-                        <option value="">Select...</option>
-                        <option value="easy">Easy</option>
-                        <option value="medium">Medium</option>
-                        <option value="hard">Hard</option>
-
-                    </select>
-                </div>
-            
-                </div>
-
-
-
-                <div className=" mb-4">
-                    <label className="block mb-1 font-semibold" htmlFor="interviewType">Question Type  (mandatory)</label>
-                    <select
-                        name="questiontype"
-                        id="questiontype"
-                        value={formData.questiontype}
-                        onChange={handleChange}
-                        className="w-full text-black border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        required
-                    >
-                        
-                        <option value="">Select...</option>
-                        <option value="hr">HR</option>
-                        <option value="system design">System Design</option>
-                        <option value="case study">Case Study</option>
-                        <option value="technical">technical</option>
-                        <option value="behavioral">Behavioral</option>
-
-                    </select>
-                </div>
-
-                <div className="mb-4">
-                    <label className="block mb-1 font-semibold" htmlFor="questions">Interview Questions</label>
-                    <textarea
-                        name="questions"
-                        id="questions"
-                        value={formData.questions}
-                        onChange={handleChange}
-                        className="w-full text-black border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        rows="4"
-                        required
-                    />
-                </div>
-
-                <div className="mb-4">
-                    <label className="block mb-1 font-semibold" htmlFor="answers">Your Answers</label>
-                    <textarea
-                        name="answers"
-                        id="answers"
-                        value={formData.answers}
-                        onChange={handleChange}
-                        className="w-full text-black border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        rows="4"
-                        required
-                    />
-                </div>
-
-                
-
-
-                <button type="submit" className="bg-blue-600 text-white py-2 px-4 rounded w-full hover:bg-blue-700 transition duration-200">Submit Experience</button>
-
-
-            </form>
-
-
-            <h2 className="text-2xl font-semibold mb-4 text-white text-center">Submitted Experiences</h2>
-
-            
-            <div>
-            {experiences.map((exp, index) => (
-    <div key={index} className="bg-gray-100 p-4 mb-4 rounded shadow">
-            <h3 className="font-bold text-lg">
-                        {exp.companyName} - {exp.role} ({exp.questiontype})
-               </h3>
-                         <p className="mt-2"><strong>Skill:</strong> {exp.skill}</p>
-                         <p className="mt-2"><strong>Domain:</strong> {exp.Domain}</p>
-                         <p className="mt-2"><strong>Experience Level:</strong> {exp.ExperienceLevel}</p>
-                         <p className="mt-2"><strong>Difficulty:</strong> {exp.difficulty}</p>
-                         <p className="mt-2"><strong>Questions:</strong> {exp.questions}</p>
-                          <p className="mt-2"><strong>Answers:</strong> {exp.answers}</p>
-            </div>
-          ))}
-
-            </div>
-
-
-
-        </div>
-
-        </div>
-      )}
-    
-  
-
+					{/* Submit Button */}
+					<div className="col-span-2 text-center mt-6">
+						<button
+							type="submit"
+							className="bg-blue-600 text-white text-lg py-2 px-6 rounded-lg">
+							Submit Interview
+							Experience
+						</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	);
+};
 
 export default Interview;
