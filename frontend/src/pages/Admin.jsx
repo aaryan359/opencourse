@@ -93,6 +93,9 @@ function Admin() {
   ];
   
 
+
+
+
   const getYoutubeVideoId = (url) => {
     if (!url) {
       console.error("Invalid URL provided:", url);
@@ -109,11 +112,14 @@ function Admin() {
   
 
 
+
+
   // Fetch all fields with topics and videos
   useEffect(() => {
     fetchFields();
     fetchvideos();
   }, []);
+
 
 
 
@@ -184,6 +190,7 @@ function Admin() {
 
 
 
+
   // Handle field click by setting full field object (including _id)
   const handleFieldClick = (field) => {
 
@@ -232,6 +239,8 @@ function Admin() {
       }
     }
   };
+
+
 
 
 
@@ -311,6 +320,7 @@ function Admin() {
 
 
 
+
   const handleSubmitVideo = async (e) => {
     e.preventDefault();
     const { url, title, description } = videoDetails;
@@ -353,12 +363,14 @@ function Admin() {
 
 
 
+
   
   return (
     <div className="min-h-screen bg-bg-dark p-6">
 
       {/* My Videos Section */}
       <div className=" max-w-7xl mx-auto bg-bg-dark shadow-lg rounded-lg p-6">
+
         <div className="mb-8">
           <h2 className="text-2xl font-semibold text-gray-200 mb-4">My Videos</h2>
           <div className=" border-4 border-purple-300 rounded-xl p-5  grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-7">
@@ -538,9 +550,9 @@ function Admin() {
             
           </form>
         )}
-         </div>
 
 
+      </div>
 
     </div>
   );

@@ -7,13 +7,14 @@ const verifyJWT = async (req, res, next) => {
 
   
     const token = req.cookies?.accessToken || req.header("Authorization")?.replace("Bearer ", "");
-    console.log("token aa gya",token);
+    
 
     // Check if token exists
     if (!token) {
       throw new Error(401, "Please log in first.");
 
     }
+
 
     let decodedToken;
 
@@ -40,6 +41,7 @@ const verifyJWT = async (req, res, next) => {
     // Move to the next middleware
     next();
   } catch (error) {
+    
     // Handle any other errors (like DB errors)
     return res.status(error.statusCode || 500).json({ message: error.message || "Internal server error" });
   }

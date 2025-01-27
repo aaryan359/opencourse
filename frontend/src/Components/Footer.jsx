@@ -21,27 +21,17 @@ function Footer() {
             <h3 className="text-lg font-semibold text-white mb-3 ">Quick Links</h3>
             <ul className="space-y-2">
               <li>
-                <a href="#" className="hover:text-indigo-400 transition-colors">
+                <a href="/" className="hover:text-indigo-400 transition-colors">
                   Home
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-indigo-400 transition-colors">
+                <a href="/userpanel" className="hover:text-indigo-400 transition-colors">
                   Courses
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-indigo-400 transition-colors">
-                  DevChallenge
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-indigo-400 transition-colors">
-                  Labs
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-indigo-400 transition-colors">
+                <a href="/about" className="hover:text-indigo-400 transition-colors">
                   Contact
                 </a>
               </li>
