@@ -26,7 +26,6 @@ const verifyJWT = async (req, res, next) => {
       throw new Error(401, "Invalid or expired token.");
     }
 
-   
     const user = await User.findById(decodedToken?._id).select("-password -refreshToken");
 
    
