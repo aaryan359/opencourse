@@ -14,7 +14,7 @@ const authMiddleware = require('./middlewares/authMiddlewares');
 
 const interviewRoutes = require('./routes/InterviewSectionRouting/interviewRoutes')
 
-require('./config/passport-setup'); // Import passport setup
+ // Import passport setup
 
 const app = express();
 

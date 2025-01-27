@@ -42,7 +42,9 @@ const InterviewPrep = () => {
   ];
     
   return (
+      <div className=' bg-bg-dark'>
 
+   
      <div className=' flex flex-col justify-center items-center gap-10' >
                   <div className=" flex flex-wrap justify-center pt-10 gap-5 "  >
 
@@ -54,14 +56,14 @@ const InterviewPrep = () => {
                 </Link>
 
                 <Link
-                to="/interviewprep/DailyGoals"
+                to="/practiceinterviewanswer"
                 style={{ textDecoration: 'none' }} // Ensure no underline
                 className="  bg-yellow-500 hover:bg-yellow-600 text-white py-3 px-8 rounded-lg shadow-lg transition-transform transform hover:scale-105  hover:text-white focus:outline-none active:bg-yellow-700" >
                 SET DAILY GOALS
               </Link>
 
               <Link
-                to="/interviewprep/GiveContest"
+                to="/practiceinterviewanswer"
                 style={{ textDecoration: 'none' }} // Ensure no underline
                 className= "   bg-yellow-500 hover:bg-yellow-600 text-white py-3 px-8 rounded-lg shadow-lg transition-transform transform hover:scale-105  hover:text-white focus:outline-none active:bg-yellow-700" >
                 INTERVIEW CONTEST
@@ -72,13 +74,13 @@ const InterviewPrep = () => {
 
 
 
-          <div className="flex flex-wrap justify-center pt-10 gap-8">
+          <div className="flex flex-wrap justify-center pt-10 w-full gap-8">
             {cardDetails.map((card, index) => (
           <div
           key={index}
-          className="w-80 bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow"
+          className="w-[360px]  border-2 border-cyan-400 bg-transparent  p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow"
         >
-          <h2 className="text-xl font-semibold mb-4 text-gray-800">{card.title}</h2>
+          <h2 className="text-xl font-semibold mb-4  text-white">{card.title}</h2>
           <ul className="list-disc list-inside text-gray-600 mb-6">
             {card.points.map((point, idx) => (
               <li key={idx} className="mb-1">
@@ -90,6 +92,8 @@ const InterviewPrep = () => {
         </div>
       ))}
 
+
+             </div>
 
      </div>
 
