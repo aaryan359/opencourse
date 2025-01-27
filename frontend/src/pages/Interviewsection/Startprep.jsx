@@ -109,19 +109,23 @@ const StartPrep = () => {
 
 
     return(
+
+      <div  className=' bg-bg-dark ' >
+
+ 
          <div className=' flex flex-col   p-5 '>
-                     <h1 className="text-3xl font-bold mb-6 text-center">Welcome to Start Prep Section</h1>
+                     <h1 className="text-3xl bg-bg-dark text-white font-bold mb-6 text-center">Welcome to Start Prep Section</h1>
                     
                   
-                  <div   className=" gap-5 flex flex-wrap justify-start bg-white p-8 rounded shadow-md mb-6  mx-auto" >
+                  <div   className=" gap-5 flex flex-wrap justify-start  border-2  bg-slate-900 p-4 rounded shadow-md mb-6  mx-auto" >
 
                       {/* Button to Show All Questions */}
 
                       
    
                     
-                  <div className="mb-4">
-                  <label className="block mb-1 font-semibold" htmlFor="skill">By Technology/Skills</label>
+                  <div className="  mb-4">
+                  <label className="block mb-1 text-white font-medium" htmlFor="skill">By Technology/Skills</label>
                   <select
                       name="skill"
                       id="skill"
@@ -138,7 +142,7 @@ const StartPrep = () => {
                   </div>
 
                   <div className="mb-4">
-                  <label className="block mb-1 font-semibold" htmlFor="Domain">By Industry/Domain</label>
+                  <label className="block text-white  mb-1 font-medium" htmlFor="Domain">By Industry/Domain</label>
                   <select
                       name="Domain"
                       id="Domain"
@@ -155,7 +159,7 @@ const StartPrep = () => {
                   </div>
 
                   <div className="mb-4">
-                  <label className="block mb-1 font-semibold" htmlFor="companyName">By Company</label>
+                  <label className="block mb-1 text-white font-medium" htmlFor="companyName">By Company</label>
                   <select
                       name="companyName"
                       id="companyName"
@@ -172,7 +176,7 @@ const StartPrep = () => {
                   </div>
 
                   <div className="mb-4">
-                  <label className="block mb-1 font-semibold" htmlFor="role">By Job Role</label>
+                  <label className="block mb-1 text-white font-medium" htmlFor="role">By Job Role</label>
                   <select
                       name="role"
                       id="role"
@@ -191,7 +195,7 @@ const StartPrep = () => {
 
                   <div className="mb-4">
 
-                  <label className="block mb-1 font-semibold" htmlFor="questiontype">By Question Type</label>
+                  <label className="block mb-1 text-white font-medium" htmlFor="questiontype">By Question Type</label>
                   <select
                       name="questiontype"
                       id="questiontype"
@@ -207,7 +211,7 @@ const StartPrep = () => {
                   </div>
 
                   <div className="mb-4">
-                  <label className="block mb-1 font-semibold" htmlFor="difficulty">By Difficulty Level</label>
+                  <label className="block mb-1 text-white font-medium" htmlFor="difficulty">By Difficulty Level</label>
                   <select
                       name="difficulty"
                       id="difficulty"
@@ -223,7 +227,7 @@ const StartPrep = () => {
                   </div>
 
                   <div className="mb-4">
-                  <label className="block mb-1 font-semibold" htmlFor="interviewType">By Experience Level</label>
+                  <label className="block mb-1 text-white font-medium" htmlFor="interviewType">By Experience Level</label>
                   <select
                       name="ExperienceLevel"
                       id="ExperienceLevel"
@@ -249,7 +253,7 @@ const StartPrep = () => {
                  </div>
 
 
-                 <h2 className="text-2xl font-semibold mb-4 text-center">Filtered questions</h2>
+                 <h2 className="text-2xl font-medium text-white mb-4 text-center">Filtered questions</h2>
 
             
             <div className=' flex flex-col  justify-start items-center'>
@@ -272,7 +276,9 @@ const StartPrep = () => {
             </div>
                   
 
- </div>
+        </div>
+
+        </div>
     )
       
 };

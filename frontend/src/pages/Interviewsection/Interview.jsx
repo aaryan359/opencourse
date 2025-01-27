@@ -158,12 +158,18 @@ const Interview = () => {
     };
 
     return (
-        <div className="container mx-auto p-6">
-            <h1 className="text-3xl font-bold mb-6 text-center">Interview Experience Submission</h1>
 
-            <form onSubmit={handleSubmit} className="bg-white p-8 rounded shadow-md mb-6 max-w-lg mx-auto">
+        <div className=' bg-bg-dark'>
 
-                <div className="mb-4">
+        
+        <div className="container w-[75%]  mx-auto p-6">
+            <h1 className="text-3xl font-bold mb-6 bg-bg-dark text-white text-center">Interview Experience Submission</h1>
+
+            <form onSubmit={handleSubmit} className="border-2 border-cyan-500 text-white bg-slate-900 p-8 w-full rounded shadow-md mb-6  ">
+
+              <div className=' flex flex-col sm:flex-row justify-around '>
+                             
+              <div className=" sm:w-[40%] mb-4">
                     <label className="block mb-1 font-semibold" htmlFor="companyName">Company Name (optional)</label>
                     <input
                        
@@ -173,12 +179,12 @@ const Interview = () => {
                         id="companyName"
                         value={formData.companyName}
                         onChange={handleChange}
-                        className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full text-black border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                         
                     />
                 </div>
 
-                <div className="mb-4">
+                <div className="  sm:w-[40%] mb-4">
                     <label className="block mb-1 font-semibold" htmlFor="role"> Job Role  (optional)</label>
                     <input
                        placeholder='EX- frontend developer/Data Analyst'
@@ -187,12 +193,15 @@ const Interview = () => {
                         id="role"
                         value={formData.role}
                         onChange={handleChange}
-                        className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full text-black border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                        
                     />
                 </div>
 
-                <div className="mb-4">
+              </div>
+                
+              <div className=' flex flex-col sm:flex-row justify-around '>
+                <div className=" sm:w-[40%] mb-4">
                     <label className="block mb-1 font-semibold" htmlFor="skill"> Technology/Skill  (mandatory)</label>
                     <input
                        placeholder='EX- Reactjs/python'
@@ -201,12 +210,12 @@ const Interview = () => {
                         id="skill"
                         value={formData.skill}
                         onChange={handleChange}
-                        className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full text-black border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                        required
                     />
                 </div>
 
-                <div className="mb-4">
+                <div className= " sm:w-[40%] mb-4">
                     <label className="block mb-1 font-semibold" htmlFor="Domain"> Industry/Domain (optional)</label>
                     <input
                        placeholder='EX- AI-ML/Blockchain Development'
@@ -215,19 +224,23 @@ const Interview = () => {
                         id="Domain"
                         value={formData.Domain}
                         onChange={handleChange}
-                        className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full text-black border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                        
                     />
                 </div>
 
-                <div className="mb-4">
+              </div>
+
+           
+              <div className=' flex flex-col sm:flex-row justify-around '>
+                <div className=" sm:w-[40%] mb-4">
                     <label className="block mb-1 font-semibold" htmlFor="interviewType">Experience Level  (mandatory)</label>
                     <select
                         name="ExperienceLevel"
                         id="ExperienceLevel"
                         value={formData.ExperienceLevel}
                         onChange={handleChange}
-                        className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full text-black border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                        required
                     >
                         
@@ -238,14 +251,14 @@ const Interview = () => {
                     </select>
                 </div>
 
-                <div className="mb-4">
+                <div className=" sm:w-[40%] mb-4">
                     <label className="block mb-1 font-semibold" htmlFor="interviewType">Difficulty Level  (mandatory)</label>
                     <select
                         name="difficulty"
                         id="difficulty"
                         value={formData.difficulty}
                         onChange={handleChange}
-                        className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full text-black border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                         required
                     >
                         
@@ -256,15 +269,19 @@ const Interview = () => {
 
                     </select>
                 </div>
+            
+                </div>
 
-                <div className="mb-4">
+
+
+                <div className=" mb-4">
                     <label className="block mb-1 font-semibold" htmlFor="interviewType">Question Type  (mandatory)</label>
                     <select
                         name="questiontype"
                         id="questiontype"
                         value={formData.questiontype}
                         onChange={handleChange}
-                        className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full text-black border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                         required
                     >
                         
@@ -272,7 +289,7 @@ const Interview = () => {
                         <option value="hr">HR</option>
                         <option value="system design">System Design</option>
                         <option value="case study">Case Study</option>
-                        <option value="conceptual">Conceptual</option>
+                        <option value="technical">technical</option>
                         <option value="behavioral">Behavioral</option>
 
                     </select>
@@ -285,7 +302,7 @@ const Interview = () => {
                         id="questions"
                         value={formData.questions}
                         onChange={handleChange}
-                        className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full text-black border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                         rows="4"
                         required
                     />
@@ -298,7 +315,7 @@ const Interview = () => {
                         id="answers"
                         value={formData.answers}
                         onChange={handleChange}
-                        className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full text-black border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                         rows="4"
                         required
                     />
@@ -313,7 +330,7 @@ const Interview = () => {
             </form>
 
 
-            <h2 className="text-2xl font-semibold mb-4 text-center">Submitted Experiences</h2>
+            <h2 className="text-2xl font-semibold mb-4 text-white text-center">Submitted Experiences</h2>
 
             
             <div>
@@ -334,6 +351,8 @@ const Interview = () => {
             </div>
 
 
+
+        </div>
 
         </div>
       )}

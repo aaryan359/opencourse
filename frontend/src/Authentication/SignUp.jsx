@@ -3,19 +3,13 @@ import axios from 'axios';
 import { useNavigate ,Link } from 'react-router-dom';
 
 const SignUp = () => {
+
   const [formData, setFormData] = useState({
     username: '',
-
     email: '',
-
     password: '',
-
     expertise: '', 
-
-    // Can be years of experience or description
     experience: '', 
-
- // Optional: URL or upload for their work samples
     portfolio: '', 
   });
 
@@ -35,9 +29,10 @@ const SignUp = () => {
     e.preventDefault();
 
     try {
+      console.log(" form data is",formData);
       const response = await axios.post('http://localhost:5001/auth/signup', formData);
 
-        // sent no alert redirect to home page or take or non tech field
+        console.log('sign up response is',response.data);
         
       if (response.status >= 200 && response.status < 300) {
 

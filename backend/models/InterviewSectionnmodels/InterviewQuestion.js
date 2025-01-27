@@ -30,7 +30,7 @@ const questionSchema = new mongoose.Schema({
   }, // Example: ['Frontend Developer', 'Data Analyst']
   questiontype: { 
     type: String, 
-    enum: ['hr', 'system design', 'case study', 'conceptual', 'behavioral'] 
+    enum: ['hr', 'system design', 'case study', 'technical', 'behavioral'] 
   },
   ExperienceLevel: { 
     type: String, 
