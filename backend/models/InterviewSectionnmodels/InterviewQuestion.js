@@ -15,19 +15,22 @@ const questionSchema = new mongoose.Schema({
   },
   skill:{ 
     type: String, 
+    default:"unknown"
    
   }, // Example: ['JavaScript', 'Python']
   Domain:{ 
     type: String, 
+    default:"unknown"
     
   }, // Example: ['Web Development', 'AI/ML']
   role:{ 
     type: String, 
+    default:"unknown"
    
   }, // Example: ['Frontend Developer', 'Data Analyst']
   questiontype: { 
     type: String, 
-    enum: ['hr', 'system design', 'case study', 'conceptual', 'behavioral'] 
+    enum: ['hr', 'system design', 'case study', 'technical', 'behavioral'] 
   },
   ExperienceLevel: { 
     type: String, 

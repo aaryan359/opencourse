@@ -15,16 +15,16 @@ const QuestionTemplate = ({exp}) => {
     };
 
       return(
-        <div  className=" w-[95%]  flex flex-row bg-yellow-50 p-4 mb-4 rounded-lg shadow">
+        <div  className=" w-[95%]  flex flex-row bg-slate-800 p-2 mb-4 rounded-lg shadow">
         
                     
                     <div className=" w-[100%]  sm:w-[75%] flex flex-col  mt-5" >
 
                             {/* QUESTION AND ANSWER P TAG */}
-                        <p className="  flex flex-row  justify-start items-center text-stone-900  text-2xl  font-bold "> <strong className=" font-extrabold"> Question: </strong> {exp.questions}</p>
+                        <p className="  flex flex-row  justify-start items-center text-white   text-xl  font-bold "> <strong className=" text-xl  font-normal"> Question: </strong> {exp.questions}</p>
                          { showanswer && 
                            
-                           <p  className="flex flex-row  justify-start items-center text-stone-900 text-lg " ><strong>Answers:</strong> {exp.answers}</p>
+                           <p  className="flex flex-row  justify-start items-center text-white text-xl " ><strong>Answers:</strong> {exp.answers}</p>
                               
                          }
 
@@ -33,8 +33,8 @@ const QuestionTemplate = ({exp}) => {
 
                              <div   onClick={() => setshowanswer(prev => !prev)}
                             style={{ textDecoration: 'none' }} // Ensure no underline
-                               className= " flex items-center cursor-pointer   bg-orange-500 hover:bg-orange-600 text-white py-3 px-8 rounded-lg shadow-lg transition-transform transform hover:scale-105  hover:text-white focus:outline-none active:bg-orange-700" >
-                              <FaEye className=" text-2xl"  />{ showanswer ? 'CLOSE ANSWER':'SEE ANSWER'}
+                               className= " flex items-center cursor-pointer   bg-orange-500 hover:bg-orange-600 text-white py-3 px-4 rounded-lg shadow-lg transition-transform transform hover:scale-105  hover:text-white focus:outline-none active:bg-orange-700" >
+                              <FaEye className=" text-xl"  />{ showanswer ? 'CLOSE ANSWER':'SEE ANSWER'}
                            </div>
 
                            <Link        
@@ -44,29 +44,29 @@ const QuestionTemplate = ({exp}) => {
                                     }}
                                 
                             style={{ textDecoration: 'none' }} // Ensure no underline
-                               className= "  flex items-center  bg-orange-500 hover:bg-orange-600 text-white py-3 px-8 rounded-lg shadow-lg transition-transform transform hover:scale-105  hover:text-white focus:outline-none active:bg-orange-700" >
-                            <CgSandClock className=" text-2xl"  /> PRACTICE ANSWER
+                               className= "  flex items-center  bg-orange-500 hover:bg-orange-600 text-white py-3 px-4 rounded-lg shadow-lg transition-transform transform hover:scale-105  hover:text-white focus:outline-none active:bg-orange-700" >
+                            <CgSandClock className=" text-xl"  /> PRACTICE ANSWER
                            </Link>
                                           
                              </div>
 
                           {/* ASKED TO COMPANY NAME ,SKILL TAGES */}
 
-                          <div className="flex flex-row justify-around items-center space-x-4 py-4">
+                          <div className="flex flex-row justify-around items-center space-x-2 py-2">
                            
 
 
                              {/* Company */}
-                            <span className="text-lg font-semibold text-gray-700">company: #{exp.companyName}</span>
+                            <span className="text-xs font-medium text-white">company: #{exp.companyName}</span>
 
                              {/* Skill */}
-                            <span className="text-lg font-semibold text-blue-500">skill: #{exp.skill}</span>
+                            <span className="text-xs font-medium text-blue-500">skill: #{exp.skill}</span>
 
                              {/* question type */}
-                            <span className="text-lg font-semibold text-gray-700">Question Type: #{exp.questiontype}</span>
+                            <span className="text-xs font-medium text-white">Question Type: #{exp.questiontype}</span>
 
                              {/* Job role */}
-                            <span className="text-lg font-semibold text-blue-500">Job role: #{exp.role}</span>
+                            <span className="text-xs font-medium text-blue-500">Job role: #{exp.role}</span>
 
                         
                           </div>
@@ -78,13 +78,13 @@ const QuestionTemplate = ({exp}) => {
                     <div className="flex flex-col  justify-center items-center">
                         
                      {/*Domain*/}
-                    <span className="font-semibold text-gray-700">Domain: #{exp.Domain}</span>
+                    <span className="font-medium text-white">Domain: #{exp.Domain}</span>
 
                      {/* Skill */}
-                   <span className=" font-semibold text-blue-500">Experience Level: #{exp.ExperienceLevel}</span>
+                   <span className=" font-medium text-blue-500">Experience Level: #{exp.ExperienceLevel}</span>
 
                      {/* question type */}
-                   <span className=" font-semibold text-gray-700">Difficulty level: #{exp.difficulty}</span>
+                   <span className=" font-medium text-white">Difficulty level: #{exp.difficulty}</span>
 
                     </div>
 

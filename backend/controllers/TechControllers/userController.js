@@ -1,6 +1,6 @@
 const User = require('../../models/TechSection/User');
 
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 
 const jwt = require('jsonwebtoken');
 
