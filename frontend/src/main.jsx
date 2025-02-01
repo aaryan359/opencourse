@@ -39,6 +39,9 @@ import Addsubtopicnontech from './pages/nontechadminparts/Addsubtopic.jsx';
 import Seencourse from './pages/nontechshowcourseparts/Seencourse.jsx';
 import ExplorenontechCourse from './pages/nontechshowcourseparts/Explorenoncourse.jsx';
 
+
+import { GoogleOAuthProvider } from '@react-oauth/google';
+
   
    
  const store =  configureStore({
@@ -49,7 +52,8 @@ import ExplorenontechCourse from './pages/nontechshowcourseparts/Explorenoncours
 
 createRoot(document.getElementById('root')).render(
  
-  <StrictMode>
+  
+ 
 
     <Provider store = { store}>
 
@@ -107,7 +111,8 @@ createRoot(document.getElementById('root')).render(
 
     <ToastContainer />
     </Provider>
-    </StrictMode>
+   
+    
 
   
 )

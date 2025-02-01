@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const SignUp = () => {
 	const [formData, setFormData] = useState({
@@ -24,22 +26,54 @@ const SignUp = () => {
 		e.preventDefault();
 
 		try {
-			console.log(" form data is", formData);
+			
+			
+
 			const response = await axios.post(
 				"http://localhost:5001/auth/signup",
 				formData
 			);
 
-			console.log("sign up response is", response.data);
+			
 
 			if (response.status >= 200 && response.status < 300) {
-				navigate("/");
+				navigate("/login");
+				toast.success('User Registered', {
+					position: "top-right",
+					autoClose: 5000, 
+					success:true,
+					hideProgressBar: false,
+					closeOnClick: true,
+					pauseOnHover: true,
+					draggable: true,
+					theme: "light",
+				  });
+				
 			} else {
-				alert("Signup failed");
+				toast.success('Registered failed', {
+					position: "top-right",
+					autoClose: 5000, 
+					success:false,
+					hideProgressBar: false,
+					closeOnClick: true,
+					pauseOnHover: true,
+					draggable: true,
+					theme: "light",
+				  });
 			}
 		} catch (err) {
 			console.error(err);
-			alert("Error registering user");
+		
+			toast.success('Error registering user', {
+				position: "top-right",
+				autoClose: 5000, 
+				success:false,
+				hideProgressBar: false,
+				closeOnClick: true,
+				pauseOnHover: true,
+				draggable: true,
+				theme: "light",
+			  });
 		}
 	};
 

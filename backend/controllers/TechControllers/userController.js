@@ -30,9 +30,12 @@ const generateAccessAndRefreshTokens = async (userId) => {
 // tested api
 
 const registerUser = async (req, res) => {
+
   const { username, email, password, expertise, experience, portfolio } = req.body;
 
   try {
+
+
 
     // Check if user already exists
     const existingUser = await User.findOne({ email });
@@ -44,7 +47,8 @@ const registerUser = async (req, res) => {
 
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
-   
+
+
 
      
     // Create new user
@@ -57,6 +61,8 @@ const registerUser = async (req, res) => {
       portfolio,
     });
 
+
+
     // Save the user to the database
     await user.save();
 
@@ -65,8 +71,11 @@ const registerUser = async (req, res) => {
     // Generate JWT token
     const token = jwt.sign(
       { id: user._id },
+
        process.env.JWT_SECRET,
+       
         { expiresIn: '1d' });
+
 
        
     // Send token to client

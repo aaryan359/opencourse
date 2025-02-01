@@ -3,7 +3,8 @@ import { setToken, logout } from '../reducer/slice/authSlice';
 import { jwtDecode } from 'jwt-decode';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import toast from 'react-hot-toast';
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import Cookies from 'js-cookie';
 
 function Header() {
@@ -12,6 +13,7 @@ function Header() {
   const [isexpired, setisexpired] = useState(true);
   const { token: accesstoken } = useSelector((state) => state.auth);
 
+  
   const verifyAccessToken = (token) => {
     try {
       // Decode the token
@@ -24,15 +26,30 @@ function Header() {
         setisexpired(true);
         // Logout if the token is expired
         dispatch(logout());
+        
+
       } else {
         setisexpired(false);
       }
     } catch (error) {
-      console.error('Invalid token:', error);
+
+      toast.success('Please login again', {
+        position: "top-right",
+        autoClose: 5000, 
+        success:false,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "light",
+      });
+
       setisexpired(true);
       dispatch(logout());
     }
   };
+
+
 
   // useEffect to verify the token when the component mounts
   useEffect(() => {
@@ -50,10 +67,20 @@ function Header() {
     }
   }, [accesstoken]);
 
+
+
   const handleLogout = () => {
     dispatch(logout());
     navigate('/');
-    toast.success('You have successfully logged out');
+    toast.success('You have successfully logged out', {
+      position: "top-right",
+      autoClose: 3000, 
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      theme: "light",
+    });
   };
 
   const [menuOpen, setMenuOpen] = useState(false);
@@ -76,16 +103,29 @@ function Header() {
       </Link>
 
       {/* Navigation Links */}
-      <nav className="hidden md:flex space-x-6">
+      <nav className="hidden md:flex space-x-8">
+      <Link
+          to="/Admin"
+          className="text-xl font-bold no-underline text-gray-300 hover:text-white hover:underline transition-colors hover:scale-105 duration-150"
+        >
+          Contribute
+        </Link>
+      <Link
+          to="/Userpanel"
+          className="text-xl font-bold no-underline text-gray-300 hover:text-white hover:underline transition-colors hover:scale-105 duration-150"
+        >
+          Courses
+        </Link>
+{/*         
         <Link
           to="/#"
           className="text-xl font-bold no-underline text-gray-300 hover:text-white hover:underline transition-colors hover:scale-105 duration-150"
         >
-          Roadmap
-        </Link>
+          Docs
+        </Link> */}
 
         <Link
-          to="/InterviewPrep"
+          to="/interviewprep/Startprep"
           className="text-xl font-bold no-underline text-gray-300 hover:text-white hover:underline transition-colors hover:scale-105 duration-150"
         >
           Interview
@@ -151,7 +191,7 @@ function Header() {
               to="/#"
               className="block px-4 py-2 text-gray-300 hover:text-white hover:underline transition-colors"
             >
-              Roadmap
+              Docs
             </Link>
             <Link
               to="/InterviewPrep"
@@ -159,6 +199,7 @@ function Header() {
             >
               Interview
             </Link>
+
             <Link
               to="/about"
               className="block px-4 py-2 text-gray-300 hover:text-white hover:underline transition-colors"

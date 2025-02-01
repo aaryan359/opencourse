@@ -163,8 +163,8 @@ const ExplorenontechCourse = () => {
                       
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {user.videos.map((video) => (
-                <div key={video._id} className="bg-white shadow-xl rounded-lg p-2 flex flex-col">
-                  <h3 className=" text-sm font-semibold  text-gray-800">{video.title}</h3>
+                <div key={video._id} className="border-2 border-purple-600 shadow-xl rounded-lg px-2 pt-3">
+                  <h3 className="text-xl font-semibold mb-1 ml-1 text-gray-50">{video.title}</h3>
                   <iframe
                     width="100%"
                     height="215"

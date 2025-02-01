@@ -9,7 +9,7 @@ const ComingSoon = () => {
   });
 
   useEffect(() => {
-    const targetDate = new Date("2025-02-01T00:00:00"); // Replace with your launch date
+    const targetDate = new Date("2025-02-10T00:00:00"); 
     const timer = setInterval(() => {
       const now = new Date();
       const difference = targetDate - now;
@@ -30,7 +30,7 @@ const ComingSoon = () => {
   }, []);
 
   return (
-    <div className="bg-gray-900 text-white h-screen flex flex-col items-center justify-center">
+    <div className="bg-black text-white h-screen flex flex-col items-center justify-center">
       {/* Title */}
       <h1 className="text-4xl font-bold mb-4">Community Page Coming Soon!</h1>
       <p className="text-lg text-gray-300 mb-8">

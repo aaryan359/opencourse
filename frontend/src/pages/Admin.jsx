@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 
 function Admin() {
@@ -26,6 +28,7 @@ function Admin() {
   });
 
   const { token } = useSelector((state) => state.auth);
+
 
 
   const predefinedFields = [
@@ -73,14 +76,17 @@ function Admin() {
       return null;
     }
   
+
     // Match standard YouTube URLs and shortened youtu.be URLs
     const match = url.match(
       /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^&\n?]+)/ 
     );
   
+
     return match ? match[1] : null;
   };
   
+
 
 
 
@@ -97,6 +103,7 @@ function Admin() {
 
 
 
+
   const fetchFields = async () => {
     try {
       const response = await axios.get("http://localhost:5001/user/getfields",{
@@ -106,7 +113,7 @@ function Admin() {
       });
       const data = response.data;
 
-      setFields(data); // Store full field objects
+      setFields(data); 
       const topicsMap = {};
 
       data.forEach(field => {
@@ -119,7 +126,7 @@ function Admin() {
       setTopics(topicsMap);     
 
     } catch (error) {
-      console.error("Failed to fetch fields", error);
+    console.log(error)
     }
   };
 
@@ -137,7 +144,6 @@ function Admin() {
       });
       const Videos = response.data.videos;
 
-
     //  Fetch user videos and set them
     const videoList = Videos.map(video => ({
       title: video.title,
@@ -152,7 +158,7 @@ function Admin() {
       // console.log(" videos is ",Videos);
 
     } catch (error) {
-      console.error("Failed to fetch fields", error);
+      console.log(error)
     }
   }
 
@@ -176,8 +182,18 @@ function Admin() {
 
   //add new filed 
   const handleAddField = async () => {
+
     if (fields.some(f => f.name === newField)) {
-      alert(`${newField} has already been added.`);
+      toast.warn('Field already exists', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "light",
+      });
+      
       return;
     }
 
@@ -198,6 +214,17 @@ function Admin() {
 
         const data = response.data;
 
+        toast.success('Field added successfuly', {
+					position: "top-right",
+					autoClose: 5000, 
+					success:true,
+					hideProgressBar: false,
+					closeOnClick: true,
+					pauseOnHover: true,
+					draggable: true,
+					theme: "light",
+				  });
+
         // Add full field object
         setFields([...fields, data]); 
 
@@ -206,7 +233,17 @@ function Admin() {
         setNewField(""); // Reset the input
       } catch (error) {
         console.error("Error adding field", error);
-        alert("Failed to add field");
+  
+        toast.error('Failed to add field', {
+					position: "top-right",
+					autoClose: 5000, 
+					success:false,
+					hideProgressBar: false,
+					closeOnClick: true,
+					pauseOnHover: true,
+					draggable: true,
+					theme: "light",
+				  });
       }
     }
   };
@@ -221,12 +258,31 @@ function Admin() {
   const handleAddTopic = async () => {
 
     if (!selectedField) {
-      alert("Select a field first");
+     toast.warn('Select a field first', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "light",
+      });
       return;
     }
   
     if (!newTopic || newTopic.trim() === "") {
-      alert("Topic name cannot be empty.");
+
+      toast.warn('Topic name cannot be empty.', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "light",
+      });
+
+      
       return;
     }
   
@@ -242,7 +298,15 @@ function Admin() {
         });
   
         const data = response.data;
-        console.log("Data of new subtopic:", data);
+        toast.success('Tpoic added successfully', {
+          position: "top-right",
+          autoClose: 4000, 
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          theme: "light",
+        });
   
         // Update the topics state with the new subtopic
         setTopics(prevTopics => ({
@@ -257,15 +321,51 @@ function Admin() {
   
       } catch (error) {
         console.error("Error adding topic", error);
+        toast.error('Error adding topic', {
+          position: "top-right",
+          autoClose: 4000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          theme: "light",
+        });
   
         if (error.response) {
           alert(`Failed to add topic: ${error.response.data.error}`);
+          toast.error('Failed to add topic.', {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            theme: "light",
+          });
         } else {
           alert("Failed to add topic due to network error");
+          toast.error('Failed to add topic due to network error.', {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            theme: "light",
+          });
         }
       }
     } else {
-      alert(`${newTopic} already exists in ${selectedField.name}.`);
+     
+      toast.warn('User already exists.', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "light",
+      });
     }
   };
   
@@ -296,6 +396,8 @@ function Admin() {
     e.preventDefault();
     const { url, title, description } = videoDetails;
   
+
+
     if (title && url && description && selectedTopic) {
       try {
         const response = await axios.post(
@@ -308,9 +410,21 @@ function Admin() {
             }, 
           }
         );
+
+        
   
         if (response.status === 200) {
-          alert("Video uploaded successfully");
+
+          toast.success('Video uploaded successfully.', {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            theme: "light",
+          });
+
           setMyVideos([...myVideos, { title, subtopic: selectedTopic.name }]);
           setVideoDetails({ url: "", title: "", description: "" });
   
@@ -322,11 +436,29 @@ function Admin() {
           alert("This subtopic already has videos from 5 different users.");
         } else {
           console.error("Error uploading video", error.response ? error.response.data : error);
-          alert("Failed to upload video");
+          
+          toast.error('Failed to upload video.', {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            theme: "light",
+          });
         }
       }
     } else {
-      alert("Please fill in all details and select a subtopic.");
+      
+      toast.warn('Please fill in all details and select a subtopic.', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "light",
+      });
     }
   };
   
@@ -348,7 +480,7 @@ function Admin() {
 
 
             {myVideos.map((video, index) => (
-              <div key={index} className="p-4 bg-bg-dark border-2 border-purple-300 text-purple-900 rounded-lg shadow-lg">
+              <div key={index} className="p-4 bg-bg-dark border-2 border-purple-300 text-white rounded-lg shadow-lg">
                 <h3 className="text-xl font-bold text-center">{video.title}</h3>
                 <p className="text-center text-sm">{video.field}</p>
 
@@ -471,7 +603,7 @@ function Admin() {
                 name="title"
                 value={videoDetails.title}
                 onChange={handleInputChange}
-                className="border-2 border-green-300 rounded-lg p-2 w-full bg-gray-600"
+                className="border-2 border-green-300 text-white rounded-lg p-2 w-full bg-gray-600"
                 required
               />
             </div>
@@ -487,7 +619,7 @@ function Admin() {
                 name="url"
                 value={videoDetails.url}
                 onChange={handleInputChange}
-                className="border-2 border-green-300 rounded-lg p-2 w-full bg-gray-600"
+                className="border-2 border-green-300 text-white rounded-lg p-2 w-full bg-gray-600"
                 required
               />
 
@@ -504,7 +636,7 @@ function Admin() {
                 name="description"
                 value={videoDetails.description}
                 onChange={handleInputChange}
-                className="border-2 border-green-300 rounded-lg p-2 w-full bg-gray-600"
+                className="border-2 text-white border-green-300 rounded-lg p-2 w-full bg-gray-600"
                 rows="4"
                 required
               />

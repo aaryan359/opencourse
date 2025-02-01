@@ -10,11 +10,13 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@react-oauth/google": "^0.12.1",
     "@reduxjs/toolkit": "^2.3.0",
     "axios": "^1.7.7",
     "bcrypt": "^5.1.1",
     "framer-motion": "^12.0.5",
     "js-cookie": "^3.0.5",
+    "jsonwebtoken": "^9.0.2",
     "jwt-decode": "^4.0.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
@@ -30,6 +32,7 @@
     "react-toastify": "^10.0.6",
     "react-treebeard": "^3.2.4",
     "rsuite": "^5.72.0",
+    "styled-components": "^6.1.14",
     "tailwind-merge": "^2.6.0"
   },
   "devDependencies": {

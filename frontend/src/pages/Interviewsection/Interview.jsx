@@ -3,10 +3,13 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useSelector } from "react-redux";
+import Editor from "../../Components/Text-editor/Quill";
 
 const Interview = () => {
 	const [experiences, setExperiences] = useState([]);
 	const { sighnupData } = useSelector((state) => state.auth);
+	const [editorContent, setEditorContent] = useState(""); 
+	
 
 	const [formData, setFormData] = useState({
 		companyName: "",
@@ -17,20 +20,22 @@ const Interview = () => {
 		difficulty: "",
 		questiontype: "",
 		questions: "",
-		answers: "",
+		answers: '',
 		postedBy: sighnupData ? sighnupData._id : null,
 	});
 
 	const handleChange = (e) => {
 		const { name, value } = e.target;
-		setFormData({ ...formData, [name]: value.toLowerCase() });
+		setFormData({ ...formData, [name]: value });
 	};
 
 	const addQuestions = async () => {
 		try {
+			// Ensure the editor content is included in the formData
+			const dataToSend = { ...formData, answers: editorContent };
 			await axios.post(
 				"http://localhost:5001/Interview/addQuestion",
-				formData
+				dataToSend
 			);
 
 			toast.success("Question added successfully!", {
@@ -62,13 +67,13 @@ const Interview = () => {
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 
-		setExperiences([...experiences, formData]);
+		// Update formData with the latest editor content
+		const updatedFormData = { ...formData, answers: editorContent };
+		setExperiences([...experiences, updatedFormData]);
 
 		await addQuestions();
-		//add  api  to add question question in database
-
+		// Reset form
 		setFormData({
-			// Reset form
 			companyName: "",
 			role: "",
 			skill: "",
@@ -79,6 +84,7 @@ const Interview = () => {
 			questions: "",
 			answers: "",
 		});
+		setEditorContent(""); // Reset the editor content
 	};
 
 	return (
@@ -93,7 +99,6 @@ const Interview = () => {
 					className=" border-2 border-purple-500 p-11  rounded-xl grid grid-cols-1 sm:grid-cols-2 gap-8 mt-10">
 					{/* Left Column */}
 					<div>
-
 						{/* Company Name */}
 						<div className="relative z-0 w-full mb-6 group">
 							<input
@@ -101,19 +106,14 @@ const Interview = () => {
 								name="companyName"
 								id="companyName"
 								placeholder=" "
-								value={
-									formData.companyName
-								}
-								onChange={
-									handleChange
-								}
+								value={formData.companyName}
+								onChange={handleChange}
 								className="block py-4 px-0 w-full text-xl text-white bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
 							/>
 							<label
 								htmlFor="companyName"
 								className="peer-focus:font-medium absolute text-lg text-gray-50 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:text-blue-400 peer-focus:scale-75 peer-focus:-translate-y-6">
-								Company Name
-								(optional)
+								Company Name (optional)
 							</label>
 						</div>
 
@@ -124,19 +124,14 @@ const Interview = () => {
 								name="role"
 								id="role"
 								placeholder=" "
-								value={
-									formData.role
-								}
-								onChange={
-									handleChange
-								}
+								value={formData.role}
+								onChange={handleChange}
 								className="block py-4 px-0 w-full text-xl text-white bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
 							/>
 							<label
 								htmlFor="role"
 								className="peer-focus:font-medium absolute text-lg text-gray-50 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-								job Role
-								(optional)
+								Job Role (optional)
 							</label>
 						</div>
 
@@ -147,20 +142,15 @@ const Interview = () => {
 								name="skill"
 								id="skill"
 								placeholder=" "
-								value={
-									formData.skill
-								}
-								onChange={
-									handleChange
-								}
+								value={formData.skill}
+								onChange={handleChange}
 								className="block py-4 px-0 w-full text-xl text-white bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
 								required
 							/>
 							<label
 								htmlFor="skill"
 								className="peer-focus:font-medium absolute text-lg text-gray-50 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-								Technology/Skill
-								(mandatory)
+								Technology/Skill (mandatory)
 							</label>
 						</div>
 
@@ -171,19 +161,14 @@ const Interview = () => {
 								name="Domain"
 								id="Domain"
 								placeholder=" "
-								value={
-									formData.Domain
-								}
-								onChange={
-									handleChange
-								}
+								value={formData.Domain}
+								onChange={handleChange}
 								className="block py-4 px-0 w-full text-xl text-white bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
 							/>
 							<label
 								htmlFor="Domain"
 								className="peer-focus:font-medium absolute text-lg text-gray-50 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-								Industry/Domain
-								(optional)
+								Industry/Domain (optional)
 							</label>
 						</div>
 
@@ -192,36 +177,19 @@ const Interview = () => {
 							<select
 								name="ExperienceLevel"
 								id="ExperienceLevel"
-								value={
-									formData.ExperienceLevel
-								}
-								onChange={
-									handleChange
-								}
+								value={formData.ExperienceLevel}
+								onChange={handleChange}
 								className="block py-4 px-0 w-full text-xl text-gray-400 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
 								required>
-								<option value="">
-									Select...
-								</option>
-								<option value="fresher">
-									Fresher
-								</option>
-								<option value="1-5">
-									1-3
-									years of
-									Experience
-								</option>
-								<option value="5+">
-									5+ years
-									of
-									Experience
-								</option>
+								<option value="">Select...</option>
+								<option value="fresher">Fresher</option>
+								<option value="1-5">1-3 years of Experience</option>
+								<option value="5+">5+ years of Experience</option>
 							</select>
 							<label
 								htmlFor="ExperienceLevel"
 								className="peer-focus:font-medium absolute text-lg text-gray-50 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:text-blue-400 peer-focus:scale-75 peer-focus:-translate-y-6">
-								Experience Level
-								(mandatory)
+								Experience Level (mandatory)
 							</label>
 						</div>
 					</div>
@@ -233,32 +201,19 @@ const Interview = () => {
 							<select
 								name="difficulty"
 								id="difficulty"
-								value={
-									formData.difficulty
-								}
-								onChange={
-									handleChange
-								}
+								value={formData.difficulty}
+								onChange={handleChange}
 								className="block py-4 px-0 w-full text-xl text-gray-400 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
 								required>
-								<option value="">
-									Select...
-								</option>
-								<option value="easy">
-									Easy
-								</option>
-								<option value="medium">
-									Medium
-								</option>
-								<option value="hard">
-									Hard
-								</option>
+								<option value="">Select...</option>
+								<option value="easy">Easy</option>
+								<option value="medium">Medium</option>
+								<option value="hard">Hard</option>
 							</select>
 							<label
 								htmlFor="difficulty"
 								className="peer-focus:font-medium absolute text-lg text-gray-50 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-								Difficulty Level
-								(mandatory)
+								Difficulty Level (mandatory)
 							</label>
 						</div>
 
@@ -267,40 +222,21 @@ const Interview = () => {
 							<select
 								name="questiontype"
 								id="questiontype"
-								value={
-									formData.questiontype
-								}
-								onChange={
-									handleChange
-								}
+								value={formData.questiontype}
+								onChange={handleChange}
 								className="block py-4 px-0 w-full text-xl text-gray-400 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
 								required>
-								<option value="">
-									Select...
-								</option>
-								<option value="hr">
-									HR
-								</option>
-								<option value="system design">
-									System
-									Design
-								</option>
-								<option value="case study">
-									Case
-									Study
-								</option>
-								<option value="technical">
-									Technical
-								</option>
-								<option value="behavioral">
-									Behavioral
-								</option>
+								<option value="">Select...</option>
+								<option value="hr">HR</option>
+								<option value="system design">System Design</option>
+								<option value="case study">Case Study</option>
+								<option value="technical">Technical</option>
+								<option value="behavioral">Behavioral</option>
 							</select>
 							<label
 								htmlFor="questiontype"
 								className="peer-focus:font-medium absolute text-lg text-gray-50 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-								Question Type
-								(mandatory)
+								Question Type (mandatory)
 							</label>
 						</div>
 
@@ -309,12 +245,8 @@ const Interview = () => {
 							<textarea
 								name="questions"
 								id="questions"
-								value={
-									formData.questions
-								}
-								onChange={
-									handleChange
-								}
+								value={formData.questions}
+								onChange={handleChange}
 								className="block py-4 px-0 w-full text-xl text-white bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
 								rows="2"
 								required
@@ -322,31 +254,18 @@ const Interview = () => {
 							<label
 								htmlFor="questions"
 								className="peer-focus:font-medium absolute text-lg text-gray-50 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-								Interview
-								Questions
+								Interview Questions
 							</label>
 						</div>
 
 						{/* Your Answers */}
 						<div className="relative z-0 w-full mb-6 group">
-							<textarea
-								name="answers"
-								id="answers"
-								value={
-									formData.answers
-								}
-								onChange={
-									handleChange
-								}
-								className="block py-4 px-0 w-full text-xl text-white bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-								rows="3"
-								required
-							/>
 							<label
 								htmlFor="answers"
 								className="peer-focus:font-medium absolute text-lg text-gray-50 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
 								Your Answers
 							</label>
+							<Editor setContent={setEditorContent} />
 						</div>
 					</div>
 
@@ -355,8 +274,7 @@ const Interview = () => {
 						<button
 							type="submit"
 							className="bg-blue-600 text-white text-lg py-2 px-6 rounded-lg">
-							Submit Interview
-							Experience
+							Submit Interview Experience
 						</button>
 					</div>
 				</form>
