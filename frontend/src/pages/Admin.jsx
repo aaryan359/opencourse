@@ -106,7 +106,7 @@ function Admin() {
 
   const fetchFields = async () => {
     try {
-      const response = await axios.get("http://localhost:5001/user/getfields",{
+      const response = await axios.get("https://opencoursebackend.onrender.com/user/getfields",{
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -137,7 +137,7 @@ function Admin() {
 
   const fetchvideos = async()=>{
     try {
-      const response = await axios.get("http://localhost:5001/user/getvideos",{
+      const response = await axios.get("https://opencoursebackend.onrender.com/user/getvideos",{
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -201,7 +201,7 @@ function Admin() {
       console.log(token);
       try {
         const response = await axios.post(
-          "http://localhost:5001/user/fields", // Endpoint
+          "https://opencoursebackend.onrender.com/user/fields", // Endpoint
           {
             name: newField, 
           },
@@ -293,7 +293,7 @@ function Admin() {
          //console.log("Field ID is:", selectedField._id);
        
       try {
-        const response = await axios.post(`http://localhost:5001/user/fields/${selectedField._id}/subtopics`, {
+        const response = await axios.post(`https://opencoursebackend.onrender.com/user/fields/${selectedField._id}/subtopics`, {
           subtopicName: newTopic.trim()
         });
   
@@ -401,7 +401,7 @@ function Admin() {
     if (title && url && description && selectedTopic) {
       try {
         const response = await axios.post(
-          `http://localhost:5001/user/subtopics/${selectedTopic.id}/videos`,
+          `https://opencoursebackend.onrender.com/user/subtopics/${selectedTopic.id}/videos`,
            // Use selectedTopic.id here
           { title, url, description },
           {

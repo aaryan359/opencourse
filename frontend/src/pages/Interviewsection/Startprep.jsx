@@ -43,7 +43,7 @@ const StartPrep = () => {
 
     const fetchQuestions = async () => {
         try {
-          const response = await axios.get('http://localhost:5001/Interview/getQuestions');
+          const response = await axios.get('https://opencoursebackend.onrender.com/Interview/getQuestions');
           setquestions(response.data);
           setCompanyNames([...new Set(response.data.map(item => item.companyName.toLowerCase()))]);
           setRoles([...new Set(response.data.map(item => item.role.toLowerCase()))]);

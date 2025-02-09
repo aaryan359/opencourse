@@ -24,7 +24,7 @@ const UserPanel = () => {
 		const getFieldData = async () => {
 			try {
 				const response = await axios.get(
-					"http://localhost:5001/user/getfields"
+					"https://opencoursebackend.onrender.com/user/getfields"
 				);
 				setFieldData(response.data);
 			} catch (error) {
@@ -43,7 +43,7 @@ const UserPanel = () => {
 		try {
 
 			const response = await axios.get(
-				`http://localhost:5001/user/fields/${fieldId}/subtopic/${subtopicName}/videos`
+				`https://opencoursebackend.onrender.com/user/fields/${fieldId}/subtopic/${subtopicName}/videos`
 			);
 
 

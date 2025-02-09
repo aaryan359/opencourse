@@ -3,8 +3,8 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 
 const toolbarOptions = [
-  [{ size: ["small", false, "large", "huge"] }], // Text Size
-  [{ list: "ordered" }, { list: "bullet" }], // Ordered & Bullet Lists
+  [{ size: ["small", false, "large", "huge"] }]
+  [{ list: "ordered" }, { list: "bullet" }]
 ];
 
 const Editor = ({ setContent }) => {

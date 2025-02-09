@@ -77,7 +77,7 @@ const Addsubtopicnontech = () => {
                const loadingToast = toast.loading('Uploading videos & QA...');
       try {
         // Send API request to add subtopic contributions
-        const response = await axios.post('http://localhost:5001/nontech/addNonTechSubtopic', payload, {
+        const response = await axios.post('https://opencoursebackend.onrender.com/nontech/addNonTechSubtopic', payload, {
           headers: {
             Authorization: `Bearer ${token}`, // Include authentication token
           },

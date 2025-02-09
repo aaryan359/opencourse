@@ -85,7 +85,7 @@ const Dummynontech = () => {
   
     try {
       // Make the API request to the backend
-      const response = await axios.post('http://localhost:5001/nontech/addnontechVideo', payload, {
+      const response = await axios.post('https://opencoursebackend.onrender.com/nontech/addnontechVideo', payload, {
         headers: {
           Authorization: `Bearer ${token}`, // Include the token in Authorization header
         },
@@ -126,7 +126,7 @@ const Dummynontech = () => {
     const fetchCourses = async () => {
      
       try {
-        const response = await axios.get('http://localhost:5001/nontech/getnontechcourse');
+        const response = await axios.get('https://opencoursebackend.onrender.com/nontech/getnontechcourse');
   
         if (response.data) {
           setCourses(response.data.nontechcourses); // Store the courses in state

@@ -20,7 +20,7 @@ const Seencourse = ()=>{
  const fetchCourses = async () => {
      
         try {
-          const response = await axios.get('http://localhost:5001/nontech/getnontechcourse');
+          const response = await axios.get('https://opencoursebackend.onrender.com/nontech/getnontechcourse');
     
           if (response.data) {
             setCourses(response.data.nontechcourses); // Store the courses in state

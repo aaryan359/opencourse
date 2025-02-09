@@ -28,7 +28,7 @@ const ExplorenontechCourse = () => {
            
     setloading(true);
     try {
-        const response = await axios.post('http://localhost:5001/nontech/getnontechsubtopic',{NonTechSubTopicnameid});
+        const response = await axios.post('https://opencoursebackend.onrender.com/nontech/getnontechsubtopic',{NonTechSubTopicnameid});
   
         if (response.data) {
           setCourses(response.data.data); // Store the courses in state

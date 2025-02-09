@@ -1,5 +1,4 @@
 
-import { jwtDecode } from "jwt-decode";
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
@@ -9,7 +8,6 @@ import Cookies from "js-cookie";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-import { GoogleLogin } from "@react-oauth/google";
 
 const Login = () => {
 	const [formData, setFormData] = useState({
@@ -26,10 +24,10 @@ const Login = () => {
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-
+		
 		try {
 			const response = await axios.post(
-				"http://localhost:5001/auth/login",
+				"https://opencoursebackend.onrender.com/auth/login",
 				formData,
 				{
 					withCredentials: true,

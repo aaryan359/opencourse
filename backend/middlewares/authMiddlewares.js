@@ -7,7 +7,7 @@ const verifyJWT = async (req, res, next) => {
 
   
     const token = req.cookies?.accessToken || req.header("Authorization")?.replace("Bearer ", "");
-    
+    console.log("token",token);
 
     // Check if token exists
     if (!token) {
@@ -21,6 +21,7 @@ const verifyJWT = async (req, res, next) => {
     // Verify the token and extract the payload
     try {
       decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+
       req.user = decodedToken;
 
     } catch (error) {
@@ -40,6 +41,8 @@ const verifyJWT = async (req, res, next) => {
 
     // Move to the next middleware
     next();
+
+    
   } catch (error) {
     
     // Handle any other errors (like DB errors)

@@ -17,7 +17,7 @@ const DailyGoals = () => {
                  
                  try{
 
-                  const response =  await axios.post('http://localhost:5001/Interview/getpreviousquestion',{userId});
+                  const response =  await axios.post('https://opencoursebackend.onrender.com/Interview/getpreviousquestion',{userId});
                            setpreviousquestion(response.data.previousQuestions);
                                       
                  }catch(error){
@@ -49,7 +49,7 @@ const DailyGoals = () => {
        const isgoalactive = async()=>{
                             
                      try{
-                              const response =  await axios.post('http://localhost:5001/Interview/isgoalactive',{userId});
+                              const response =  await axios.post('https://opencoursebackend.onrender.com/Interview/isgoalactive',{userId});
                                    console.log("goal active:",response);
                                 if( response.data.existingGoal){
                                                
@@ -61,7 +61,7 @@ const DailyGoals = () => {
 
                         if(response.data.existingGoal.active){
 
-                              const response2 =  await axios.post('http://localhost:5001/Interview/getdailyquestion',{userId});
+                              const response2 =  await axios.post('https://opencoursebackend.onrender.com/Interview/getdailyquestion',{userId});
                               if( response2){
                                     console.log(" response 2 is : ",response2);
 
@@ -97,7 +97,7 @@ const DailyGoals = () => {
 
                   try{
                         
-                        const response =  await axios.post('http://localhost:5001/Interview/stopdailygoals', {userId});
+                        const response =  await axios.post('https://opencoursebackend.onrender.com/Interview/stopdailygoals', {userId});
 
                         localStorage.setItem('DailyQuestions', JSON.stringify([]));
                         setDailyQuestions(JSON.parse(localStorage.getItem('DailyQuestions')));
@@ -151,13 +151,13 @@ const DailyGoals = () => {
                                       });
                               }
 
-                              const response =  await axios.post('http://localhost:5001/Interview/setdailygoal',{userId,questionsPerDay,formData});
+                              const response =  await axios.post('https://opencoursebackend.onrender.com/Interview/setdailygoal',{userId,questionsPerDay,formData});
                               
                               if(response){
                                      
                                     
                                   
-                                    const response2 =  await axios.post('http://localhost:5001/Interview/getdailyquestion',{userId});
+                                    const response2 =  await axios.post('https://opencoursebackend.onrender.com/Interview/getdailyquestion',{userId});
                                     if( response2){
                                           console.log(" response 2 is : ",response2);
 
@@ -253,7 +253,7 @@ const DailyGoals = () => {
 
         const fetchQuestions = async () => {
             try {
-              const response = await axios.get('http://localhost:5001/Interview/getQuestions');
+              const response = await axios.get('https://opencoursebackend.onrender.com/Interview/getQuestions');
               setquestions(response.data);
               setCompanyNames([...new Set(response.data.map(item => item.companyName.toLowerCase()))]);
           setRoles([...new Set(response.data.map(item => item.role.toLowerCase()))]);
