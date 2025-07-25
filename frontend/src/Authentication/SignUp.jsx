@@ -30,7 +30,7 @@ const SignUp = () => {
 			
 
 			const response = await axios.post(
-				"https://opencoursebackend.onrender.com/auth/signup",
+				"https://opencoursebackend-j3sa.onrender.com/auth/signup",
 				formData
 			);
 
