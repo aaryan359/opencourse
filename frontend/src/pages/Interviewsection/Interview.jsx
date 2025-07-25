@@ -34,7 +34,7 @@ const Interview = () => {
 			// Ensure the editor content is included in the formData
 			const dataToSend = { ...formData, answers: editorContent };
 			await axios.post(
-				"https://opencoursebackend.onrender.com/Interview/addQuestion",
+				"https://opencoursebackend-j3sa.onrender.com/Interview/addQuestion",
 				dataToSend
 			);
 
