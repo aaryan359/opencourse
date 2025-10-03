@@ -3,33 +3,28 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
+import { FiUpload, FiVideo, FiX, FiPlus } from "react-icons/fi";
+import { uploadVideoToSupabase, validateVideoFile } from "../lib/videoUpload";
 
 function Admin() {
   const [fields, setFields] = useState([]);
-
-
   const [selectedField, setSelectedField] = useState(null);
-
   const [topics, setTopics] = useState({});
-
   const [myVideos, setMyVideos] = useState([]);
-
   const [newField, setNewField] = useState("");
-
   const [newTopic, setNewTopic] = useState("");
-
   const [selectedTopic, setSelectedTopic] = useState(null);
-
   const [videoDetails, setVideoDetails] = useState({
     url: "",
     title: "",
     description: ""
   });
+  const [uploadMode, setUploadMode] = useState("url");
+  const [videoFile, setVideoFile] = useState(null);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [isUploading, setIsUploading] = useState(false);
 
   const { token } = useSelector((state) => state.auth);
-
-
 
   const predefinedFields = [
     "frontend",
@@ -45,270 +40,157 @@ function Admin() {
     "DevOps",
     "Internet of Things (IoT)",
     "Game Development",
-  
     "Software Engineering",
-
     "UI/UX Design",
-    
     "Quantum Computing",
-
     "Networking",
     "Edge Computing",
     "Generative AI",
-    
     "Deep Learning",
     "Reinforcement Learning",
-
     "Machine Learning",
     "Supervised Learning",
     "Unsupervised Learning",
-    
     "Natural Language Processing (NLP)",
   ];
-  
-
-
-
 
   const getYoutubeVideoId = (url) => {
-    if (!url) {
-      console.error("Invalid URL provided:", url);
-      return null;
-    }
-  
-
-    // Match standard YouTube URLs and shortened youtu.be URLs
+    if (!url) return null;
     const match = url.match(
-      /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^&\n?]+)/ 
+      /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^&\n?]+)/
     );
-  
-
     return match ? match[1] : null;
   };
-  
 
+  const isYouTubeUrl = (url) => {
+    return url && (url.includes('youtube.com') || url.includes('youtu.be'));
+  };
 
-
-
-
-  // Fetch all fields with topics and videos
   useEffect(() => {
     fetchFields();
     fetchvideos();
   }, []);
 
-
-
-
-
-
-
-
   const fetchFields = async () => {
     try {
-      const response = await axios.get("https://opencoursebackend-j3sa.onrender.com/user/getfields",{
+      const response = await axios.get("https://opencoursebackend-j3sa.onrender.com/user/getfields", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
       const data = response.data;
 
-      setFields(data); 
+      setFields(data);
       const topicsMap = {};
 
       data.forEach(field => {
         topicsMap[field.name] = field.subtopic.map(sub => ({
           name: sub.name,
-          id: sub._id // Store subtopicId
+          id: sub._id
         }));
       });
 
-      setTopics(topicsMap);     
-
+      setTopics(topicsMap);
     } catch (error) {
-    console.log(error)
+      console.log(error);
     }
   };
 
-
-
-
-
-
-  const fetchvideos = async()=>{
+  const fetchvideos = async () => {
     try {
-      const response = await axios.get("https://opencoursebackend-j3sa.onrender.com/user/getvideos",{
+      const response = await axios.get("https://opencoursebackend-j3sa.onrender.com/user/getvideos", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
       const Videos = response.data.videos;
 
-    //  Fetch user videos and set them
-    const videoList = Videos.map(video => ({
-      title: video.title,
-      url: video.url,
-      description: video.description,
-      createdAt: video.createdAt,
-    }));
+      const videoList = Videos.map(video => ({
+        title: video.title,
+        url: video.url,
+        description: video.description,
+        createdAt: video.createdAt,
+      }));
 
-    // console.log("Video list is",videoList);
-     
       setMyVideos(videoList);
-      // console.log(" videos is ",Videos);
-
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-  }
-
-
-
-
-
-
-
-  // Handle field click by setting full field object (including _id)
-  const handleFieldClick = (field) => {
-
-   // Set the full field object
-    setSelectedField(field);
-     
   };
 
+  const handleFieldClick = (field) => {
+    setSelectedField(field);
+  };
 
-
-
-
-  //add new filed 
   const handleAddField = async () => {
-
     if (fields.some(f => f.name === newField)) {
       toast.warn('Field already exists', {
         position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        theme: "light",
+        autoClose: 3000,
       });
-      
       return;
     }
 
     if (newField) {
-      console.log(token);
       try {
         const response = await axios.post(
-          "https://opencoursebackend-j3sa.onrender.com/user/fields", // Endpoint
-          {
-            name: newField, 
-          },
+          "https://opencoursebackend-j3sa.onrender.com/user/fields",
+          { name: newField },
           {
             headers: {
-              Authorization: `Bearer ${token}`, // Authorization token in headers
+              Authorization: `Bearer ${token}`,
             },
           }
         );
 
         const data = response.data;
+        toast.success('Field added successfully', {
+          position: "top-right",
+          autoClose: 3000,
+        });
 
-        toast.success('Field added successfuly', {
-					position: "top-right",
-					autoClose: 5000, 
-					success:true,
-					hideProgressBar: false,
-					closeOnClick: true,
-					pauseOnHover: true,
-					draggable: true,
-					theme: "light",
-				  });
-
-        // Add full field object
-        setFields([...fields, data]); 
-
+        setFields([...fields, data]);
         setTopics({ ...topics, [newField]: [] });
-
-        setNewField(""); // Reset the input
+        setNewField("");
       } catch (error) {
         console.error("Error adding field", error);
-  
         toast.error('Failed to add field', {
-					position: "top-right",
-					autoClose: 5000, 
-					success:false,
-					hideProgressBar: false,
-					closeOnClick: true,
-					pauseOnHover: true,
-					draggable: true,
-					theme: "light",
-				  });
+          position: "top-right",
+          autoClose: 3000,
+        });
       }
     }
   };
 
-
-
-
-
-
-
-
   const handleAddTopic = async () => {
-
     if (!selectedField) {
-     toast.warn('Select a field first', {
+      toast.warn('Select a field first', {
         position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        theme: "light",
+        autoClose: 3000,
       });
       return;
     }
-  
+
     if (!newTopic || newTopic.trim() === "") {
-
-      toast.warn('Topic name cannot be empty.', {
+      toast.warn('Topic name cannot be empty', {
         position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        theme: "light",
+        autoClose: 3000,
       });
-
-      
       return;
     }
-  
+
     if (!topics[selectedField.name]?.some(topic => topic.name === newTopic)) {
-
-
-          // Only log selectedField._id
-         //console.log("Field ID is:", selectedField._id);
-       
       try {
         const response = await axios.post(`https://opencoursebackend-j3sa.onrender.com/user/fields/${selectedField._id}/subtopics`, {
           subtopicName: newTopic.trim()
         });
-  
+
         const data = response.data;
-        toast.success('Tpoic added successfully', {
+        toast.success('Topic added successfully', {
           position: "top-right",
-          autoClose: 4000, 
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          theme: "light",
+          autoClose: 3000,
         });
-  
-        // Update the topics state with the new subtopic
+
         setTopics(prevTopics => ({
           ...prevTopics,
           [selectedField.name]: [
@@ -316,69 +198,26 @@ function Admin() {
             { name: newTopic.trim(), id: data.subtopic._id }
           ]
         }));
-  
-        setNewTopic(""); // Reset the input field
-  
+
+        setNewTopic("");
       } catch (error) {
         console.error("Error adding topic", error);
-        toast.error('Error adding topic', {
+        toast.error('Failed to add topic', {
           position: "top-right",
-          autoClose: 4000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          theme: "light",
+          autoClose: 3000,
         });
-  
-        if (error.response) {
-          alert(`Failed to add topic: ${error.response.data.error}`);
-          toast.error('Failed to add topic.', {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            theme: "light",
-          });
-        } else {
-          alert("Failed to add topic due to network error");
-          toast.error('Failed to add topic due to network error.', {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            theme: "light",
-          });
-        }
       }
     } else {
-     
-      toast.warn('User already exists.', {
+      toast.warn('Topic already exists', {
         position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        theme: "light",
+        autoClose: 3000,
       });
     }
   };
-  
-
-
-
 
   const handleUploadVideo = (topic) => {
-    setSelectedTopic(topic); // Open form for the selected topic
+    setSelectedTopic(topic);
   };
-
-
-
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -388,130 +227,171 @@ function Admin() {
     }));
   };
 
-
-
-
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const validation = validateVideoFile(file);
+      if (!validation.valid) {
+        toast.error(validation.error, {
+          position: "top-right",
+          autoClose: 5000,
+        });
+        e.target.value = null;
+        return;
+      }
+      setVideoFile(file);
+    }
+  };
 
   const handleSubmitVideo = async (e) => {
     e.preventDefault();
     const { url, title, description } = videoDetails;
-  
 
-
-    if (title && url && description && selectedTopic) {
-      try {
-        const response = await axios.post(
-          `https://opencoursebackend-j3sa.onrender.com/user/subtopics/${selectedTopic.id}/videos`,
-           // Use selectedTopic.id here
-          { title, url, description },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            }, 
-          }
-        );
-
-        
-  
-        if (response.status === 200) {
-
-          toast.success('Video uploaded successfully.', {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            theme: "light",
-          });
-
-          setMyVideos([...myVideos, { title, subtopic: selectedTopic.name }]);
-          setVideoDetails({ url: "", title: "", description: "" });
-  
-          // Reset selectedTopic only after success
-          setSelectedTopic(null);
-        }
-      } catch (error) {
-        if (error.response?.status === 403) {
-          alert("This subtopic already has videos from 5 different users.");
-        } else {
-          console.error("Error uploading video", error.response ? error.response.data : error);
-          
-          toast.error('Failed to upload video.', {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            theme: "light",
-          });
-        }
-      }
-    } else {
-      
-      toast.warn('Please fill in all details and select a subtopic.', {
+    if (!title || !description || !selectedTopic) {
+      toast.warn('Please fill in all details and select a subtopic', {
         position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        theme: "light",
+        autoClose: 3000,
       });
+      return;
+    }
+
+    if (uploadMode === "url" && !url) {
+      toast.warn('Please provide a video URL', {
+        position: "top-right",
+        autoClose: 3000,
+      });
+      return;
+    }
+
+    if (uploadMode === "file" && !videoFile) {
+      toast.warn('Please select a video file', {
+        position: "top-right",
+        autoClose: 3000,
+      });
+      return;
+    }
+
+    setIsUploading(true);
+    let finalVideoUrl = url;
+
+    try {
+      if (uploadMode === "file" && videoFile) {
+        const uploadToast = toast.loading('Uploading video...');
+
+        const uploadResult = await uploadVideoToSupabase(videoFile, 'course-videos');
+
+        if (!uploadResult.success) {
+          toast.update(uploadToast, {
+            render: `Upload failed: ${uploadResult.error}`,
+            type: 'error',
+            isLoading: false,
+            autoClose: 5000,
+          });
+          setIsUploading(false);
+          return;
+        }
+
+        finalVideoUrl = uploadResult.url;
+
+        toast.update(uploadToast, {
+          render: 'Video uploaded successfully!',
+          type: 'success',
+          isLoading: false,
+          autoClose: 2000,
+        });
+      }
+
+      const response = await axios.post(
+        `https://opencoursebackend-j3sa.onrender.com/user/subtopics/${selectedTopic.id}/videos`,
+        { title, url: finalVideoUrl, description },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        toast.success('Video added to course successfully', {
+          position: "top-right",
+          autoClose: 3000,
+        });
+
+        setMyVideos([...myVideos, { title, url: finalVideoUrl, description }]);
+        setVideoDetails({ url: "", title: "", description: "" });
+        setVideoFile(null);
+        setSelectedTopic(null);
+        setUploadProgress(0);
+      }
+    } catch (error) {
+      if (error.response?.status === 403) {
+        toast.error("This subtopic already has videos from 5 different users", {
+          position: "top-right",
+          autoClose: 5000,
+        });
+      } else {
+        console.error("Error uploading video", error.response ? error.response.data : error);
+        toast.error('Failed to upload video', {
+          position: "top-right",
+          autoClose: 3000,
+        });
+      }
+    } finally {
+      setIsUploading(false);
     }
   };
-  
 
-
-
-
-
-  
   return (
-    <div className="min-h-screen bg-bg-dark p-6">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-6">
+      <div className="max-w-7xl mx-auto space-y-8">
 
-      {/* My Videos Section */}
-      <div className=" max-w-7xl mx-auto bg-bg-dark shadow-lg rounded-lg p-6">
-
-        <div className="mb-8">
-          <h2 className="text-2xl font-semibold text-gray-200 mb-4">My Videos</h2>
-          <div className=" border-4 border-purple-300 rounded-xl p-5  grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-7">
-
-
+        <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700 shadow-2xl rounded-2xl p-8">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-3xl font-bold text-white flex items-center gap-3">
+              <FiVideo className="text-blue-400" />
+              My Videos
+            </h2>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {myVideos.map((video, index) => (
-              <div key={index} className="p-4 bg-bg-dark border-2 border-purple-300 text-white rounded-lg shadow-lg">
-                <h3 className="text-xl font-bold text-center">{video.title}</h3>
-                <p className="text-center text-sm">{video.field}</p>
-
-                {/* Embed YouTube video */}
-                <div className=" relative h-0 overflow-hidden" style={{ paddingBottom: '56.25%' }}>
-                  <iframe
-                    className="absolute top-0 left-0 w-full h-full"
-                    src={`https://www.youtube.com/embed/${getYoutubeVideoId(video.url)}`}
-                    frameBorder="0"
-                    allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                    title={video.title}
-                  />
+              <div key={index} className="group relative bg-slate-900/70 border border-slate-700 rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-105">
+                <div className="relative h-48 bg-slate-800">
+                  {isYouTubeUrl(video.url) ? (
+                    <iframe
+                      className="absolute inset-0 w-full h-full"
+                      src={`https://www.youtube.com/embed/${getYoutubeVideoId(video.url)}`}
+                      frameBorder="0"
+                      allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                      title={video.title}
+                    />
+                  ) : (
+                    <video
+                      className="absolute inset-0 w-full h-full object-cover"
+                      controls
+                      src={video.url}
+                    >
+                      Your browser does not support the video tag.
+                    </video>
+                  )}
+                </div>
+                <div className="p-4">
+                  <h3 className="text-lg font-semibold text-white truncate">{video.title}</h3>
+                  <p className="text-sm text-slate-400 mt-2 line-clamp-2">{video.description}</p>
                 </div>
               </div>
             ))}
-
           </div>
         </div>
 
-
-
-        {/* Add New Field Section */}
-        <div className="mb-8">
-          <div className="flex justify-between items-center">
-            <h2 className="text-2xl font-semibold text-gray-100">Manage Learning Fields</h2>
-            <div className="flex items-center">
+        <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700 shadow-2xl rounded-2xl p-8">
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-3xl font-bold text-white">Manage Learning Fields</h2>
+            <div className="flex items-center gap-3">
               <select
                 value={newField}
                 onChange={(e) => setNewField(e.target.value)}
-                className="border border-gray-300 rounded-lg p-2 mr-2"
+                className="bg-slate-900 border border-slate-600 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 <option value="" disabled>Select a field</option>
                 {predefinedFields.map((field) => (
@@ -519,21 +399,24 @@ function Admin() {
                 ))}
               </select>
               <button
-                className="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700 transition-colors"
+                className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-2 rounded-lg shadow-lg hover:from-blue-700 hover:to-blue-800 transition-all duration-300 flex items-center gap-2"
                 onClick={handleAddField}
               >
-                Add New Field
+                <FiPlus /> Add Field
               </button>
             </div>
           </div>
 
-          {/* Fields Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {fields.map((field) => (
               <div
                 key={field._id}
-                className="p-4 bg-blue-100 text-blue-900 rounded-lg shadow-lg cursor-pointer hover:bg-blue-300 hover:scale-105 transform transition duration-300"
-                onClick={() => handleFieldClick(field)} // Pass full field object
+                className={`p-6 rounded-xl shadow-lg cursor-pointer transition-all duration-300 hover:scale-105 ${
+                  selectedField?._id === field._id
+                    ? 'bg-gradient-to-br from-blue-600 to-blue-700 text-white'
+                    : 'bg-slate-900/70 border border-slate-700 text-slate-200 hover:border-blue-500'
+                }`}
+                onClick={() => handleFieldClick(field)}
               >
                 <h3 className="text-xl font-bold text-center">{field.name}</h3>
               </div>
@@ -541,44 +424,33 @@ function Admin() {
           </div>
         </div>
 
-
-
-        {/* Display selected field topics */}
         {selectedField && (
-          <div>
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-2xl font-semibold text-gray-100">{selectedField.name} Topics</h2>
-              <button
-                className="bg-green-600 text-white px-4 py-2 rounded-lg shadow hover:bg-green-700 transition-colors"
-                onClick={handleAddTopic}
-              >
-                Add Topic
-              </button>
+          <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700 shadow-2xl rounded-2xl p-8">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-3xl font-bold text-white">{selectedField.name} Topics</h2>
             </div>
 
-            {/* New Topic Input Form */}
-            <div className="mb-4">
+            <div className="flex gap-3 mb-6">
               <input
                 type="text"
                 value={newTopic}
                 onChange={(e) => setNewTopic(e.target.value)}
                 placeholder="Enter new topic"
-                className="border border-gray-300 rounded-lg p-2 mr-2"
+                className="flex-1 bg-slate-900 border border-slate-600 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
               />
               <button
-                className="bg-green-600 text-white px-4 py-2 rounded-lg shadow hover:bg-green-700 transition-colors"
+                className="bg-gradient-to-r from-green-600 to-green-700 text-white px-6 py-2 rounded-lg shadow-lg hover:from-green-700 hover:to-green-800 transition-all duration-300 flex items-center gap-2"
                 onClick={handleAddTopic}
               >
-                Add Topic
+                <FiPlus /> Add Topic
               </button>
             </div>
 
-            {/* Topics Grid with Video Upload */}
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
               {topics[selectedField.name]?.map((topic, index) => (
                 <div
                   key={index}
-                  className="p-4 bg-green-100 text-green-900 rounded-lg shadow-lg cursor-pointer hover:bg-green-300 hover:scale-105 transform transition duration-300"
+                  className="p-6 bg-slate-900/70 border border-slate-700 text-slate-200 rounded-xl shadow-lg cursor-pointer hover:border-green-500 hover:scale-105 transition-all duration-300"
                   onClick={() => handleUploadVideo(topic)}
                 >
                   <h3 className="text-xl font-bold text-center">{topic.name}</h3>
@@ -588,75 +460,126 @@ function Admin() {
           </div>
         )}
 
-
-
-        {/* Video Upload Form */}
         {selectedTopic && (
-          <form onSubmit={handleSubmitVideo} className="mt-6 bg-gray-900 shadow-lg rounded-xl p-6">
-            <h3 className="text-xl text-gray-100 font-bold mb-4">Upload Video to {selectedTopic.name}</h3>
-
-            <div className="mb-2">
-
-              <label className="block text-gray-300 mb-1">Video Title</label>
-              <input
-                type="text"
-                name="title"
-                value={videoDetails.title}
-                onChange={handleInputChange}
-                className="border-2 border-green-300 text-white rounded-lg p-2 w-full bg-gray-600"
-                required
-              />
+          <form onSubmit={handleSubmitVideo} className="bg-slate-800/50 backdrop-blur-sm border border-slate-700 shadow-2xl rounded-2xl p-8">
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="text-2xl font-bold text-white flex items-center gap-3">
+                <FiUpload className="text-blue-400" />
+                Upload Video to {selectedTopic.name}
+              </h3>
+              <button
+                type="button"
+                onClick={() => setSelectedTopic(null)}
+                className="text-slate-400 hover:text-white transition-colors"
+              >
+                <FiX size={24} />
+              </button>
             </div>
 
+            <div className="space-y-6">
+              <div className="flex gap-4 mb-4">
+                <button
+                  type="button"
+                  onClick={() => setUploadMode("url")}
+                  className={`flex-1 py-3 rounded-lg font-semibold transition-all duration-300 ${
+                    uploadMode === "url"
+                      ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white'
+                      : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
+                  }`}
+                >
+                  YouTube URL
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setUploadMode("file")}
+                  className={`flex-1 py-3 rounded-lg font-semibold transition-all duration-300 ${
+                    uploadMode === "file"
+                      ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white'
+                      : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
+                  }`}
+                >
+                  Upload File
+                </button>
+              </div>
 
+              <div>
+                <label className="block text-slate-300 font-semibold mb-2">Video Title</label>
+                <input
+                  type="text"
+                  name="title"
+                  value={videoDetails.title}
+                  onChange={handleInputChange}
+                  className="w-full bg-slate-900 border border-slate-600 text-white rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  required
+                />
+              </div>
 
-            <div className="mb-4">
+              {uploadMode === "url" ? (
+                <div>
+                  <label className="block text-slate-300 font-semibold mb-2">YouTube URL</label>
+                  <input
+                    type="url"
+                    name="url"
+                    value={videoDetails.url}
+                    onChange={handleInputChange}
+                    className="w-full bg-slate-900 border border-slate-600 text-white rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    required={uploadMode === "url"}
+                  />
+                </div>
+              ) : (
+                <div>
+                  <label className="block text-slate-300 font-semibold mb-2">Video File</label>
+                  <div className="relative">
+                    <input
+                      type="file"
+                      accept="video/*"
+                      onChange={handleFileChange}
+                      className="hidden"
+                      id="video-upload"
+                    />
+                    <label
+                      htmlFor="video-upload"
+                      className="flex items-center justify-center w-full bg-slate-900 border-2 border-dashed border-slate-600 text-slate-300 rounded-lg px-4 py-8 cursor-pointer hover:border-blue-500 transition-colors"
+                    >
+                      <div className="text-center">
+                        <FiUpload className="mx-auto text-4xl mb-2" />
+                        <p className="font-semibold">
+                          {videoFile ? videoFile.name : 'Click to upload video'}
+                        </p>
+                        <p className="text-sm text-slate-500 mt-1">MP4, WebM, OGG (max 500MB)</p>
+                      </div>
+                    </label>
+                  </div>
+                </div>
+              )}
 
-               <label className="block text-gray-300 mb-1">YouTube URL</label>
+              <div>
+                <label className="block text-slate-300 font-semibold mb-2">Video Description</label>
+                <textarea
+                  name="description"
+                  value={videoDetails.description}
+                  onChange={handleInputChange}
+                  className="w-full bg-slate-900 border border-slate-600 text-white rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  rows="4"
+                  required
+                />
+              </div>
 
-              <input
-                type="url"
-                name="url"
-                value={videoDetails.url}
-                onChange={handleInputChange}
-                className="border-2 border-green-300 text-white rounded-lg p-2 w-full bg-gray-600"
-                required
-              />
-
+              <button
+                type="submit"
+                disabled={isUploading}
+                className={`w-full py-4 rounded-lg font-semibold text-white shadow-lg transition-all duration-300 ${
+                  isUploading
+                    ? 'bg-slate-600 cursor-not-allowed'
+                    : 'bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800'
+                }`}
+              >
+                {isUploading ? 'Uploading...' : 'Upload Video'}
+              </button>
             </div>
-
-
-            <div className="mb-3">
-
-
-              <label className="block text-gray-300 mb-2">Video Description</label>
-
-
-              <textarea
-                name="description"
-                value={videoDetails.description}
-                onChange={handleInputChange}
-                className="border-2 text-white border-green-300 rounded-lg p-2 w-full bg-gray-600"
-                rows="4"
-                required
-              />
-            </div>
-
-
-            <button
-              type="submit"
-              className="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700 transition-colors"
-            >
-              Upload Video
-            </button>
-
-            
           </form>
         )}
-
-
       </div>
-
     </div>
   );
 }

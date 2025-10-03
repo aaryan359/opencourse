@@ -1,260 +1,331 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { FaChevronDown } from "react-icons/fa";
-import { CiCirclePlus } from "react-icons/ci";
-import { toast, ToastContainer } from 'react-toastify';
+import { FiChevronDown, FiChevronUp, FiVideo, FiUpload } from "react-icons/fi";
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
 import Subform from './Subform';
+import { uploadVideoToSupabase, validateVideoFile } from '../../lib/videoUpload';
 
-
-
-
-
-
-// Component to add non-technical subtopics with video and QA contributions
 const Addsubtopicnontech = () => {
+  const { token } = useSelector((state) => state.auth);
+  const { state } = useLocation();
+  const { field } = state || {};
 
-    const { token } = useSelector((state) => state.auth);
-    const { state } = useLocation(); // Access state passed via React Router's Link
-    const { field } = state || {}; // Destructure to get the field object from state
+  const [NonTechSubTopicnameid, setSelectedSubtopicid] = useState('');
+  const [qaPairs, setQAPairs] = useState([{ question: '', answer: '' }]);
+  const [videos, setVideos] = useState([{ title: '', url: '', file: null }]);
+  const [seefullform, setseefullform] = useState(false);
+  const [error, setError] = useState(null);
+  const [fieldid, setfieldid] = useState('');
+  const [NonTechSubTopicname, setSelectedSubtopic] = useState('');
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadMode, setUploadMode] = useState({});
 
-   
-  
-    // State variables for managing inputs and UI state
-    const [NonTechSubTopicnameid, setSelectedSubtopicid] = useState(''); // ID of the selected subtopic
-    const [qaPairs, setQAPairs] = useState([{ question: '', answer: '' }]); // Array for QA pairs
-    const [videos, setVideos] = useState([{ title: '', url: '' }]); // Array for videos with title and URL
-    const [seefullform, setseefullform] = useState(false); // Toggle visibility of the form
-    const [seefullform2, setseefullform2] = useState(false); // Toggle visibility of the form
-    const [error, setError] = useState(null); // Store error messages
+  const handleQAChange = (index, field, value) => {
+    const newQAPairs = [...qaPairs];
+    newQAPairs[index][field] = value;
+    setQAPairs(newQAPairs);
+  };
 
-    const [fieldid, setfieldid] = useState(''); // Store id 
-     
+  const handleVideoChange = (index, field, value) => {
+    const newVideos = [...videos];
+    newVideos[index][field] = value;
+    setVideos(newVideos);
+  };
 
-     const [NonTechSubTopicname, setSelectedSubtopic] = useState('');
-     
-  
-    // Handle changes in QA pairs
-    const handleQAChange = (index, field, value) => {
-      const newQAPairs = [...qaPairs];
-      newQAPairs[index][field] = value; // Update the specific field (question/answer) in the QA pair
-      setQAPairs(newQAPairs); // Update state
-    };
-  
-    // Handle changes in video details
-    const handleVideoChange = (index, field, value) => {
-      const newVideos = [...videos];
-      newVideos[index][field] = value; // Update the specific field (title/URL) in the video
-      setVideos(newVideos); // Update state
-    };
-  
-    // Add a new empty QA pair
-    const handleAddQA = () => setQAPairs([...qaPairs, { question: '', answer: '' }]);
-  
-    // Add a new empty video entry
-    const handleAddVideo = () => setVideos([...videos, { title: '', url: '' }]);
-  
-    // Handle form submission
-    const handleSubmit = async (e) => {
-      e.preventDefault();
-  
-      // Validate form inputs
-      if ( !videos.length || !qaPairs.length) {
-        setError('Please provide all the required details.');
+  const handleVideoFileChange = (index, file) => {
+    if (file) {
+      const validation = validateVideoFile(file);
+      if (!validation.valid) {
+        toast.error(validation.error, {
+          position: "top-right",
+          autoClose: 5000,
+        });
         return;
       }
-  
-      // Prepare the payload for API request
+      const newVideos = [...videos];
+      newVideos[index].file = file;
+      newVideos[index].url = '';
+      setVideos(newVideos);
+    }
+  };
+
+  const toggleUploadMode = (index, mode) => {
+    setUploadMode(prev => ({ ...prev, [index]: mode }));
+    const newVideos = [...videos];
+    if (mode === 'file') {
+      newVideos[index].url = '';
+    } else {
+      newVideos[index].file = null;
+    }
+    setVideos(newVideos);
+  };
+
+  const handleAddQA = () => setQAPairs([...qaPairs, { question: '', answer: '' }]);
+
+  const handleAddVideo = () => {
+    const newIndex = videos.length;
+    setVideos([...videos, { title: '', url: '', file: null }]);
+    setUploadMode(prev => ({ ...prev, [newIndex]: 'url' }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!videos.length || !qaPairs.length) {
+      setError('Please provide all the required details.');
+      return;
+    }
+
+    const loadingToast = toast.loading('Uploading videos & QA...');
+    setIsUploading(true);
+
+    try {
+      const processedVideos = await Promise.all(
+        videos.map(async (video) => {
+          if (video.file) {
+            const uploadResult = await uploadVideoToSupabase(video.file, 'nontech-videos');
+            if (!uploadResult.success) {
+              throw new Error(`Failed to upload ${video.title}: ${uploadResult.error}`);
+            }
+            return { title: video.title, url: uploadResult.url };
+          }
+          return { title: video.title, url: video.url };
+        })
+      );
+
       const payload = {
         fieldid,
         NonTechSubTopicname,
         NonTechSubTopicnameid,
-        Videos: videos.map(video => ({ title: video.title, url: video.url })), // Format videos
-        qaPair: qaPairs.map(qa => ({ question: qa.question, answer: qa.answer })), // Format QA pairs
+        Videos: processedVideos,
+        qaPair: qaPairs.map(qa => ({ question: qa.question, answer: qa.answer })),
       };
-               const loadingToast = toast.loading('Uploading videos & QA...');
-      try {
-        // Send API request to add subtopic contributions
-        const response = await axios.post('https://opencoursebackend-j3sa.onrender.com/nontech/addNonTechSubtopic', payload, {
+
+      const response = await axios.post(
+        'https://opencoursebackend-j3sa.onrender.com/nontech/addNonTechSubtopic',
+        payload,
+        {
           headers: {
-            Authorization: `Bearer ${token}`, // Include authentication token
+            Authorization: `Bearer ${token}`,
           },
-        });
-  
-        // Reset form on successful submission
-        if (response.data.success) {
-             
-                    // Show success toast
-                    toast.update(loadingToast, {
-                      render: 'uploaded successfully!',
-                      type: 'success',
-                      isLoading: false,
-                      autoClose: 5000,
-                    });
-            setSelectedSubtopic('');
-          setSelectedSubtopicid('');
-          setVideos([{ title: '', url: '' }]);
-          setQAPairs([{ question: '', answer: '' }]);
         }
-      } catch (error) {
-        console.error('Error in submitting form:', error);
+      );
+
+      if (response.data.success) {
         toast.update(loadingToast, {
-                render: 'Failed to upload video & QA',
-                type: 'error',
-                isLoading: false,
-                autoClose: 5000,
-              });
+          render: 'Uploaded successfully!',
+          type: 'success',
+          isLoading: false,
+          autoClose: 3000,
+        });
+        setSelectedSubtopic('');
+        setSelectedSubtopicid('');
+        setVideos([{ title: '', url: '', file: null }]);
+        setQAPairs([{ question: '', answer: '' }]);
+        setUploadMode({ 0: 'url' });
       }
-    };
+    } catch (error) {
+      console.error('Error in submitting form:', error);
+      toast.update(loadingToast, {
+        render: error.message || 'Failed to upload video & QA',
+        type: 'error',
+        isLoading: false,
+        autoClose: 5000,
+      });
+    } finally {
+      setIsUploading(false);
+    }
+  };
 
-   
-      
-    useEffect(() => {
-        if (field) {
-            setfieldid(field._id);
+  useEffect(() => {
+    if (field) {
+      setfieldid(field._id);
+    }
+  }, [field]);
 
-        }
-      }, [field]);  // Ensures state is set only when field changes
-      
-  
-    return (
+  useEffect(() => {
+    setUploadMode({ 0: 'url' });
+  }, []);
 
-      <div className=' bg-bg-dark' >
-      <div className="text-4xl pl-16 pr-16 w-[100%] mt-40">
-        <div className="flex flex-col items-center justify-center">
-          {/* Section Header */}
-          
-            
-          <p className=' mt-4 mb-3  font-medium text-white'> Course Name : {field.branchname}</p>
-           
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 py-20 px-6">
+      <div className="max-w-5xl mx-auto space-y-8">
+        <div className="text-center mb-8">
+          <h1 className="text-4xl font-bold text-white mb-3 flex items-center justify-center gap-3">
+            <FiVideo className="text-blue-400" />
+            {field?.branchname || 'Course Management'}
+          </h1>
+          <p className="text-slate-400">Add and manage course content</p>
+        </div>
 
-                 {/* form to add new subtopic */}
-                  <form onSubmit={handleSubmit} className="  w-[75%] bg-gray-800 border rounded-lg  shadow-md">
-                 
-                    <div className=' flex flex-row p-2 pl-3   justify-between items-center  w-full   rounded-lg focus:outline-none focus:ring-2' >
-                                         <h2 className=" text-center text-xl text-white font-light  mb-2">Add New Subtopic</h2> 
-                                          <CiCirclePlus className=' hover:text-yellow-400 cursor-pointer mr-4 text-2xl text-white' onClick={ ()=>{setseefullform(!seefullform)}} /> 
-                          </div>   { seefullform &&
-                           <div className="p-4 w-[100%] ">
-                 
-                         
-                      
-                 
-                         {/* Subtopic Input */}
-                         <div className="mb-2">
-                           <label className="block text-white text-lg font-medium mb-2">Add Subtopic</label>
-                           <input
-                             type="text"
-                             value={NonTechSubTopicname}
-                             onChange={(e) => setSelectedSubtopic(e.target.value)}
-                             placeholder="Enter Subtopic Name"
-                             className="w-full h-10 p-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" required
-                           />
-                         </div>
-                 
-                         {/* Video Title and URL Input */}
-                         <label className="block text-lg text-white font-medium mb-2">Title and URL of Video</label>
-                         {videos.map((video, index) => (
-                           <div key={index} className="flex flex-col md:flex-row gap-4 mb-4">
-                             {/* Video Title */}
-                             <input
-                               type="text"
-                               value={video.title}
-                               onChange={(e) => handleVideoChange(index, 'title', e.target.value)}
-                               placeholder={`Video Title ${index + 1}`}
-                               className="flex-1 h-10 p-3 border text-sm rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-                               required
-                             />
-                             {/* Video URL */}
-                             <input
-                               type="url"
-                               value={video.url}
-                               onChange={(e) => handleVideoChange(index, 'url', e.target.value)}
-                               placeholder={`Video URL ${index + 1}`}
-                               className="flex-1 h-10 p-3 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-                               required
-                             />
-                           </div>
-                         ))}
-                         <button
-                           type="button"
-                           className="bg-yellow-500 text-sm text-white py-2 px-6 rounded-full shadow-lg hover:bg-yellow-600 transform hover:scale-105 transition-all duration-300"
-                           onClick={handleAddVideo}
-                         >
-                           Add More Videos
-                         </button>
-                 
-                         {/* Questions and Answers */}
-                         <div className="mt-6">
-                           <label className="block text-white text-xl font-medium mb-4">Upload Questions and Answers</label>
-                           {qaPairs.map((qa, index) => (
+        <form onSubmit={handleSubmit} className="bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-2xl shadow-2xl overflow-hidden">
+          <div
+            className="flex items-center justify-between p-6 cursor-pointer hover:bg-slate-700/30 transition-colors"
+            onClick={() => setseefullform(!seefullform)}
+          >
+            <h2 className="text-2xl font-semibold text-white">Add New Subtopic</h2>
+            {seefullform ? (
+              <FiChevronUp className="text-2xl text-blue-400" />
+            ) : (
+              <FiChevronDown className="text-2xl text-blue-400" />
+            )}
+          </div>
 
-                             <div key={index} className="flex flex-col md:flex-row gap-4 mb-4">
-                               <input
-                                 type="text"
-                                 value={qa.question}
-                                 onChange={(e) => handleQAChange(index, 'question', e.target.value)}
-                                 placeholder={`Question ${index + 1}`}
-                                 className="flex-1 p-3 h-10 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-                                 required
-                               />
-                               <input
-                                 type="text"
-                                 value={qa.answer}
-                                 onChange={(e) => handleQAChange(index, 'answer', e.target.value)}
-                                 placeholder="Answer"
-                                 className="flex-1 p-3 border text-sm h-10 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-                                 required
-                               />
-                             </div>
-                           ))}
-                           <button
-                             type="button"
-                             className="bg-yellow-500 text-sm text-white py-2 px-4 rounded-full shadow-lg hover:bg-yellow-600 transform hover:scale-105 transition-all duration-300"
-                             onClick={handleAddQA}
-                           >
-                             Add More Questions
-                           </button>
-                         </div>
-                 
-                         {/* Submit Button */}
-                         <div className="text-center mt-6">
-                           <button
-                             type="submit"
-                             className="bg-blue-600 text-white py-3 px-2 rounded-full shadow-lg hover:bg-blue-700 transform hover:scale-105 transition-all duration-300"
-                           >
-                             Upload Video & QA
-                           </button>
-                         </div>
-                 
-                         
-                 
-                           </div>}
-                 
-                 
-                 </form>
+          {seefullform && (
+            <div className="p-6 border-t border-slate-700 space-y-6">
+              <div>
+                <label className="block text-slate-300 font-semibold mb-2">Subtopic Name</label>
+                <input
+                  type="text"
+                  value={NonTechSubTopicname}
+                  onChange={(e) => setSelectedSubtopic(e.target.value)}
+                  placeholder="Enter Subtopic Name"
+                  className="w-full bg-slate-900 border border-slate-600 text-white rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  required
+                />
+              </div>
 
+              <div className="space-y-4">
+                <label className="block text-slate-300 font-semibold text-lg">Videos</label>
+                {videos.map((video, index) => (
+                  <div key={index} className="bg-slate-900/50 border border-slate-600 rounded-xl p-5 space-y-4">
+                    <div className="flex gap-3 mb-3">
+                      <button
+                        type="button"
+                        onClick={() => toggleUploadMode(index, 'url')}
+                        className={`flex-1 py-2 rounded-lg font-medium transition-all ${
+                          uploadMode[index] === 'url'
+                            ? 'bg-blue-600 text-white'
+                            : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
+                        }`}
+                      >
+                        URL
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => toggleUploadMode(index, 'file')}
+                        className={`flex-1 py-2 rounded-lg font-medium transition-all ${
+                          uploadMode[index] === 'file'
+                            ? 'bg-blue-600 text-white'
+                            : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
+                        }`}
+                      >
+                        Upload File
+                      </button>
+                    </div>
 
-            
-          <p className=' mt-4 mb-3 font-medium text-white'>Contribute in pre-existing subtopic with your own video</p>
-  
-          {/* Iterate over subtopics passed from state */}
-          {field?.subtopic?.map(sub => (
+                    <input
+                      type="text"
+                      value={video.title}
+                      onChange={(e) => handleVideoChange(index, 'title', e.target.value)}
+                      placeholder={`Video Title ${index + 1}`}
+                      className="w-full bg-slate-900 border border-slate-600 text-white rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      required
+                    />
 
-                   <Subform
-                              key={sub._id} // Ensure to add a unique key
-                              sub= {sub}
-                              
-                   />
+                    {uploadMode[index] === 'url' ? (
+                      <input
+                        type="url"
+                        value={video.url}
+                        onChange={(e) => handleVideoChange(index, 'url', e.target.value)}
+                        placeholder={`Video URL ${index + 1}`}
+                        className="w-full bg-slate-900 border border-slate-600 text-white rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        required={uploadMode[index] === 'url'}
+                      />
+                    ) : (
+                      <div>
+                        <input
+                          type="file"
+                          accept="video/*"
+                          onChange={(e) => handleVideoFileChange(index, e.target.files[0])}
+                          className="hidden"
+                          id={`video-file-${index}`}
+                        />
+                        <label
+                          htmlFor={`video-file-${index}`}
+                          className="flex items-center justify-center w-full bg-slate-900 border-2 border-dashed border-slate-600 text-slate-300 rounded-lg px-4 py-6 cursor-pointer hover:border-blue-500 transition-colors"
+                        >
+                          <div className="text-center">
+                            <FiUpload className="mx-auto text-3xl mb-2" />
+                            <p className="font-medium">
+                              {video.file ? video.file.name : 'Click to upload video'}
+                            </p>
+                            <p className="text-sm text-slate-500 mt-1">MP4, WebM, OGG (max 500MB)</p>
+                          </div>
+                        </label>
+                      </div>
+                    )}
+                  </div>
+                ))}
+                <button
+                  type="button"
+                  className="w-full bg-gradient-to-r from-yellow-600 to-yellow-700 text-white py-3 rounded-lg shadow-lg hover:from-yellow-700 hover:to-yellow-800 transition-all"
+                  onClick={handleAddVideo}
+                >
+                  Add More Videos
+                </button>
+              </div>
 
-          ))}
+              <div className="space-y-4">
+                <label className="block text-slate-300 font-semibold text-lg">Questions & Answers</label>
+                {qaPairs.map((qa, index) => (
+                  <div key={index} className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <input
+                      type="text"
+                      value={qa.question}
+                      onChange={(e) => handleQAChange(index, 'question', e.target.value)}
+                      placeholder={`Question ${index + 1}`}
+                      className="bg-slate-900 border border-slate-600 text-white rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      required
+                    />
+                    <input
+                      type="text"
+                      value={qa.answer}
+                      onChange={(e) => handleQAChange(index, 'answer', e.target.value)}
+                      placeholder="Answer"
+                      className="bg-slate-900 border border-slate-600 text-white rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      required
+                    />
+                  </div>
+                ))}
+                <button
+                  type="button"
+                  className="w-full bg-gradient-to-r from-yellow-600 to-yellow-700 text-white py-3 rounded-lg shadow-lg hover:from-yellow-700 hover:to-yellow-800 transition-all"
+                  onClick={handleAddQA}
+                >
+                  Add More Questions
+                </button>
+              </div>
+
+              <button
+                type="submit"
+                disabled={isUploading}
+                className={`w-full py-4 rounded-lg font-semibold text-white shadow-lg transition-all ${
+                  isUploading
+                    ? 'bg-slate-600 cursor-not-allowed'
+                    : 'bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800'
+                }`}
+              >
+                {isUploading ? 'Uploading...' : 'Upload Video & QA'}
+              </button>
+            </div>
+          )}
+        </form>
+
+        <div className="text-center">
+          <h2 className="text-2xl font-bold text-white mb-6">Contribute to Existing Subtopics</h2>
+          <div className="space-y-4">
+            {field?.subtopic?.map((sub) => (
+              <Subform key={sub._id} sub={sub} />
+            ))}
+          </div>
         </div>
       </div>
+    </div>
+  );
+};
 
-      </div>
-    );
-  };
-  
-  export default Addsubtopicnontech;
+export default Addsubtopicnontech;
