@@ -1,6 +1,8 @@
 import Container from "../../components/ui/Container";
 import ContributeSelectionCard from "./components/SelectionCard";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
+
 const techContributions = [
 	{
 		title: "Create / Improve Courses",
@@ -32,6 +34,7 @@ const nonTechContributions = [
 ];
 
 export default function Contribute() {
+	const navigate = useNavigate();
 	return (
 		<section className='relative min-h-screen bg-neutral-950 py-20 overflow-hidden'>
 			{/* FIXED BACKGROUND */}
@@ -83,6 +86,17 @@ export default function Contribute() {
 								key={item.title}
 								{...item}
 								accent='indigo'
+								onClick={() => {
+									if (item.title.includes("Video")) {
+										navigate("/contribute/new?type=video");
+									}
+									if (item.title.includes("Interview")) {
+										navigate("/contribute/new?type=interview");
+									}
+									if (item.title.includes("Course")) {
+										navigate("/contribute/new?type=course");
+									}
+								}}
 							/>
 						))}
 					</div>
@@ -108,6 +122,10 @@ export default function Contribute() {
 				</section>
 			</Container>
 		</section>
+   
+
+
+
 	);
 }
 

@@ -1,10 +1,12 @@
 import { motion, useMotionTemplate, useMotionValue } from "framer-motion";
-import type { ReactNode, MouseEvent } from "react";
+import type { ReactNode, MouseEvent, KeyboardEvent } from "react";
 
 type GlowCardProps = {
 	children: ReactNode;
 	accent?: "indigo" | "emerald";
 	className?: string;
+    
+	onClick?: () => void;
 };
 
 const ACCENT = {
@@ -12,7 +14,7 @@ const ACCENT = {
 	emerald: "99,102,241",
 };
 
-export default function GlowCard({ children, accent = "indigo", className = "" }: GlowCardProps) {
+export default function GlowCard({ children, accent = "indigo", className = "", onClick, }: GlowCardProps) {
 	const mouseX = useMotionValue(0);
 	const mouseY = useMotionValue(0);
 
@@ -20,6 +22,13 @@ export default function GlowCard({ children, accent = "indigo", className = "" }
 		const rect = e.currentTarget.getBoundingClientRect();
 		mouseX.set(e.clientX - rect.left);
 		mouseY.set(e.clientY - rect.top);
+	}
+	function handleKeyDown(e: KeyboardEvent<HTMLDivElement>) {
+		if (!onClick) return;
+		if (e.key === "Enter" || e.key === " ") {
+			e.preventDefault();
+			onClick();
+		}
 	}
 
 	const mask = useMotionTemplate`
@@ -35,6 +44,8 @@ export default function GlowCard({ children, accent = "indigo", className = "" }
 	return (
 		<div
 			onMouseMove={handleMouseMove}
+			onClick={onClick}
+			onKeyDown={handleKeyDown}
 			className={`
                 group relative rounded-2xl
                 border border-white/10

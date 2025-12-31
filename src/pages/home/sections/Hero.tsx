@@ -76,7 +76,7 @@ export default function Hero() {
 
             {/* Floating cards */}
             <motion.div
-              className="absolute top-0 left-0 w-64 p-5 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10"
+              className="absolute top-0 left-0 w-70 p-5 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10"
               initial={{ opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 }}
@@ -99,7 +99,7 @@ export default function Hero() {
             </motion.div>
 
             <motion.div
-              className="absolute bottom-0 left-24 w-80 p-6 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10"
+              className="absolute bottom-5 left-24 w-70 p-6 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10"
               initial={{ opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.8 }}
