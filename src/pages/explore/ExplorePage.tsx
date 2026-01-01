@@ -11,73 +11,53 @@ type SortOption = "rating" | "views" | "upvotes";
 
 export default function ExplorePage() {
 	const [domain, setDomain] = useState<"tech" | "nonTech">("tech");
-	const [selectedVideos, setSelectedVideos] = useState<Video[]>([]);
+	const [activeMiniTopic, setActiveMiniTopic] = useState<any>(null);
 	const [query, setQuery] = useState("");
 	const [sort, setSort] = useState<SortOption>("rating");
 
-	const filteredVideos = useMemo(() => {
-		let videos = selectedVideos.filter((v) => v.title.toLowerCase().includes(query.toLowerCase()));
+	const videos = useMemo(() => {
+		if (!activeMiniTopic) return [];
+		let v = activeMiniTopic.videos.filter((video: Video) => video.title.toLowerCase().includes(query.toLowerCase()));
 
-		return [...videos].sort((a, b) => {
+		return [...v].sort((a, b) => {
 			if (sort === "views") return b.views - a.views;
 			if (sort === "upvotes") return b.upvotes - a.upvotes;
 			return b.rating - a.rating;
 		});
-	}, [selectedVideos, query, sort]);
+	}, [activeMiniTopic, query, sort]);
 
 	return (
-		<section className='min-h-screen bg-neutral-950 py-10'>
-			<div className='fixed inset-0 z-0 opacity-[0.5]'>
-				{/* Subtle grid */}
-				<motion.div
-					className='absolute -top-32 -left-32 w-[500px] h-[500px] rounded-full bg-indigo-500/30 blur-[120px]'
-					animate={{ x: [0, 40, -20], y: [0, 20, -10] }}
-					transition={{ duration: 12, repeat: Infinity, repeatType: "mirror" }}
-				/>
-
-				<motion.div
-					className='absolute top-1/3 -right-40 w-[600px] h-[600px] rounded-full bg-cyan-400/20 blur-[140px]'
-					animate={{ x: [0, -30, 20], y: [0, -20, 10] }}
-					transition={{ duration: 14, repeat: Infinity, repeatType: "mirror" }}
-				/>
-
-				{/* Subtle grid overlay */}
-				<div
-					className='absolute inset-0 opacity-[0.06]'
-					style={{
-						backgroundImage:
-							"linear-gradient(to right, white 1px, transparent 1px), linear-gradient(to bottom, white 1px, transparent 1px)",
-						backgroundSize: "48px 48px",
-					}}
-				/>
-			</div>
-
+		<section className='relative h-[calc(100vh-64px)] bg-neutral-950 py-10'>
 			<Container>
-				{/* Domain Tabs */}
 				<DomainTabs
 					value={domain}
 					onChange={setDomain}
 				/>
 
-				<div className='mt-8 z-50 grid grid-cols-12 gap-10'>
+				<div className='mt-6 grid grid-cols-12 gap-8'>
 					{/* Sidebar */}
-					<aside className='col-span-3'>
+					<aside className='col-span-3 h-[calc(100vh-160px)] overflow-y-auto pr-2'>
 						<CategorySidebar
 							domains={mockContent[domain]}
-							onSelectVideos={setSelectedVideos}
+							activeMiniTopic={activeMiniTopic}
+							onSelectMiniTopic={setActiveMiniTopic}
 						/>
 					</aside>
 
-					{/* Main */}
-					<main className='col-span-9 space-y-6 z-50'>
+					{/* Main Content */}
+					<main className='col-span-9 flex flex-col h-[calc(100vh-160px)]'>
 						<ExploreToolbar
 							query={query}
 							onQueryChange={setQuery}
 							sort={sort}
 							onSortChange={setSort}
+							title={activeMiniTopic?.title}
 						/>
 
-						<VideoGrid videos={filteredVideos} />
+						{/* Scrollable Videos */}
+						<div className='mt-4 flex-1 overflow-y-auto pr-2 no-scrollbar'>
+							<VideoGrid videos={videos} />
+						</div>
 					</main>
 				</div>
 			</Container>

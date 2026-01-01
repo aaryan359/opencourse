@@ -1,201 +1,169 @@
-import { Link } from "react-router-dom";
-
+import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
-
-import { toast } from "react-toastify";
-
 import { motion, AnimatePresence } from "framer-motion";
+import Container from "./ui/Container";
+
+const NAV_ITEMS = [
+	{ label: "Explore", href: "/explore" },
+	{ label: "Contribute", href: "/contribute" },
+	{ label: "Interview Prep", href: "/prep" },
+	{ label: "Community", href: "/community" },
+];
 
 export default function Header() {
 	const [menuOpen, setMenuOpen] = useState(false);
-
-	// =============================
-	// Token validation
-	// =============================
-
-	const handleLogout = () => {
-		toast.success("Logged out successfully");
-	};
-
-	const isAuthed = true;
+	const location = useLocation();
 
 	return (
-		<div className="top-1 sticky z-10" >
-			<div className=' px-6'>
-				<div className='flex h-10 items-center justify-between'>
+		<header
+			className='
+        sticky top-0 z-100
+        backdrop-blur-xl
+        bg-neutral-950/60
+        border-b border-white/10
+      '>
+			<Container>
+				<div className='flex h-16 items-center justify-between'>
 					{/* Logo */}
 					<Link
 						to='/'
-						className='flex items-center gap-2'>
-						<img
-							src='/open-course-logo-3.png'
-							alt='Open Course'
-							className='h-8 w-auto'
-						/>
+						className='flex items-center gap-2 group'>
+						<h3>OPEN COURSE</h3>
 					</Link>
 
 					{/* Desktop Nav */}
-					<nav className='hidden md:flex items-center gap-8 text-sm font-medium'>
-						<NavLink to='/Userpanel'>Courses</NavLink>
-						<NavLink to='/Admin'>Contribute</NavLink>
-						<NavLink to='/interviewprep/Startprep'>Interview</NavLink>
-						<NavLink to='/community'>Community</NavLink>
-						<NavLink to='/about'>About</NavLink>
+					<nav className='hidden md:flex items-center gap-8'>
+						{NAV_ITEMS.map((item) => (
+							<NavItem
+								key={item.href}
+								{...item}
+								active={location.pathname.startsWith(item.href)}
+							/>
+						))}
 					</nav>
 
-					{/* Auth Actions */}
-					<div className='hidden md:flex items-center gap-3'>
-						{!isAuthed ? (
-							<>
-								<Link
-									to='/login'
-									className='text-sm text-neutral-300 hover:text-white transition'>
-									Login
-								</Link>
-								<Link
-									to='/signup'
-									className='
-                    rounded-xl bg-white px-4 py-2
-                    text-sm font-semibold text-black
-                    hover:bg-neutral-200 transition
-                  '>
-									Sign Up
-								</Link>
-							</>
-						) : (
-							<button
-								onClick={handleLogout}
-								className='
-                  rounded-xl bg-red-600/90
-                  px-4 py-2 text-sm font-medium text-white
-                  hover:bg-red-700 transition
-                '>
-								Logout
-							</button>
-						)}
+					{/* Right Action */}
+					<div className='hidden md:flex items-center gap-4'>
+						<Link
+							to='/explore'
+							className='
+                                relative inline-flex items-center
+                                rounded-xl px-4 py-2
+                                text-sm font-medium text-white
+                                bg-white/10 hover:bg-white/15
+                                transition
+                            '>
+							Get Started
+						</Link>
 					</div>
 
 					{/* Mobile Toggle */}
 					<button
 						onClick={() => setMenuOpen((v) => !v)}
 						className='
-              md:hidden rounded-lg border border-white/10
-              p-2 text-neutral-300 hover:text-white
-              hover:bg-white/5 transition
+              md:hidden rounded-xl
+              p-2 text-white
+              bg-white/5 hover:bg-white/10
+              transition
             '
 						aria-label='Open menu'>
-						☰
+						<span className='block h-0.5 w-5 bg-white mb-1' />
+						<span className='block h-0.5 w-5 bg-white mb-1' />
+						<span className='block h-0.5 w-5 bg-white' />
 					</button>
 				</div>
-			</div>
+			</Container>
 
 			{/* ================= Mobile Menu ================= */}
 			<AnimatePresence>
 				{menuOpen && (
 					<motion.div
-						initial={{ opacity: 0, y: -8 }}
+						initial={{ opacity: 0, y: -12 }}
 						animate={{ opacity: 1, y: 0 }}
-						exit={{ opacity: 0, y: -8 }}
-						transition={{ duration: 0.2 }}
+						exit={{ opacity: 0, y: -12 }}
+						transition={{ duration: 0.25, ease: "easeOut" }}
 						className='
               md:hidden
+              bg-neutral-950/95 backdrop-blur-xl
               border-t border-white/10
-              bg-neutral-950/95 backdrop-blur
             '>
-						<div className='px-6 py-6 space-y-4'>
-							<MobileLink
-								to='/Userpanel'
-								onClick={setMenuOpen}>
-								Courses
-							</MobileLink>
-							<MobileLink
-								to='/Admin'
-								onClick={setMenuOpen}>
-								Contribute
-							</MobileLink>
-							<MobileLink
-								to='/interviewprep/Startprep'
-								onClick={setMenuOpen}>
-								Interview
-							</MobileLink>
-							<MobileLink
-								to='/community'
-								onClick={setMenuOpen}>
-								Community
-							</MobileLink>
-							<MobileLink
-								to='/about'
-								onClick={setMenuOpen}>
-								About
-							</MobileLink>
+						<Container>
+							<div className='py-6 space-y-4'>
+								{NAV_ITEMS.map((item) => (
+									<MobileNavItem
+										key={item.href}
+										{...item}
+										onClick={() => setMenuOpen(false)}
+									/>
+								))}
 
-							<div className='pt-4 border-t border-white/10 space-y-3'>
-								{!isAuthed ? (
-									<>
-										<Link
-											to='/login'
-											className='block text-neutral-300 hover:text-white'>
-											Login
-										</Link>
-										<Link
-											to='/signup'
-											className='
-                        block rounded-xl bg-white
-                        px-4 py-2 text-center
-                        font-semibold text-black
-                      '>
-											Sign Up
-										</Link>
-									</>
-								) : (
-									<button
-										onClick={handleLogout}
-										className='
-                      w-full rounded-xl bg-red-600
-                      px-4 py-2 text-white
-                    '>
-										Logout
-									</button>
-								)}
+								<Link
+									to='/explore'
+									className='
+                    mt-4 block rounded-xl
+                    bg-white text-black
+                    px-4 py-2 text-center
+                    font-semibold
+                  '>
+									Get Started
+								</Link>
 							</div>
-						</div>
+						</Container>
 					</motion.div>
 				)}
 			</AnimatePresence>
-		</div>
+		</header>
 	);
 }
 
 /* =====================================
-   Small Reusable Primitives
+   Desktop Nav Item (micro-interactions)
 ===================================== */
 
-function NavLink({ to, children }: any) {
+function NavItem({ label, href, active }: { label: string; href: string; active?: boolean }) {
 	return (
 		<Link
-			to={to}
+			to={href}
 			className='
+        relative text-sm font-medium
         text-neutral-300 hover:text-white
-        transition relative
-        after:absolute after:-bottom-1 after:left-0
-        after:h-[2px] after:w-0 after:bg-white
-        after:transition-all hover:after:w-full
+        transition
       '>
-			{children}
+			{label}
+
+			{/* Underline */}
+			<span
+				className={`
+          pointer-events-none
+          absolute -bottom-1 left-0 h-[2px]
+          bg-white
+          transition-all duration-300
+          ${active ? "w-full opacity-100" : "w-0 opacity-0"}
+          group-hover:w-full group-hover:opacity-100
+        `}
+			/>
 		</Link>
 	);
 }
 
-function MobileLink({ to, children, onClick }: any) {
+/* =====================================
+   Mobile Nav Item
+===================================== */
+
+function MobileNavItem({ label, href, onClick }: { label: string; href: string; onClick: () => void }) {
 	return (
 		<Link
-			to={to}
-			onClick={() => onClick(false)}
+			to={href}
+			onClick={onClick}
 			className='
-        block text-lg font-medium
-        text-neutral-200 hover:text-white
+        block rounded-xl
+        px-4 py-3
+        text-base font-medium
+        text-neutral-200
+        bg-white/5 hover:bg-white/10
+        transition
       '>
-			{children}
+			{label}
 		</Link>
 	);
 }

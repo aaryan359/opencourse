@@ -1,87 +1,95 @@
-import Container from "../../../components/ui/Container"
-import { domains } from "../../../utils/data"
+"use client";
 
-export default function Domains() {
+import { motion, useMotionTemplate, useMotionValue } from "framer-motion";
+
+export default function DomainCard({ domain }: any) {
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  // Very subtle glass glow (not colorful)
+  const glow = useMotionTemplate`
+    radial-gradient(
+      280px at ${mouseX}px ${mouseY}px,
+      rgba(85, 37, 196, 0.359),
+      transparent 70%
+    )
+  `;
+
   return (
-    <section className="py-10 bg-neutral-950">
-      <Container>
+    
+    <motion.div
+      onMouseMove={(e) => {
+        const rect = e.currentTarget.getBoundingClientRect();
+        mouseX.set(e.clientX - rect.left);
+        mouseY.set(e.clientY - rect.top);
+      }}
+      whileHover={{ y: -4 }}
+      transition={{ type: "spring", stiffness: 300, damping: 30 }}
+      className="
+        group relative overflow-hidden rounded-2xl
+        border border-white/10
+        bg-neutral-900/20
+        backdrop-blur-xl
+        p-6
+      "
+    >
+      {/* Glass glow */}
+      <motion.div
+        style={{ background: glow }}
+        className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+      />
 
-        {/* Header */}
-        <div className="mb-14 max-w-3xl">
-          <h2 className="text-4xl font-semibold text-white">
-            What you can learn
-          </h2>
-          <p className="mt-3 text-neutral-400">
-            Structured learning paths built and maintained by the
-            OpenCourse community.
-          </p>
+      {/* Dark vignette (THIS is key) */}
+      <div className="
+        pointer-events-none absolute inset-0
+        bg-[radial-gradient(ellipse_at_center,rgba(255,255,255,0.06),transparent_70%)]
+      " />
+
+      {/* Content */}
+      <div className="relative z-10 flex h-full flex-col">
+        {/* Badge */}
+        <span
+          className="
+            inline-flex w-fit items-center
+            rounded-md
+            bg-purple-700/20
+            px-3 py-2
+            text-sm font-medium
+            text-purple-200
+            backdrop-blur-md
+          "
+        >
+          {domain.name}
+        </span>
+
+        {/* Description */}
+        <p className="mt-4 text-sm leading-relaxed text-neutral-300">
+          Curated learning paths with hands-on depth, real-world context,
+          and continuous community refinement.
+        </p>
+
+        {/* Footer */}
+        <div className="mt-8 flex items-center justify-between text-xs">
+          <span className="text-neutral-500">
+            {domain.contributors}+ contributors
+          </span>
+
+          <span className="
+            flex items-center gap-1
+            text-indigo-400
+            transition group-hover:gap-2
+          ">
+            Explore
+            <span className="transition-transform group-hover:translate-x-1">→</span>
+          </span>
         </div>
+      </div>
 
-        {/* Grid */}
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {domains.map((d) => (
-            <div
-              key={d.name}
-              tabIndex={0}
-              className="
-                group relative overflow-hidden
-                rounded-xl
-                border border-white/10
-                bg-white/[0.03]
-                p-6
-                transition-all duration-300
-                hover:-translate-y-[2px]
-                hover:border-white/20
-                hover:bg-white/[0.05]
-                hover:shadow-xl hover:shadow-indigo-500/10
-                focus-visible:outline-none
-                focus-visible:ring-1 focus-visible:ring-white/30
-              "
-            >
-              {/* Glow line */}
-              <div
-                className="
-                  absolute top-0 left-1/2
-                  h-px w-1/2
-                  -translate-x-1/2
-                  bg-gradient-to-r
-                  from-transparent
-                  via-indigo-400
-                  to-transparent
-                  opacity-0
-                  group-hover:opacity-100
-                  transition
-                "
-              />
-
-              {/* Title + Icon */}
-              <div className="flex items-center gap-3 mb-2">
-                <span className="text-lg opacity-80">
-                  {d.icon}
-                </span>
-                <h3 className="text-lg font-medium text-white">
-                  {d.name}
-                </h3>
-              </div>
-
-              {/* Description */}
-              <p className="text-sm text-white/60 leading-relaxed">
-                Community-driven curriculum with real-world examples,
-                interview prep, and continuous updates.
-              </p>
-
-              {/* Footer */}
-              <div className="mt-4 flex items-center justify-between text-xs text-white/50">
-                <span>{d.contributors} contributors</span>
-                <span className="text-indigo-400/80">
-                  Explore →
-                </span>
-              </div>
-            </div>
-          ))}
-        </div>
-
-      </Container>
-    </section>
-  )
+      {/* Inner stroke */}
+      <div className="
+        pointer-events-none absolute inset-0 rounded-2xl
+        shadow-[inset_0_0_0_1px_rgba(255,255,255,0.04)]
+      " />
+    </motion.div>
+  );
 }

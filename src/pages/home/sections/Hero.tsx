@@ -1,121 +1,152 @@
-import { motion } from "framer-motion"
-import Container from "../../../components/ui/Container"
-import Button from "../../../components/ui/Button"
+"use client";
+
+import { motion, useMotionValue, useTransform } from "framer-motion";
+import { CheckCircle, Users, Layers, Sparkles, BookOpen } from "lucide-react";
+import Container from "../../../components/ui/Container";
+import Button from "../../../components/ui/Button";
 
 export default function Hero() {
+  const mx = useMotionValue(0);
+  const my = useMotionValue(0);
+
+  const rotateX = useTransform(my, [-200, 200], [4, -4]);
+  const rotateY = useTransform(mx, [-200, 200], [-4, 4]);
+
   return (
-    <section className="relative min-h-screen overflow-hidden bg-black">
-      
-      {/* ===== BACKGROUND LAYERS ===== */}
-      
-      {/* Animated gradient orbs */}
-      <motion.div
-        className="absolute -top-32 -left-32 w-[500px] h-[500px] rounded-full bg-indigo-500/30 blur-[120px]"
-        animate={{ x: [0, 40, -20], y: [0, 20, -10] }}
-        transition={{ duration: 12, repeat: Infinity, repeatType: "mirror" }}
-      />
+    <section
+      onMouseMove={(e) => {
+        const r = e.currentTarget.getBoundingClientRect();
+        mx.set(e.clientX - r.left - r.width / 2);
+        my.set(e.clientY - r.top - r.height / 2);
+      }}
+      className="relative overflow-hidden bg-neutral-950"
+    >
+      {/* ===== ATMOSPHERE ===== */}
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(99,102,241,0.18),transparent_60%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,rgba(34,211,238,0.12),transparent_55%)]" />
 
-      <motion.div
-        className="absolute top-1/3 -right-40 w-[600px] h-[600px] rounded-full bg-cyan-400/20 blur-[140px]"
-        animate={{ x: [0, -30, 20], y: [0, -20, 10] }}
-        transition={{ duration: 14, repeat: Infinity, repeatType: "mirror" }}
-      />
-
-      {/* Subtle grid overlay */}
-      <div
-        className="absolute inset-0 opacity-[0.06]"
-        style={{
-          backgroundImage:
-            "linear-gradient(to right, white 1px, transparent 1px), linear-gradient(to bottom, white 1px, transparent 1px)",
-          backgroundSize: "48px 48px",
-        }}
-      />
-
-      {/* ===== CONTENT ===== */}
       <Container>
-        <div className="relative z-10 grid lg:grid-cols-2 gap-16 items-center min-h-screen py-32">
+        <div className="relative z-10 pt-20 pb-15">
 
-          {/* ===== LEFT CONTENT ===== */}
+          {/* ===== EYEBROW ===== */}
           <motion.div
-            initial={{ opacity: 0, y: 60 }}
+            initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+            className="mb-8"
           >
-            <h1 className="text-6xl md:text-8xl font-bold leading-[1.05]">
-              <span className="block">OPEN COURSE.</span>
-              <span className="block text-4xl md:text-6xl text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-cyan-400 to-purple-400">
-                   Built by people.
-              </span>
-            </h1>
-
-            <p className="mt-8 text-xl text-neutral-400 max-w-xl leading-[1.5] ">
-              OpenCourse is a living knowledge platform where developers,
-              educators, and learners continuously build and evolve
-              courses, interview prep, and real-world skills.
-            </p>
-
-            {/* CTA */}
-            <div className="mt-12 flex gap-5">
-              <Button className="shadow-[0_0_60px_rgba(99,102,241,0.45)]">
-                Explore Courses
-              </Button>
-
-              <Button variant="secondary">
-                Become a Contributor
-              </Button>
-            </div>
-
-            {/* Trust / signal */}
-            <div className="mt-10 text-sm text-neutral-400">
-              Trusted by <span className="text-white font-medium">7,000+</span> learners · Updated weekly
-            </div>
+            <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.05] px-4 py-1.5 text-xs text-white/70 backdrop-blur">
+              <Sparkles className="h-3 w-3 text-indigo-400" />
+              Open-source · Community driven
+            </span>
           </motion.div>
 
-          {/* ===== RIGHT VISUAL SYSTEM ===== */}
-          <div className="relative hidden lg:block">
+          {/* ===== MAIN GRID ===== */}
+          <div className="grid lg:grid-cols-2 gap-16 items-start">
 
-            {/* Floating cards */}
+            {/* ===== LEFT ===== */}
             <motion.div
-              className="absolute top-0 left-0 w-70 p-5 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10"
-              initial={{ opacity: 0, y: 40 }}
+              initial={{ opacity: 0, y: 32 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 }}
+              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
             >
-              <div className="text-sm text-neutral-400">Latest Update</div>
-              <div className="mt-2 text-lg font-semibold">
-                New DevOps Interview Pack
+              <h1 className="text-[3.2rem] md:text-[4.6rem] font-semibold leading-[1.05] tracking-tight">
+                <span className="block text-white">
+                  Learning that evolves
+                </span>
+                <span className="block bg-gradient-to-r from-indigo-400 via-cyan-400 to-purple-400 bg-clip-text text-transparent">
+                  with the industry
+                </span>
+              </h1>
+
+              <p className="mt-7 max-w-xl text-lg text-neutral-400 leading-relaxed">
+                OpenCourse is a community-driven platform where developers
+                continuously build, review, and refine courses and interview
+                preparation — keeping knowledge relevant, practical, and current.
+              </p>
+
+              {/* ===== CTA ===== */}
+              <div className="mt-10 flex flex-wrap gap-4">
+                <Button className="shadow-[0_0_45px_rgba(99,102,241,0.45)]">
+                  Explore Courses
+                </Button>
+                <Button variant="secondary">
+                  Become a Contributor
+                </Button>
+              </div>
+
+              {/* ===== METRICS STRIP (KEY FIX) ===== */}
+              <div className="mt-12 grid grid-cols-3 gap-6 max-w-xl">
+                <Stat value="120+" label="Courses & Paths" />
+                <Stat value="300+" label="Contributors" />
+                <Stat value="Weekly" label="Content Updates" />
               </div>
             </motion.div>
 
+            {/* ===== RIGHT ===== */}
             <motion.div
-              className="absolute top-40 right-0 w-72 p-6 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10"
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.6 }}
+              style={{ rotateX, rotateY }}
+              className="relative perspective-[1200px]"
             >
-              <div className="text-sm text-neutral-400">Contributor</div>
-              <div className="mt-2 font-semibold">Aryan Meena</div>
-              <div className="text-sm text-neutral-400">Web • DevOps</div>
-            </motion.div>
+              <div className="rounded-3xl border border-white/10 bg-white/[0.05] backdrop-blur-xl p-8 shadow-2xl">
 
-            <motion.div
-              className="absolute bottom-5 left-24 w-70 p-6 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10"
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.8 }}
-            >
-              <div className="text-sm text-neutral-400">
-                Community Activity
-              </div>
-              <div className="mt-3 flex items-center gap-3">
-                <div className="h-2 w-2 rounded-full bg-green-400 animate-pulse" />
-                <span className="text-sm">3 new lessons added today</span>
+                {/* Feature stack */}
+                <div className="space-y-6">
+                  <Feature
+                    icon={<Layers />}
+                    title="Structured Courses"
+                    desc="Community-maintained curricula with real-world depth."
+                  />
+                  <Feature
+                    icon={<Users />}
+                    title="Verified Contributors"
+                    desc="Developers and educators reviewed by peers."
+                  />
+                  <Feature
+                    icon={<CheckCircle />}
+                    title="Always Up-to-date"
+                    desc="Lessons evolve with hiring trends."
+                  />
+                </div>
+
+                {/* Secondary panel (adds density) */}
+                <div className="mt-8 rounded-xl border border-white/10 bg-black/30 p-4">
+                  <div className="flex items-center gap-2 text-xs text-neutral-400 mb-2">
+                    <BookOpen className="h-4 w-4 text-indigo-400" />
+                    Community activity
+                  </div>
+                  <div className="flex items-center gap-3 text-sm text-neutral-300">
+                    <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+                    3 new lessons published today
+                  </div>
+                </div>
               </div>
             </motion.div>
-
           </div>
         </div>
       </Container>
     </section>
-  )
+  );
+}
+
+/* ================= HELPERS ================= */
+
+function Feature({ icon, title, desc }: any) {
+  return (
+    <div className="flex gap-4">
+      <div className="mt-1 text-indigo-400">{icon}</div>
+      <div>
+        <div className="text-white font-medium">{title}</div>
+        <div className="text-sm text-neutral-400">{desc}</div>
+      </div>
+    </div>
+  );
+}
+
+function Stat({ value, label }: { value: string; label: string }) {
+  return (
+    <div>
+      <div className="text-xl font-semibold text-white">{value}</div>
+      <div className="text-xs text-neutral-400">{label}</div>
+    </div>
+  );
 }

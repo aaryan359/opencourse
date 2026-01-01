@@ -5,7 +5,7 @@ type GlowCardProps = {
 	children: ReactNode;
 	accent?: "indigo" | "emerald";
 	className?: string;
-    
+
 	onClick?: () => void;
 };
 
@@ -14,7 +14,7 @@ const ACCENT = {
 	emerald: "99,102,241",
 };
 
-export default function GlowCard({ children, accent = "indigo", className = "", onClick, }: GlowCardProps) {
+export default function GlowCard({ children, accent = "indigo", className = "", onClick }: GlowCardProps) {
 	const mouseX = useMotionValue(0);
 	const mouseY = useMotionValue(0);
 
@@ -53,7 +53,7 @@ export default function GlowCard({ children, accent = "indigo", className = "", 
                 backdrop-blur-sm
                 overflow-hidden
                 transition
-                z-100
+                z-50
                 ${className}
             `}>
 			<motion.div

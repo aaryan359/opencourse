@@ -3,9 +3,9 @@ import VideoCard from "../../components/video/VideoCard";
 export default function VideoGrid({ videos }: any) {
   if (!videos.length) {
     return (
-      <p className="text-neutral-500 text-sm z-50">
-        Select a topic to explore videos.
-      </p>
+      <div className="h-full flex items-center justify-center text-neutral-500 text-sm">
+        Select a topic to start learning 
+      </div>
     );
   }
 

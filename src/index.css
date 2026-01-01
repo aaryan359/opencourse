@@ -1,29 +1,35 @@
 @import "tailwindcss";
 
 body {
-  background: #050505;
-  color: white;
-  overflow-x: hidden;
-
+	background: #050505;
+	color: white;
+	overflow-x: hidden;
 }
 
+no-scrollbar::-webkit-scrollbar {
+	display: none;
+}
 
+/* Hide scrollbar for IE, Edge and Firefox */
+.no-scrollbar {
+	-ms-overflow-style: none; /* IE and Edge */
+	scrollbar-width: none; /* Firefox */
+}
 
 .mesh-bg {
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(at 20% 20%, rgba(99,102,241,0.15), transparent 40%),
-    radial-gradient(at 80% 30%, rgba(34,211,238,0.12), transparent 40%),
-    radial-gradient(at 50% 80%, rgba(168,85,247,0.12), transparent 40%);
-  filter: blur(80px);
-  z-index: 0;
+	position: absolute;
+	inset: 0;
+	background: radial-gradient(at 20% 20%, rgba(99, 102, 241, 0.15), transparent 40%),
+		radial-gradient(at 80% 30%, rgba(34, 211, 238, 0.12), transparent 40%),
+		radial-gradient(at 50% 80%, rgba(168, 85, 247, 0.12), transparent 40%);
+	filter: blur(80px);
+	z-index: 0;
 }
 
 .noise {
-  position: absolute;
-  inset: 0;
-  background-image: url("https://grainy-gradients.vercel.app/noise.svg");
-  opacity: 0.04;
-  pointer-events: none;
+	position: absolute;
+	inset: 0;
+	background-image: url("https://grainy-gradients.vercel.app/noise.svg");
+	opacity: 0.04;
+	pointer-events: none;
 }

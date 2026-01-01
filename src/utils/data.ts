@@ -30,19 +30,6 @@ export const contributors = [
   { name: "Vikas Pal", role: "AI / ML" },
   { name: "Anurag Singh", role: "Android" },
   { name: "Manroop Singh", role: "Design" },
-  { name: "Aryan Meena", role: "Web & DevOps" },
-  { name: "Vikas Pal", role: "AI / ML" },
-  { name: "Anurag Singh", role: "Android" },
-  { name: "Manroop Singh", role: "Design" },
-  { name: "Aryan Meena", role: "Web & DevOps" },
-  { name: "Vikas Pal", role: "AI / ML" },
-  { name: "Anurag Singh", role: "Android" },
-  { name: "Manroop Singh", role: "Design" },
-  { name: "Aryan Meena", role: "Web & DevOps" },
-  { name: "Vikas Pal", role: "AI / ML" },
-  { name: "Anurag Singh", role: "Android" },
-  { name: "Manroop Singh", role: "Design" },
-  { name: "Aryan Meena", role: "Web & DevOps" },
 
 ]
 
