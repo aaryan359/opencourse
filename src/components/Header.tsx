@@ -28,8 +28,12 @@ export default function Header() {
 					<Link
 						to='/'
 						className='flex items-center gap-2 group'>
-							
-						<img src="/logo.png" alt="" width={100} height={110}/>
+						<img
+							src='/logo.png'
+							alt=''
+							width={100}
+							height={110}
+						/>
 					</Link>
 
 					{/* Desktop Nav */}

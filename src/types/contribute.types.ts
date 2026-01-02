@@ -1,9 +1,11 @@
+import type { Video } from "./videos.types"
+
 export type ContributionType = "video" | "course" | "interview"
 
 export type MiniTopic = {
   id: string
   title: string
-  videos?: any[]
+  videos?: Video[]
 }
 
 export type Subtopic = {

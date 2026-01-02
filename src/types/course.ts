@@ -1,4 +1,4 @@
-import type { Video } from "../../../types/videos.types";
+import type { Video } from "./videos.types";
 
 
 export type MiniTopic = {

@@ -10,10 +10,14 @@ import CommunityPage from "./pages/community/Community";
 import StartPrep from "./pages/interviewPrep/InterviewPrep";
 import Register from "./auth/register/Register";
 import Login from "./auth/login/Login";
-import DomainsPage from "./pages/courses/Course";
+
+
 import CoursesPage from "./pages/courses/CoursesPage";
-import CourseDetailPage from "./pages/courses/CourseDetailPage";
+import TrackPage from "./pages/courses/TrackPage";
+import DomainPage from "./pages/courses/DomainPage";
+import CourseOverviewPage from "./pages/courses/CourseOverviewPage";
 import CourseLearnPage from "./pages/courses/CourseLearnPage";
+
 
 function App() {
 	return (
@@ -35,20 +39,27 @@ function App() {
 				/>
 				<Route
 					path='/courses'
-					element={<DomainsPage />}
-				/>
-				<Route
-					path='/courses/:type/:id'
 					element={<CoursesPage />}
 				/>
 				<Route
-					path='/course/:type/:id'
-					element={<CourseDetailPage />}
+					path='/courses/:track'
+					element={<TrackPage />}
 				/>
 				<Route
-					path='/learn/:type/:id'
+					path='/courses/:track/:domain'
+					element={<DomainPage />}
+				/>
+				<Route
+					path='/courses/:track/:domain/:course'
+					element={<CourseOverviewPage />}
+				/>
+
+				<Route
+					path='/courses/:track/:domain/:course/learn'
 					element={<CourseLearnPage />}
 				/>
+
+
 
 				<Route
 					path='/dashboard'

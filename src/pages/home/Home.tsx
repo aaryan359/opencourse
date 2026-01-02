@@ -1,5 +1,5 @@
 import Hero from "./sections/Hero";
-// import Stats from "./sections/Stats"
+import Stats from "./sections/Stats"
 
 import Contributors from "./sections/Contributors";
 import CTA from "./sections/CTA";
@@ -25,7 +25,7 @@ export default function Home() {
 
      
 			
-			
+			<Stats/>
 			<Interview />
 			<Contributors />
 			<CTA />
