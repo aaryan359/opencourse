@@ -1,73 +1,102 @@
-# React + TypeScript + Vite
+<p align="center">
+  <img src="image.png" alt="Open Course banner" />
+</p>
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+<h1 align="center" style="border-bottom: none;">
+  Open Course
+</h1>
 
-Currently, two official plugins are available:
+<p align="center">
+  <b>An open, collaborative, and evolving learning platform</b><br/>
+  Knowledge as a living system — built by everyone.
+</p>
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+<div align="center">
+  <img src="https://img.shields.io/badge/status-active-success?style=flat-square" />
+  <img src="https://img.shields.io/badge/open--source-yes-blueviolet?style=flat-square" />
+  <img src="https://img.shields.io/badge/license-MIT-blueviolet?style=flat-square" />
+  <img src="https://img.shields.io/badge/frontend-React-blueviolet?style=flat-square" />
+</div>
 
-## React Compiler
+<br />
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+<p align="center">
+  <i>Think of Open Course as <b>open-source education</b>.</i>
+</p>
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## What is Open Course?
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+**Open Course** is a modern, community-driven learning platform where courses are not static products but **continuously evolving knowledge systems**.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+Unlike traditional platforms where a single creator controls content, Open Course allows **anyone to create, expand, refine, and improve courses together** — similar to how open-source software is built.
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+Learning here never stops growing.
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## 🧠 Core Philosophy
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+- Knowledge should be **open**
+- Learning should be **iterative**
+- Education should be **collaborative**
+- Courses should **evolve with time**
+
+> Open Course treats education like code: fork it, improve it, and share it back.
+
+---
+
+## ✨ Key Features
+
+- **Crowdsourced Courses**  
+  Create new courses or contribute to existing ones.
+
+- **Continuous Improvement**  
+  Courses evolve instead of becoming outdated.
+
+- **Multi-Contributor Learning**  
+  Lessons can be improved by multiple contributors.
+
+- **Focused Learning Experience**  
+  Clean UI designed for deep focus.
+
+- **Dark-First Modern UI**  
+  Optimized for long learning sessions.
+
+- **Community-Owned Knowledge**  
+  Powered by people, not institutions.
+
+---
+
+## 🖥️ Tech Stack
+
+### Frontend
+- **React**
+- **Tailwind CSS**
+- Component-based architecture
+- Fully responsive design
+
+### Backend *(planned / in progress)*
+- Node.js API
+- Authentication & authorization
+- Contribution review & moderation
+
+### Database *(planned)*
+- Relational / document-based (TBD)
+
+---
+
+## 📸 UI Preview
+
+<p align="center">
+  <img src="image.png" alt="Open Course UI preview" />
+</p>
+
+![Interview Page](public/interviewPage.png)
+
+<p align="center" style="color: grey;">
+  <i>Designed to communicate openness, clarity, and collaboration.</i>
+</p>
+
+---

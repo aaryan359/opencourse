@@ -4,13 +4,16 @@ import AppLayout from "./layouts/AppLayout";
 import Home from "./pages/home/Home";
 import Contribute from "./pages/contribute/Contribute";
 import ContributeNew from "./pages/contribute/ContributeNew";
-import ExplorePage from "./pages/explore/ExplorePage";
 import DashboardPage from "./pages/dashboard/DashboardPage";
 import CommunityPage from "./pages/community/Community";
 
 import StartPrep from "./pages/interviewPrep/InterviewPrep";
 import Register from "./auth/register/Register";
 import Login from "./auth/login/Login";
+import DomainsPage from "./pages/courses/Course";
+import CoursesPage from "./pages/courses/CoursesPage";
+import CourseDetailPage from "./pages/courses/CourseDetailPage";
+import CourseLearnPage from "./pages/courses/CourseLearnPage";
 
 function App() {
 	return (
@@ -21,10 +24,7 @@ function App() {
 					path='/'
 					element={<Home />}
 				/>
-				<Route
-					path='/explore'
-					element={<ExplorePage />}
-				/>
+
 				<Route
 					path='/contribute'
 					element={<Contribute />}
@@ -33,6 +33,23 @@ function App() {
 					path='/contribute/new'
 					element={<ContributeNew />}
 				/>
+				<Route
+					path='/courses'
+					element={<DomainsPage />}
+				/>
+				<Route
+					path='/courses/:type/:id'
+					element={<CoursesPage />}
+				/>
+				<Route
+					path='/course/:type/:id'
+					element={<CourseDetailPage />}
+				/>
+				<Route
+					path='/learn/:type/:id'
+					element={<CourseLearnPage />}
+				/>
+
 				<Route
 					path='/dashboard'
 					element={<DashboardPage />}
@@ -47,9 +64,14 @@ function App() {
 				/>
 			</Route>
 
-			
-			 <Route path="/register" element={<Register />} /> 
-			 <Route path="/login" element={<Login />} /> 
+			<Route
+				path='/register'
+				element={<Register />}
+			/>
+			<Route
+				path='/login'
+				element={<Login />}
+			/>
 		</Routes>
 	);
 }
