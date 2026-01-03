@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import Container from "./ui/Container";
 
 const NAV_ITEMS = [
-	{ label: "Explore", href: "/explore" },
+	{ label: "Courses", href: "/courses" },
 	{ label: "Contribute", href: "/contribute" },
 	{ label: "Interview Prep", href: "/prep" },
 	{ label: "Community", href: "/community" },
