@@ -94,9 +94,13 @@ Learning here never stops growing.
 </p>
 
 ![Interview Page](public/interviewPage.png)
+![Explore page](image-2.png)
+![Contribute page](image-1.png)
 
 <p align="center" style="color: grey;">
   <i>Designed to communicate openness, clarity, and collaboration.</i>
 </p>
+
+
 
 ---

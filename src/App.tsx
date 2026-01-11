@@ -2,7 +2,7 @@ import { Routes, Route } from "react-router-dom";
 import AppLayout from "./layouts/AppLayout";
 
 import Home from "./pages/home/Home";
-import Contribute from "./pages/contribute/Contribute";
+
 import ContributeNew from "./pages/contribute/ContributeNew";
 import DashboardPage from "./pages/dashboard/DashboardPage";
 import CommunityPage from "./pages/community/Community";
@@ -18,7 +18,8 @@ import DomainPage from "./pages/courses/DomainPage";
 import CourseOverviewPage from "./pages/courses/CourseOverviewPage";
 import CourseLearnPage from "./pages/courses/CourseLearnPage";
 import ExploreCoursesPage from "./pages/explore/Explore";
-import ContributePage from "./pages/courses/CoursesPage";
+import ContributePage from "./pages/contribute/Contribute";
+
 
 
 function App() {
