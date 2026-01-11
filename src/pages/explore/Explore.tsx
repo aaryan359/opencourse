@@ -71,6 +71,8 @@ const categories: Category[] = [
   { id: 'music', name: 'Music', icon: <Zap />, color: 'from-rose-500/20 to-red-500/20', count: 410 },
 ];
 
+
+
 const subcategories: Subcategory[] = [
   { id: 'webdev', name: 'Web Development', categoryId: 'tech', count: 420 },
   { id: 'mobile', name: 'Mobile Development', categoryId: 'tech', count: 210 },
