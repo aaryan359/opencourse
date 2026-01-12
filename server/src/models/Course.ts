@@ -23,3 +23,4 @@ const CourseSchema = new Schema<ICourse>(
 );
 
 export const Course: Model<ICourse> = mongoose.model<ICourse>("Course", CourseSchema);
+

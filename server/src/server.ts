@@ -5,17 +5,14 @@ import helmet from "helmet";
 import cors from "cors";
 import rateLimit from "express-rate-limit";
 import http from "http";
-import ApiResponse from "./utils/ApiResponse.js";
-
-
-
-
+import ApiResponse from "./utils/ApiResponse";
+import { connectDB } from "./config/db";
 
 
 
 const app: Application = express();
 
-
+connectDB();
 
 /* -------------------- Middleware -------------------- */
 app.use(express.json({ limit: "10kb" }));
@@ -92,5 +89,5 @@ const httpServer = http.createServer(app);
 
 
 httpServer.listen(PORT, () => {
-    console.log(` HTTP + WS server running on port ${PORT}`);
+    console.log(` HTTP server running on port ${PORT}`);
 });
