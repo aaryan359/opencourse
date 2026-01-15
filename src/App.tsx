@@ -2,7 +2,7 @@ import { Routes, Route } from "react-router-dom";
 import AppLayout from "./layouts/AppLayout";
 
 import Home from "./pages/home/Home";
-import Contribute from "./pages/contribute/Contribute";
+
 import ContributeNew from "./pages/contribute/ContributeNew";
 import DashboardPage from "./pages/dashboard/DashboardPage";
 import CommunityPage from "./pages/community/Community";
@@ -17,6 +17,9 @@ import TrackPage from "./pages/courses/TrackPage";
 import DomainPage from "./pages/courses/DomainPage";
 import CourseOverviewPage from "./pages/courses/CourseOverviewPage";
 import CourseLearnPage from "./pages/courses/CourseLearnPage";
+import ExploreCoursesPage from "./pages/explore/Explore";
+import ContributePage from "./pages/contribute/Contribute";
+
 
 
 function App() {
@@ -29,10 +32,7 @@ function App() {
 					element={<Home />}
 				/>
 
-				<Route
-					path='/contribute'
-					element={<Contribute />}
-				/>
+				
 				<Route
 					path='/contribute/new'
 					element={<ContributeNew />}
@@ -60,6 +60,15 @@ function App() {
 				/>
 
 
+				<Route
+					path='/explore'
+					element={<ExploreCoursesPage />}
+				/>
+
+				<Route
+					path='/contribute'
+					element={<ContributePage />}
+				/>
 
 				<Route
 					path='/dashboard'
