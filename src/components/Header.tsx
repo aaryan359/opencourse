@@ -50,7 +50,7 @@ export default function Header() {
 					{/* Right Action */}
 					<div className='hidden md:flex items-center gap-4'>
 						<Link
-							to='/explore'
+							to='/courses'
 							className='
                                 relative inline-flex items-center
                                 rounded-xl px-4 py-2

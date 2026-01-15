@@ -1,3 +1,19 @@
+
+import mongoose, { Schema, Model, type HydratedDocument } from "mongoose";
+import bcrypt from "bcryptjs";
+import type { IUser } from "../types/User.type.js";
+
+const UserSchema = new Schema<IUser>(
+  {
+    email: { type: String, required: true, unique: true, lowercase: true },
+
+    password: {
+      type: String,
+      required: true,
+      select: false,         // hide password
+    },
+
+=======
 import mongoose, { Schema, Document, Model, type HydratedDocument } from "mongoose";
 import bcrypt from "bcryptjs";
 import type { IUser } from "../types/User.type.js";
@@ -6,7 +22,6 @@ import type { IUser } from "../types/User.type.js";
 const UserSchema = new Schema<IUser>(
   {
     email: { type: String, required: true, unique: true, lowercase: true },
-    password: { type: String, required: true },
     username: { type: String, required: true, unique: true },
 
     profile: {
@@ -39,21 +54,8 @@ const UserSchema = new Schema<IUser>(
 
 /* ---------------- HOOKS ---------------- */
 
-UserSchema.pre(
-  "save",
-  async function (this: HydratedDocument<IUser>) {
-    if (!this.isModified("password")) return;
-
-    this.password = await bcrypt.hash(this.password, 10);
-  }
-);
-
-
-
 UserSchema.methods.comparePassword = async function (password: string) {
   return bcrypt.compare(password, this.password);
 };
 
-
-
-export const User: Model<IUser> = mongoose.model<IUser>("User", UserSchema);
+rt const User: Model<IUser> = mongoose.model<IUser>("User", UserSchema);

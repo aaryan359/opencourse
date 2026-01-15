@@ -6,7 +6,12 @@ import cors from "cors";
 import rateLimit from "express-rate-limit";
 import http from "http";
 import ApiResponse from "./utils/ApiResponse";
-import { connectDB } from "./config/db";
+
+import { connectDB } from "../config/db";
+
+import router from "./route/routes";
+
+
 
 
 
@@ -34,12 +39,17 @@ app.use(
 
 
 app.use(
-    "/api/v1/auth",
+    "/api/v1",
     rateLimit({
         windowMs: 15 * 60 * 1000,
         max: 20,
     })
 );
+
+
+
+/* -------------------- Routes -------------------- */
+app.use("/api/v1", router);
 
 
 
