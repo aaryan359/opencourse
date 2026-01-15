@@ -1,5 +1,5 @@
 import type { Response, NextFunction } from "express";
-import type { AuthRequest } from "./auth.middleware";
+import type { AuthRequest } from "../middlewares/auth.middleware";
 import ApiResponse from "../utils/ApiResponse";
 
 /* ================= ROLE AUTHORIZATION MIDDLEWARE ================= */

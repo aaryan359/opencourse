@@ -1,5 +1,5 @@
 import type { Response } from "express";
-import type { AuthRequest } from "../middleware/auth.middleware";
+import type { AuthRequest } from "../middlewares/auth.middleware";
 import { Topic } from "../models/Topic";
 import { Course } from "../models/Course";
 import ApiResponse from "../utils/ApiResponse";

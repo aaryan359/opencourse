@@ -7,11 +7,9 @@ import rateLimit from "express-rate-limit";
 import http from "http";
 import ApiResponse from "./utils/ApiResponse";
 
-import { connectDB } from "../config/db";
 
-import router from "./route/routes";
-
-
+import router from "./routes/routes";
+import { connectDB } from "./config/db";
 
 
 
@@ -62,15 +60,6 @@ app.get("/health", (_req: Request, res: Response) => {
         timestamp: new Date().toISOString(),
     });
 });
-
-
-/* -------------------- Routes -------------------- */
-// app.use("/api/v1/users", userRouter);
-// app.use("/api/v1/apikey", apiRoute);
-// app.use("/api/v1/agent", agentRoute);
-// app.use("/api/v1/stats", statsRoute);
-// app.use("/api/v1/events", eventRoute);
-// app.use("/api/v1/terminal", terminalRoutes);
 
 
 

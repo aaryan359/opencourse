@@ -1,5 +1,5 @@
 
-import type { ErrorOptions, SuccessOptions } from '../types/ApiResponse.type.js';
+import type { ErrorOptions, SuccessOptions } from '../types/ApiResponse.type';
 import type { Response } from 'express'
 
 class ApiResponse {
