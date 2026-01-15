@@ -1,5 +1,5 @@
 import { useEnroll } from "../../hooks/useEnroll";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";       
 
 export default function CourseDetail({ course, type }: any) {
   const { enrolled, enroll } = useEnroll(course.id);

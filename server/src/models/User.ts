@@ -3,20 +3,6 @@ import mongoose, { Schema, Model, type HydratedDocument } from "mongoose";
 import bcrypt from "bcryptjs";
 import type { IUser } from "../types/User.type.js";
 
-const UserSchema = new Schema<IUser>(
-  {
-    email: { type: String, required: true, unique: true, lowercase: true },
-
-    password: {
-      type: String,
-      required: true,
-      select: false,         // hide password
-    },
-
-=======
-import mongoose, { Schema, Document, Model, type HydratedDocument } from "mongoose";
-import bcrypt from "bcryptjs";
-import type { IUser } from "../types/User.type.js";
 
 
 const UserSchema = new Schema<IUser>(
@@ -52,10 +38,8 @@ const UserSchema = new Schema<IUser>(
   { timestamps: true }
 );
 
-/* ---------------- HOOKS ---------------- */
 
 UserSchema.methods.comparePassword = async function (password: string) {
   return bcrypt.compare(password, this.password);
 };
-
-rt const User: Model<IUser> = mongoose.model<IUser>("User", UserSchema);
+export const User: Model<IUser> = mongoose.model<IUser>("User", UserSchema);

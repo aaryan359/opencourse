@@ -1,30 +1,38 @@
 import { Router } from "express";
-import { authMiddleware } from "../middleware/auth.middleware";
-import { requireAdmin, requireInstructor } from "../middleware/role.middleware";
+import { authMiddleware } from "../middlewares/auth.middleware";
 
-// Import controllers
+
+
 import * as UserController from "../controllers/User.controller";
-
+import * as CourseController from "../controllers/Course.controller"
 import * as AdminUserController from "../controllers/AdminUser.Controller";
 import * as FieldController from "../controllers/Field.Controller";
-import * as CourseController from "../controllers/Course.Controller";
 import * as TopicController from "../controllers/Topic.Controller";
 import * as VideoController from "../controllers/Video.controller";
 import * as AdminVideoController from "../controllers/AdminVideo.Controller";
 import * as EnrollmentController from "../controllers/Enrollment.Controller";
 import * as SearchController from "../controllers/Search.Controller";
 import * as AdminDashboardController from "../controllers/AdminDashboard.Controller";
+import { requireAdmin, requireInstructor } from "../middlewares/role.middleware";
+
 
 const router = Router();
 
-/* ================= AUTH ROUTES ================= */
+
+
+
 router.post("/auth/register", UserController.registerUser);
 router.post("/auth/login", UserController.loginUser);
 router.post("/auth/logout", authMiddleware, UserController.logoutUser);
 router.get("/auth/me", authMiddleware, UserController.getCurrentUser);
 router.post("/auth/refresh", UserController.refreshToken);
 
-/* ================= USER ROUTES ================= */
+
+
+
+
+
+
 router.get("/users/:id", UserController.getUserProfile);
 router.put("/users/me", authMiddleware, UserController.updateProfile);
 router.put("/users/me/password", authMiddleware, UserController.changePassword);
@@ -32,12 +40,18 @@ router.get("/users/me/stats", authMiddleware, UserController.getUserStats);
 router.get("/users/me/uploads", authMiddleware, UserController.getUserUploads);
 
 
-/* ================= ADMIN USER ROUTES ================= */
+
+
+
+
 router.get("/admin/users", authMiddleware, requireAdmin, AdminUserController.listUsers);
 router.put("/admin/users/:id/role", authMiddleware, requireAdmin, AdminUserController.changeUserRole);
 router.post("/admin/users/:id/ban", authMiddleware, requireAdmin, AdminUserController.banUser);
 
-/* ================= FIELD ROUTES ================= */
+
+
+
+
 // Public
 router.get("/fields", FieldController.listFields);
 router.get("/fields/:slug", FieldController.getFieldBySlug);
@@ -47,11 +61,18 @@ router.post("/fields", authMiddleware, requireAdmin, FieldController.createField
 router.put("/fields/:id", authMiddleware, requireAdmin, FieldController.updateField);
 router.delete("/fields/:id", authMiddleware, requireAdmin, FieldController.deleteField);
 
-/* ================= COURSE ROUTES ================= */
+
+
+
+
+
 // Public
 router.get("/courses", CourseController.listCourses);
 router.get("/courses/:slug", CourseController.getCourseBySlug);
 router.get("/fields/:fieldSlug/courses", CourseController.getCoursesByField);
+
+
+
 
 // Admin/Instructor
 router.post("/courses", authMiddleware, requireInstructor, CourseController.createCourse);
@@ -63,7 +84,7 @@ router.patch("/courses/:id/publish", authMiddleware, requireInstructor, CourseCo
 router.post("/courses/:id/enroll", authMiddleware, EnrollmentController.enrollInCourse);
 router.get("/courses/:courseId/progress", authMiddleware, EnrollmentController.getCourseProgress);
 
-/* ================= TOPIC ROUTES ================= */
+
 // Public
 router.get("/courses/:courseId/topics", TopicController.listTopicsByCourse);
 router.get("/topics/:id", TopicController.getTopicById);
@@ -74,7 +95,7 @@ router.put("/topics/:id", authMiddleware, requireInstructor, TopicController.upd
 router.delete("/topics/:id", authMiddleware, requireInstructor, TopicController.deleteTopic);
 router.patch("/topics/reorder", authMiddleware, requireInstructor, TopicController.reorderTopics);
 
-/* ================= VIDEO ROUTES ================= */
+
 // Public
 router.get("/courses/:courseId/videos", VideoController.listVideosByCourse);
 router.get("/topics/:topicId/videos", VideoController.listVideosByTopic);
@@ -90,21 +111,22 @@ router.patch("/admin/videos/:id/approve", authMiddleware, requireAdmin, AdminVid
 router.patch("/admin/videos/:id/reject", authMiddleware, requireAdmin, AdminVideoController.rejectVideo);
 router.delete("/admin/videos/:id", authMiddleware, requireAdmin, AdminVideoController.deleteVideo);
 
-/* ================= ENROLLMENT ROUTES ================= */
+
 router.get("/users/me/enrollments", authMiddleware, EnrollmentController.getUserEnrollments);
 router.get("/enrollments/:courseId", authMiddleware, EnrollmentController.getCourseProgress);
 router.patch("/enrollments/:courseId/progress", authMiddleware, EnrollmentController.updateCourseProgress);
 
-/* ================= SEARCH ROUTES ================= */
+
 router.get("/search", SearchController.globalSearch);
 router.get("/search/courses", SearchController.searchCourses);
 router.get("/search/videos", SearchController.searchVideos);
 router.get("/trending", SearchController.getTrending);
 
-/* ================= ADMIN DASHBOARD ROUTES ================= */
+
 router.get("/admin/stats", authMiddleware, requireAdmin, AdminDashboardController.getAdminStats);
 router.get("/admin/courses", authMiddleware, requireAdmin, AdminDashboardController.getAdminCourses);
 router.get("/admin/videos", authMiddleware, requireAdmin, AdminDashboardController.getAdminVideos);
 router.get("/admin/enrollments", authMiddleware, requireAdmin, AdminDashboardController.getEnrollmentStats);
+
 
 export default router;
