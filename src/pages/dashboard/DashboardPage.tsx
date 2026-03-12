@@ -1,9 +1,10 @@
 import { motion} from "framer-motion";
 import { useRef, useState, useEffect } from "react";
 import Container from "../../components/ui/Container";
-import VideoCard from "../../components/video/VideoCard";
 import Progress from "./components/Progress";
-import { mockVideos } from "../../utils/mockContent";
+import { userApi } from "../../api/courses.api";
+import { useAuthStore } from "../../store/auth.store";
+import { Play, Loader2, ExternalLink } from "lucide-react";
 
 // Enhanced StatCard component with new design system
 const EnhancedStatCard = ({ label, value }: { label: string; value: string }) => {
@@ -211,16 +212,42 @@ const EnhancedSection = ({ title, children }: { title: string; children: React.R
 export default function DashboardPage() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const user = useAuthStore((s) => s.user);
+  const token = useAuthStore((s) => s.token);
+
+  const [stats, setStats] = useState({
+    totalCourses: 0, completedCourses: 0, totalVideosWatched: 0,
+    uploadedVideos: 0, level: 1, xp: 0,
+  });
+  const [uploads, setUploads] = useState<any[]>([]);
+  const [loadingStats, setLoadingStats] = useState(false);
+
+  useEffect(() => {
+    if (!token) return;
+    setLoadingStats(true);
+    Promise.all([
+      userApi.getStats(),
+      userApi.getUploads(),
+    ])
+      .then(([statsRes, uploadsRes]) => {
+        setStats(statsRes.data?.data ?? stats);
+        setUploads(uploadsRes.data?.data ?? []);
+      })
+      .catch(() => {})
+      .finally(() => setLoadingStats(false));
+  }, [token]);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!containerRef.current) return;
-    
     const rect = containerRef.current.getBoundingClientRect();
-    setMousePosition({
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top,
-    });
+    setMousePosition({ x: e.clientX - rect.left, y: e.clientY - rect.top });
   };
+
+  const displayName = user?.profile?.firstName
+    ? `${user.profile.firstName} ${user.profile.lastName ?? ""}`.trim()
+    : user?.username ?? "Learner";
+  const title = user?.profile?.title ?? "Learner";
+  const avatar = user?.profile?.avatar ?? "https://i.pravatar.cc/100";
 
 
 
@@ -249,22 +276,10 @@ export default function DashboardPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 0.6 }}
           >
-            <EnhancedStatCard
-              label="COURSES ENROLLED"
-              value="6"
-            />
-            <EnhancedStatCard
-              label="VIDEOS WATCHED"
-              value="42"
-            />
-            <EnhancedStatCard
-              label="UPLOADED VIDEOS"
-              value="9"
-            />
-            <EnhancedStatCard
-              label="STREAK"
-              value="12 days"
-            />
+            <EnhancedStatCard label="COURSES ENROLLED" value={loadingStats ? "..." : String(stats.totalCourses)} />
+            <EnhancedStatCard label="VIDEOS WATCHED" value={loadingStats ? "..." : String(stats.totalVideosWatched)} />
+            <EnhancedStatCard label="UPLOADED VIDEOS" value={loadingStats ? "..." : String(stats.uploadedVideos)} />
+            <EnhancedStatCard label="LEVEL" value={loadingStats ? "..." : `Level ${stats.level}`} />
           </motion.div>
 
           {/* ===== MAIN GRID ===== */}
@@ -273,41 +288,46 @@ export default function DashboardPage() {
             <div className="col-span-12 lg:col-span-8 space-y-12">
               {/* Continue Learning */}
               <EnhancedSection title="Continue Learning">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {mockVideos.map((video, index) => (
-                    <motion.div
-                      key={index}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.1 * index, duration: 0.4 }}
-                    >
-                      <VideoCard 
-                        video={video}
-                        className="hover:scale-[1.02] transition-transform duration-300 ease-[0.16,1,0.3,1]"
-                      />
-                    </motion.div>
-                  ))}
-                </div>
+                {uploads.length === 0 && !loadingStats ? (
+                  <p className="text-foreground-muted text-sm">Enroll in a course to start learning.</p>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {uploads.slice(0, 3).map((video: any, index: number) => (
+                      <motion.div
+                        key={video._id}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.1 * index, duration: 0.4 }}
+                      >
+                        <UploadCard video={video} />
+                      </motion.div>
+                    ))}
+                  </div>
+                )}
               </EnhancedSection>
 
               {/* Uploaded Videos */}
               <EnhancedSection title="Your Uploaded Videos">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {mockVideos.slice(0, 4).map((video, index) => (
-                    <motion.div
-                      key={index}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.1 * index + 0.2, duration: 0.4 }}
-                    >
-                      <VideoCard 
-                        video={video}
-                        variant="detailed"
-                        className="hover:scale-[1.01] transition-transform duration-300 ease-[0.16,1,0.3,1]"
-                      />
-                    </motion.div>
-                  ))}
-                </div>
+                {uploads.length === 0 && !loadingStats ? (
+                  <p className="text-foreground-muted text-sm">You haven't uploaded any videos yet.</p>
+                ) : loadingStats ? (
+                  <div className="flex justify-center py-8">
+                    <Loader2 className="w-6 h-6 animate-spin text-accent" />
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {uploads.map((video: any, index: number) => (
+                      <motion.div
+                        key={video._id}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.1 * index + 0.2, duration: 0.4 }}
+                      >
+                        <UploadCard video={video} detailed />
+                      </motion.div>
+                    ))}
+                  </div>
+                )}
               </EnhancedSection>
             </div>
 
@@ -324,20 +344,20 @@ export default function DashboardPage() {
                     <div className="relative">
                       <div className="absolute inset-0 bg-accent/30 blur-xl rounded-full" />
                       <img
-                        src="https://i.pravatar.cc/100"
+                        src={avatar}
                         className="h-16 w-16 rounded-full border-2 border-white/[0.08] relative z-10"
                         alt="Profile"
                       />
                     </div>
                     <div>
-                      <div className="font-semibold text-lg text-foreground">Aryan Meena</div>
-                      <div className="text-sm text-foreground-muted mt-1">Contributor · Web & DevOps</div>
+                      <div className="font-semibold text-lg text-foreground">{displayName}</div>
+                      <div className="text-sm text-foreground-muted mt-1">{title}</div>
                       <div className="flex gap-2 mt-3">
                         <span className="px-2 py-1 text-xs rounded-full bg-accent/20 text-accent border border-accent/30">
-                          Level 4
+                          Level {stats.level}
                         </span>
-                        <span className="px-2 py-1 text-xs rounded-full bg-white/[0.05] text-foreground-muted border border-white/[0.06]">
-                          Top 10%
+                        <span className="px-2 py-1 text-xs rounded-full bg-white/[0.05] text-foreground-muted border border-white/[0.06] capitalize">
+                          {user?.role ?? "student"}
                         </span>
                       </div>
                     </div>
@@ -400,32 +420,101 @@ export default function DashboardPage() {
                   </div>
                   
                   <ul className="space-y-4">
-                    {[
-                      { text: "Uploaded Docker Basics", time: "2 hours ago", icon: "📤" },
-                      { text: "Completed JS Closures", time: "4 hours ago", icon: "✅" },
-                      { text: "Started System Design", time: "1 day ago", icon: "🚀" },
-                      { text: "Reached 100 followers", time: "2 days ago", icon: "👥" },
-                    ].map((item, index) => (
-                      <motion.li
-                        key={index}
-                        className="flex items-start gap-3 text-sm"
-                        initial={{ opacity: 0, x: -10 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: 0.6 + index * 0.1 }}
-                      >
-                        <div className="text-lg">{item.icon}</div>
-                        <div className="flex-1">
-                          <div className="text-foreground">{item.text}</div>
-                          <div className="text-xs text-foreground-muted mt-1">{item.time}</div>
-                        </div>
-                      </motion.li>
-                    ))}
+                    {uploads.slice(0, 4).length > 0
+                      ? uploads.slice(0, 4).map((video: any, index: number) => (
+                        <motion.li
+                          key={video._id}
+                          className="flex items-start gap-3 text-sm"
+                          initial={{ opacity: 0, x: -10 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: 0.6 + index * 0.1 }}
+                        >
+                          <div className="text-lg">📤</div>
+                          <div className="flex-1">
+                            <div className="text-foreground line-clamp-1">{video.title}</div>
+                            <div className="text-xs text-foreground-muted mt-1 capitalize">{video.status}</div>
+                          </div>
+                        </motion.li>
+                      ))
+                      : [
+                        { text: "Start contributing videos!", time: "right now", icon: "🚀" },
+                      ].map((item, index) => (
+                        <motion.li
+                          key={index}
+                          className="flex items-start gap-3 text-sm"
+                          initial={{ opacity: 0, x: -10 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: 0.6 + index * 0.1 }}
+                        >
+                          <div className="text-lg">{item.icon}</div>
+                          <div className="flex-1">
+                            <div className="text-foreground">{item.text}</div>
+                            <div className="text-xs text-foreground-muted mt-1">{item.time}</div>
+                          </div>
+                        </motion.li>
+                      ))
+                    }
                   </ul>
                 </EnhancedGlowCard>
               </motion.div>
             </div>
           </div>
         </Container>
+      </div>
+    </div>
+  );
+}
+
+// UploadCard component for displaying API video objects
+function UploadCard({ video, detailed = false }: { video: any; detailed?: boolean }) {
+  const STATUS_COLORS: Record<string, string> = {
+    approved: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
+    pending: "bg-amber-500/10 text-amber-400 border-amber-500/20",
+    rejected: "bg-red-500/10 text-red-400 border-red-500/20",
+  };
+  const statusColor = STATUS_COLORS[video.status] ?? STATUS_COLORS.pending;
+  const courseTitle = typeof video.course === "object" ? video.course?.title : null;
+  const topicTitle = typeof video.topic === "object" ? video.topic?.title : null;
+
+  return (
+    <div className="group rounded-2xl border border-white/[0.06] bg-gradient-to-b from-white/[0.08] to-white/[0.02] p-5 hover:border-white/[0.12] transition-all">
+      <div className="flex items-start justify-between gap-3 mb-3">
+        <h3 className="font-medium text-sm line-clamp-2 group-hover:text-white transition-colors">
+          {video.title}
+        </h3>
+        <span className={`flex-shrink-0 text-xs px-2 py-0.5 rounded-full border capitalize ${statusColor}`}>
+          {video.status}
+        </span>
+      </div>
+
+      {video.description && (
+        <p className="text-xs text-foreground-muted mb-3 line-clamp-2">{video.description}</p>
+      )}
+
+      {detailed && (
+        <div className="text-xs text-foreground-muted space-y-1 mb-3">
+          {courseTitle && <p>Course: <span className="text-foreground">{courseTitle}</span></p>}
+          {topicTitle && <p>Topic: <span className="text-foreground">{topicTitle}</span></p>}
+        </div>
+      )}
+
+      <div className="flex items-center justify-between pt-3 border-t border-white/[0.06]">
+        <span className="text-xs text-foreground-muted">
+          {video.createdAt ? new Date(video.createdAt).toLocaleDateString() : ""}
+        </span>
+        {video.url && (
+          <a
+            href={video.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1 text-xs text-accent hover:text-accent/80 transition-colors"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <Play className="w-3 h-3" />
+            View
+            <ExternalLink className="w-3 h-3" />
+          </a>
+        )}
       </div>
     </div>
   );

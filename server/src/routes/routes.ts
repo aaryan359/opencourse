@@ -13,6 +13,7 @@ import * as AdminVideoController from "../controllers/AdminVideo.Controller";
 import * as EnrollmentController from "../controllers/Enrollment.Controller";
 import * as SearchController from "../controllers/Search.Controller";
 import * as AdminDashboardController from "../controllers/AdminDashboard.Controller";
+import * as InterviewQuestionController from "../controllers/InterviewQuestion.Controller";
 import { requireAdmin, requireInstructor } from "../middlewares/role.middleware";
 
 
@@ -127,6 +128,22 @@ router.get("/admin/stats", authMiddleware, requireAdmin, AdminDashboardControlle
 router.get("/admin/courses", authMiddleware, requireAdmin, AdminDashboardController.getAdminCourses);
 router.get("/admin/videos", authMiddleware, requireAdmin, AdminDashboardController.getAdminVideos);
 router.get("/admin/enrollments", authMiddleware, requireAdmin, AdminDashboardController.getEnrollmentStats);
+
+
+// ==================== INTERVIEW QUESTIONS ====================
+// Public
+router.get("/interview-questions", InterviewQuestionController.listInterviewQuestions);
+router.get("/interview-questions/companies", InterviewQuestionController.getCompanies);
+router.get("/interview-questions/roles", InterviewQuestionController.getRoles);
+router.get("/interview-questions/:id", InterviewQuestionController.getInterviewQuestionById);
+
+// Submit (public, but attaches userId if authenticated)
+router.post("/interview-questions", InterviewQuestionController.submitInterviewQuestions);
+
+// Admin
+router.get("/admin/interview-questions/pending", authMiddleware, requireAdmin, InterviewQuestionController.getPendingInterviewQuestions);
+router.patch("/admin/interview-questions/:id/approve", authMiddleware, requireAdmin, InterviewQuestionController.approveInterviewQuestion);
+router.patch("/admin/interview-questions/:id/reject", authMiddleware, requireAdmin, InterviewQuestionController.rejectInterviewQuestion);
 
 
 export default router;

@@ -2,21 +2,34 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Github, Mail, ArrowRight, Loader2 } from "lucide-react";
+import { Github, Mail, Loader2, Eye, EyeOff } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import GlowCard from "../../components/ui/GlowCard";
 import Button from "../../components/ui/Button";
 import Container from "../../components/ui/Container";
+import { useAuthStore } from "../../store/auth.store";
 
 
 export default function Login() {
   const [email, setEmail] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const { login, loading, error } = useAuthStore();
+  const navigate = useNavigate();
 
-  const login = async () => {
-    setLoading(true);
-    await new Promise((r) => setTimeout(r, 900));
-    setLoading(false);
-    alert("Logged in successfully ✨");
+  const handleLogin = async () => {
+    if (!email || !password) {
+      toast.error("Please enter your email and password.");
+      return;
+    }
+    try {
+      await login({ email, password });
+      toast.success("Welcome back!");
+      navigate("/");
+    } catch {
+      toast.error(error || "Login failed. Please try again.");
+    }
   };
 
   return (
@@ -31,7 +44,7 @@ export default function Login() {
               </h1>
               <p className="text-neutral-400 text-sm">
                 Sign in to contribute, manage courses, or upload interview
-                questions. Watching courses doesn’t require login.
+                questions. Watching courses does not require login.
               </p>
             </header>
 
@@ -51,17 +64,42 @@ export default function Login() {
             <div className="space-y-4">
               <Input
                 placeholder="Email address"
+                type="email"
                 value={email}
-                onChange={(e:any) => setEmail(e.target.value)}
+                onChange={(e: any) => setEmail(e.target.value)}
               />
+              <div className="relative">
+                <Input
+                  placeholder="Password"
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={(e: any) => setPassword(e.target.value)}
+                  onKeyDown={(e: any) => e.key === "Enter" && handleLogin()}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-200 transition-colors"
+                >
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
 
-              <Button className="w-full" onClick={login} disabled={!email}>
+              {error && (
+                <p className="text-sm text-red-400 bg-red-500/10 border border-red-500/20 rounded-lg px-3 py-2">
+                  {error}
+                </p>
+              )}
+
+              <Button
+                className="w-full"
+                onClick={handleLogin}
+                disabled={!email || !password || loading}
+              >
                 {loading ? (
                   <Loader2 className="w-4 h-4 animate-spin" />
                 ) : (
-                  <>
-                    Continue 
-                  </>
+                  "Sign In"
                 )}
               </Button>
             </div>
@@ -74,10 +112,7 @@ export default function Login() {
               className="text-xs text-neutral-500"
             >
               New here?{" "}
-              <a
-                href="/register"
-                className="text-emerald-400 hover:underline"
-              >
+              <a href="/register" className="text-emerald-400 hover:underline">
                 Apply as a contributor
               </a>
             </motion.div>
@@ -87,7 +122,6 @@ export default function Login() {
     </section>
   );
 }
-
 
 
 function OAuthButton({ icon, label }: { icon: React.ReactNode; label: string }) {

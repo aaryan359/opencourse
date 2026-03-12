@@ -2,8 +2,10 @@ import { useState, useCallback } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import {
   Plus, Trash2, CheckCircle, Loader2, ChevronLeft, AlertCircle,
-  MessageCircle, User, Building2, Briefcase, Lock, Eye, Edit3
+  MessageCircle, Building2, Briefcase, Lock, Eye, Edit3
 } from "lucide-react"
+import { toast } from "react-toastify"
+import { interviewApi } from "../../../api/interview.api"
 
 type QuestionAnswer = {
   id: string
@@ -59,20 +61,30 @@ export default function InterviewQuestions() {
   }, [questions])
 
   const handleSubmit = useCallback(async () => {
-    setSubmitting(true)
-    // Simulate submission
-    await new Promise(resolve => setTimeout(resolve, 2000))
-    setSubmitting(false)
     setStage('review')
   }, [])
 
   const handleConfirmSubmit = useCallback(async () => {
     setSubmitting(true)
-    // Simulate final submission
-    await new Promise(resolve => setTimeout(resolve, 1500))
-    setSubmitting(false)
-    setStage('success')
-  }, [])
+    try {
+      await interviewApi.submit({
+        company,
+        role,
+        qaPairs: questions.map(q => ({
+          question: q.question,
+          answer: q.answer,
+          difficulty: q.difficulty,
+        })),
+        isAnonymous,
+      })
+      setStage('success')
+      toast.success("Interview questions submitted successfully!")
+    } catch (err: any) {
+      toast.error(err?.response?.data?.message || "Submission failed. Please try again.")
+    } finally {
+      setSubmitting(false)
+    }
+  }, [company, role, questions, isAnonymous])
 
   const isFormValid = company && role && questions.length > 0
 

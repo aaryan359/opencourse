@@ -1,7 +1,8 @@
 
-import mongoose, { Schema, Model, type HydratedDocument } from "mongoose";
+import mongoose, { Schema, Model } from "mongoose";
 import bcrypt from "bcryptjs";
 import type { IUser } from "../types/User.type.js";
+ 
 
 
 
@@ -9,6 +10,7 @@ const UserSchema = new Schema<IUser>(
   {
     email: { type: String, required: true, unique: true, lowercase: true },
     username: { type: String, required: true, unique: true },
+    password: { type: String, required: true, select: false },
 
     profile: {
       firstName: String,
@@ -38,8 +40,14 @@ const UserSchema = new Schema<IUser>(
   { timestamps: true }
 );
 
+// Hash password before save (Mongoose 9: no next callback, just async/await)
+UserSchema.pre("save", async function () {
+  if (!this.isModified("password")) return;
+  this.password = await bcrypt.hash(this.password as string, 12);
+});
 
-UserSchema.methods.comparePassword = async function (password: string) {
-  return bcrypt.compare(password, this.password);
+UserSchema.methods.comparePassword = async function (candidate: string) {
+  return bcrypt.compare(candidate, this.password);
 };
+
 export const User: Model<IUser> = mongoose.model<IUser>("User", UserSchema);

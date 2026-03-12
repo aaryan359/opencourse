@@ -1,5 +1,9 @@
+import { useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import AppLayout from "./layouts/AppLayout";
+import { useAuthStore } from "./store/auth.store";
 
 import Home from "./pages/home/Home";
 
@@ -13,8 +17,7 @@ import Login from "./auth/login/Login";
 
 
 import CoursesPage from "./pages/courses/CoursesPage";
-import TrackPage from "./pages/courses/TrackPage";
-import DomainPage from "./pages/courses/DomainPage";
+import FieldCoursesPage from "./pages/courses/DomainPage";
 import CourseOverviewPage from "./pages/courses/CourseOverviewPage";
 import CourseLearnPage from "./pages/courses/CourseLearnPage";
 import ExploreCoursesPage from "./pages/explore/Explore";
@@ -23,8 +26,25 @@ import ContributePage from "./pages/contribute/Contribute";
 
 
 function App() {
+	const initFromStorage = useAuthStore((s) => s.initFromStorage);
+
+	useEffect(() => {
+		initFromStorage();
+	}, [initFromStorage]);
+
 	return (
-		<Routes>
+		<>
+			<ToastContainer
+				position="bottom-right"
+				theme="dark"
+				autoClose={3000}
+				hideProgressBar={false}
+				newestOnTop
+				closeOnClick
+				pauseOnFocusLoss={false}
+				pauseOnHover
+			/>
+			<Routes>
 			{/* 🌐 App Shell */}
 			<Route element={<AppLayout />}>
 				<Route
@@ -42,20 +62,15 @@ function App() {
 					element={<CoursesPage />}
 				/>
 				<Route
-					path='/courses/:track'
-					element={<TrackPage />}
+					path='/courses/:fieldSlug'
+					element={<FieldCoursesPage />}
 				/>
 				<Route
-					path='/courses/:track/:domain'
-					element={<DomainPage />}
-				/>
-				<Route
-					path='/courses/:track/:domain/:course'
+					path='/courses/:fieldSlug/:courseSlug'
 					element={<CourseOverviewPage />}
 				/>
-
 				<Route
-					path='/courses/:track/:domain/:course/learn'
+					path='/courses/:fieldSlug/:courseSlug/learn'
 					element={<CourseLearnPage />}
 				/>
 
@@ -93,6 +108,7 @@ function App() {
 				element={<Login />}
 			/>
 		</Routes>
+		</>
 	);
 }
 

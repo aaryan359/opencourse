@@ -1,9 +1,10 @@
 import { Link } from 'react-router-dom';
-import { ArrowRight, Briefcase, Sparkles, Zap, TrendingUp, Users, Star, CheckCircle, Award, Play, Code, MessageSquare, Rocket, Shield, Globe, Headphones } from 'lucide-react';
-import { useState, useRef } from 'react';
+import { ArrowRight, Briefcase, Sparkles, TrendingUp, Users, CheckCircle, Award, Play, Code, MessageSquare, Rocket, Shield, Globe, Headphones, BookOpen, Loader2 } from 'lucide-react';
+import { useState, useRef, useEffect } from 'react';
 import { BackgroundEffects } from '../../components/ui/BackgroundEffects';
 import { MouseSpotlight } from '../../components/mouse/MouseTrack';
 import Button from '../../components/ui/Button';
+import { fieldsApi } from '../../api/courses.api';
 
 
 // 3. Card Component with Mouse Tracking
@@ -122,16 +123,34 @@ function FeatureCard({ icon, title, description, gradient }) {
 
 
 
+// Fallback gradient palette per field index
+const GRADIENTS = [
+  "bg-gradient-to-br from-[#5E6AD2]/30 via-purple-500/20 to-transparent",
+  "bg-gradient-to-br from-emerald-500/30 via-teal-500/20 to-transparent",
+  "bg-gradient-to-br from-pink-500/30 via-rose-500/20 to-transparent",
+  "bg-gradient-to-br from-cyan-500/30 via-blue-500/20 to-transparent",
+  "bg-gradient-to-br from-amber-500/30 via-orange-500/20 to-transparent",
+  "bg-gradient-to-br from-violet-500/30 via-purple-500/20 to-transparent",
+];
+
 export default function CoursesPage() {
+  const [fields, setFields] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fieldsApi.listFields()
+      .then((res) => setFields(res.data?.data ?? []))
+      .catch(() => {})
+      .finally(() => setLoading(false));
+  }, []);
+
   return (
     <div className="min-h-screen bg-[#050506] text-[#EDEDEF] relative overflow-hidden">
-      {/* Reusable Background Components */}
       <BackgroundEffects />
       <MouseSpotlight />
       
       <div className="relative z-10">
-        {/* Hero Section */}
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-10 lg:py-10 max-w-7xl">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-10 max-w-7xl">
           {/* Header */}
           <div className="max-w-4xl mx-auto text-center mb-16">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/[0.06] bg-white/[0.03] backdrop-blur-sm mb-8">
@@ -150,59 +169,22 @@ export default function CoursesPage() {
             </h1>
             
             <p className="text-lg lg:text-xl text-[#8A8F98] leading-relaxed max-w-3xl mx-auto mb-12">
-              Join 50,000+ professionals who have accelerated their careers through our industry-leading curriculum. 
-              Hands-on projects, personalized mentorship, and real-world applications.
+              Join professionals who have accelerated their careers through our industry-leading curriculum. 
+              Hands-on projects, real-world applications, and community-driven content.
             </p>
-            
-            {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
-              <Link to="/courses/all">
-                <button className="group relative px-8 py-4 rounded-lg bg-gradient-to-br from-[#5E6AD2] to-[#6872D9] font-semibold text-white shadow-[0_0_0_1px_rgba(94,106,210,0.5),0_4px_12px_rgba(94,106,210,0.3),inset_0_1px_0_0_rgba(255,255,255,0.2)] hover:shadow-[0_0_0_1px_rgba(94,106,210,0.8),0_8px_24px_rgba(94,106,210,0.4),inset_0_1px_0_0_rgba(255,255,255,0.3)] transition-all duration-300 hover:-translate-y-1 active:scale-[0.98]">
-                  <span className="relative z-10">Explore All Courses</span>
-                  <ArrowRight className="inline-block ml-3 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                </button>
-              </Link>
-              
-              <Link to="/demo">
-                <button className="px-8 py-4 rounded-lg border border-white/[0.12] bg-white/[0.05] font-semibold text-white hover:bg-white/[0.08] transition-all duration-300 hover:-translate-y-1">
-                  <Play className="inline-block w-5 h-5 mr-3" />
-                  Watch Demo
-                </button>
-              </Link>
-            </div>
           </div>
 
           {/* Stats Section */}
           <div className="max-w-6xl mx-auto">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-20">
-              <StatCard
-                icon={<Users className="w-6 h-6" />}
-                value="50K+"
-                label="Active Learners"
-                gradient="bg-gradient-to-br from-[#5E6AD2]/20 to-purple-500/10"
-              />
-              <StatCard
-                icon={<Award className="w-6 h-6" />}
-                value="98%"
-                label="Satisfaction Rate"
-                gradient="bg-gradient-to-br from-emerald-500/20 to-teal-500/10"
-              />
-              <StatCard
-                icon={<Code className="w-6 h-6" />}
-                value="300+"
-                label="Hours of Content"
-                gradient="bg-gradient-to-br from-cyan-500/20 to-blue-500/10"
-              />
-              <StatCard
-                icon={<Briefcase className="w-6 h-6" />}
-                value="85%"
-                label="Career Advancement"
-                gradient="bg-gradient-to-br from-amber-500/20 to-orange-500/10"
-              />
+              <StatCard icon={<Users className="w-6 h-6" />} value="50K+" label="Active Learners" gradient="bg-gradient-to-br from-[#5E6AD2]/20 to-purple-500/10" />
+              <StatCard icon={<Award className="w-6 h-6" />} value="98%" label="Satisfaction Rate" gradient="bg-gradient-to-br from-emerald-500/20 to-teal-500/10" />
+              <StatCard icon={<Code className="w-6 h-6" />} value="300+" label="Hours of Content" gradient="bg-gradient-to-br from-cyan-500/20 to-blue-500/10" />
+              <StatCard icon={<Briefcase className="w-6 h-6" />} value="85%" label="Career Advancement" gradient="bg-gradient-to-br from-amber-500/20 to-orange-500/10" />
             </div>
           </div>
 
-          {/* Main Tracks Section */}
+          {/* Fields / Learning Paths */}
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-12">
               <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-6">
@@ -211,51 +193,29 @@ export default function CoursesPage() {
                 </span>
               </h2>
               <p className="text-lg text-[#8A8F98] max-w-3xl mx-auto">
-                Select from our expertly crafted tracks designed to take you from beginner to expert.
+                Select from our expertly crafted fields designed to take you from beginner to expert.
               </p>
             </div>
 
-            <div className="grid lg:grid-cols-2 gap-8 mb-20">
-              <TrackCard
-                to="/courses/tech"
-                icon={<Zap className="w-8 h-8" />}
-                title="Technical Skills (TECH)"
-                description="Master modern technologies with hands-on projects and real-world applications. Perfect for developers, engineers, and tech enthusiasts."
-                gradient="bg-gradient-to-br from-[#5E6AD2]/30 via-purple-500/20 to-transparent"
-                count="15+ Specialized Courses"
-                features={[
-                  "Full-Stack Development",
-                  "DevOps & Cloud Engineering",
-                  "Data Science & AI/ML",
-                  "System Design & Architecture",
-                  "Cybersecurity Fundamentals"
-                ]}
-                stats={[
-                  { value: "24/7", label: "Support" },
-                  { value: "50+", label: "Projects" }
-                ]}
-              />
-              
-              <TrackCard
-                to="/courses/non-tech"
-                icon={<TrendingUp className="w-8 h-8" />}
-                title="Professional Growth (NON TECH)"
-                description="Develop essential soft skills and leadership capabilities to accelerate your career growth and personal development."
-                gradient="bg-gradient-to-br from-emerald-500/30 via-teal-500/20 to-transparent"
-                count="12+ Master Classes"
-                features={[
-                  "Leadership & Management",
-                  "Communication & Presentation",
-                  "Productivity & Time Management",
-                  "Career Strategy & Networking",
-                  "Remote Work Excellence"
-                ]}
-                stats={[
-                  { value: "1:1", label: "Coaching" },
-                  { value: "100%", label: "Practical" }
-                ]}
-              />
-            </div>
+            {loading ? (
+              <div className="flex justify-center py-20">
+                <Loader2 className="w-8 h-8 animate-spin text-[#5E6AD2]" />
+              </div>
+            ) : (
+              <div className="grid lg:grid-cols-2 gap-8 mb-20">
+                {fields.map((field, idx) => (
+                  <TrackCard
+                    key={field._id}
+                    to={`/courses/${field.slug}`}
+                    icon={<BookOpen className="w-8 h-8" />}
+                    title={field.name}
+                    description={field.description || `Explore ${field.name} courses and build real-world skills.`}
+                    gradient={GRADIENTS[idx % GRADIENTS.length]}
+                    count={`${field.slug}`}
+                  />
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Features Section */}
@@ -266,88 +226,19 @@ export default function CoursesPage() {
                   Why Learn With Us
                 </span>
               </h2>
-              <p className="text-lg text-[#8A8F98] max-w-3xl mx-auto">
-                Experience education reimagined with cutting-edge pedagogy and industry expertise.
-              </p>
             </div>
 
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-20">
-              <FeatureCard
-                icon={<Rocket className="w-6 h-6" />}
-                title="Project-Based Learning"
-                description="Build real-world projects from day one. Learn by doing with our comprehensive project library."
-                gradient="bg-gradient-to-br from-[#5E6AD2]/20 to-purple-500/10"
-              />
-              <FeatureCard
-                icon={<MessageSquare className="w-6 h-6" />}
-                title="Expert Mentorship"
-                description="Get 1:1 guidance from industry professionals with years of real-world experience."
-                gradient="bg-gradient-to-br from-emerald-500/20 to-teal-500/10"
-              />
-              <FeatureCard
-                icon={<Shield className="w-6 h-6" />}
-                title="Job-Ready Curriculum"
-                description="Courses designed in collaboration with leading tech companies to ensure relevance."
-                gradient="bg-gradient-to-br from-cyan-500/20 to-blue-500/10"
-              />
-              <FeatureCard
-                icon={<Globe className="w-6 h-6" />}
-                title="Global Community"
-                description="Connect with peers worldwide, collaborate on projects, and grow your network."
-                gradient="bg-gradient-to-br from-amber-500/20 to-orange-500/10"
-              />
-              <FeatureCard
-                icon={<Headphones className="w-6 h-6" />}
-                title="Flexible Learning"
-                description="Learn at your own pace with lifetime access to all course materials and updates."
-                gradient="bg-gradient-to-br from-pink-500/20 to-rose-500/10"
-              />
-              <FeatureCard
-                icon={<Award className="w-6 h-6" />}
-                title="Industry Recognition"
-                description="Earn certificates recognized by top companies and add them to your professional profile."
-                gradient="bg-gradient-to-br from-violet-500/20 to-purple-500/10"
-              />
+              <FeatureCard icon={<Rocket className="w-6 h-6" />} title="Project-Based Learning" description="Build real-world projects from day one with our comprehensive project library." gradient="bg-gradient-to-br from-[#5E6AD2]/20 to-purple-500/10" />
+              <FeatureCard icon={<MessageSquare className="w-6 h-6" />} title="Community-Driven" description="Learn from and contribute to a global community of passionate learners." gradient="bg-gradient-to-br from-emerald-500/20 to-teal-500/10" />
+              <FeatureCard icon={<Shield className="w-6 h-6" />} title="Job-Ready Curriculum" description="Courses designed to ensure you're ready for real-world challenges." gradient="bg-gradient-to-br from-cyan-500/20 to-blue-500/10" />
+              <FeatureCard icon={<Globe className="w-6 h-6" />} title="Global Community" description="Connect with peers worldwide, collaborate on projects, and grow your network." gradient="bg-gradient-to-br from-amber-500/20 to-orange-500/10" />
+              <FeatureCard icon={<Headphones className="w-6 h-6" />} title="Flexible Learning" description="Learn at your own pace with lifetime access to all course materials." gradient="bg-gradient-to-br from-pink-500/20 to-rose-500/10" />
+              <FeatureCard icon={<TrendingUp className="w-6 h-6" />} title="Track Your Progress" description="Monitor your growth and stay motivated with detailed progress tracking." gradient="bg-gradient-to-br from-violet-500/20 to-purple-500/10" />
             </div>
           </div>
-
-         
         </div>
-
-       
       </div>
-
-      {/* Global Animation Styles */}
-      <style>{`
-        @keyframes blob-float-1 {
-          0%, 100% { transform: translate(0, 0) scale(1); }
-          50% { transform: translate(30px, -20px) scale(1.05); }
-        }
-        @keyframes blob-float-2 {
-          0%, 100% { transform: translate(0, 0) scale(1); }
-          50% { transform: translate(-20px, 20px) scale(1.03); }
-        }
-        @keyframes blob-float-3 {
-          0%, 100% { transform: translate(0, 0) scale(1); }
-          50% { transform: translate(15px, -15px) scale(1.02); }
-        }
-        @keyframes shimmer {
-          0% { background-position: -100% 50%; }
-          100% { background-position: 200% 50%; }
-        }
-        .animate-blob-float-1 {
-          animation: blob-float-1 25s ease-in-out infinite;
-        }
-        .animate-blob-float-2 {
-          animation: blob-float-2 30s ease-in-out infinite;
-        }
-        .animate-blob-float-3 {
-          animation: blob-float-3 35s ease-in-out infinite;
-        }
-        .animate-shimmer {
-          animation: shimmer 3s ease-in-out infinite;
-        }
-      `}</style>
     </div>
   );
 }

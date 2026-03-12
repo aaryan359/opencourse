@@ -12,6 +12,7 @@
   "dependencies": {
     "@tailwindcss/vite": "^4.1.18",
     "@types/jsonwebtoken": "^9.0.10",
+    "axios": "^1.13.6",
     "clsx": "^2.1.1",
     "framer-motion": "^12.23.26",
     "jsonwebtoken": "^9.0.3",
