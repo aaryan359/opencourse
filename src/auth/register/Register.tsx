@@ -53,18 +53,24 @@ export default function Register() {
   };
 
   return (
-    <section className="min-h-screen bg-neutral-950 flex items-center py-12">
-      <Container className="max-w-xl">
+    <section className="min-h-screen bg-[#050506] flex items-center py-12 relative overflow-hidden">
+      {/* Background gradient */}
+      <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,#0a0a0f_0%,#050506_50%,#020203_100%)]" />
+      <motion.div
+        className="fixed -top-[30%] right-[20%] w-[500px] h-[500px] rounded-full bg-gradient-to-br from-[#5E6AD2]/15 to-transparent blur-[100px]"
+        animate={{ x: [0, -20, 0], y: [0, 10, 0] }}
+        transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
+      />
+      <Container className="max-w-xl relative z-10">
         <GlowCard accent="indigo">
           <div className="space-y-6">
             {/* Header */}
             <header className="space-y-2">
               <h1 className="text-3xl font-semibold text-white">
-                Become a Contributor
+                Join OpenCourse
               </h1>
-              <p className="text-neutral-400 text-sm">
-                Help keep courses up-to-date. Create an account to start
-                contributing videos and interview questions.
+              <p className="text-[#8A8F98] text-sm">
+                Create an account to contribute videos, interview questions, and help learners worldwide.
               </p>
             </header>
 
@@ -186,7 +192,7 @@ function OAuthButton({ icon, label }: { icon: React.ReactNode; label: string }) 
     <motion.button
       whileHover={{ y: -1 }}
       whileTap={{ scale: 0.98 }}
-      className="flex items-center justify-center gap-2 rounded-lg border border-neutral-800 bg-neutral-900 px-4 py-2 text-sm text-neutral-200 hover:border-neutral-700"
+      className="flex items-center justify-center gap-2 rounded-xl border border-white/[0.08] bg-white/[0.03] px-4 py-2.5 text-sm text-[#EDEDEF] hover:bg-white/[0.06] hover:border-white/[0.12] transition-all"
     >
       {icon}
       {label}
@@ -197,12 +203,12 @@ function OAuthButton({ icon, label }: { icon: React.ReactNode; label: string }) 
 function Input({ icon, ...props }: any) {
   return (
     <div className="relative">
-      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-500">
+      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[#8A8F98]">
         {icon}
       </span>
       <input
         {...props}
-        className="w-full rounded-lg bg-neutral-900 border border-neutral-800 pl-10 pr-3 py-2 text-sm text-white placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/40"
+        className="w-full rounded-xl bg-[#0f0f12] border border-white/[0.08] pl-10 pr-3 py-3 text-sm text-white placeholder-[#8A8F98] focus:outline-none focus:border-[#5E6AD2]/50 focus:ring-2 focus:ring-[#5E6AD2]/20 transition-all"
       />
     </div>
   );

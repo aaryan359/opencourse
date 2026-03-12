@@ -42,8 +42,8 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 			transition={{ duration: 0.3 }}
 			className="space-y-4"
 		>
-			<h3 className="text-lg font-semibold text-white flex items-center gap-2">
-				<Sparkles className="h-5 w-5 text-indigo-400" />
+			<h3 className="text-lg font-semibold text-[#EDEDEF] flex items-center gap-2">
+				<Sparkles className="h-5 w-5 text-[#5E6AD2]" />
 				{title}
 			</h3>
 			<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -113,7 +113,7 @@ export default function TopicFlow({ onConfirm }: { onConfirm: (data: { field: Fi
 
 	if (error) {
 		return (
-			<div className="flex flex-col items-center justify-center py-24 gap-4 text-neutral-400">
+			<div className="flex flex-col items-center justify-center py-24 gap-4 text-[#8A8F98]">
 				<ServerOff className="h-10 w-10 text-rose-500" />
 				<p className="text-sm">{error}</p>
 				<button
@@ -122,7 +122,7 @@ export default function TopicFlow({ onConfirm }: { onConfirm: (data: { field: Fi
 						setLoadingFields(true);
 						apiClient.get("/fields").then((r) => setFields(r.data.data || [])).finally(() => setLoadingFields(false));
 					}}
-					className="px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-white text-sm hover:bg-white/10 transition-colors"
+					className="px-4 py-2 rounded-lg bg-white/[0.05] border border-white/[0.08] text-[#EDEDEF] text-sm hover:bg-white/[0.08] transition-colors"
 				>
 					Retry
 				</button>
@@ -135,15 +135,15 @@ export default function TopicFlow({ onConfirm }: { onConfirm: (data: { field: Fi
 			{/* FIELDS */}
 			<Section title='Select a Domain'>
 				{loadingFields ? <LoadingGrid /> : fields.length === 0 ? (
-					<p className="text-neutral-400 text-sm col-span-3">No fields available yet.</p>
+					<p className="text-[#8A8F98] text-sm col-span-3">No fields available yet.</p>
 				) : fields.map((f) => (
 					<GlowCard
 						key={f._id}
 						selected={selectedField?._id === f._id}
 						disabled={!!selectedField && selectedField._id !== f._id}
 						onClick={() => setSelectedField(f)}>
-						<h3 className='text-white font-medium'>{f.name}</h3>
-						{f.description && <p className="text-xs text-neutral-400 mt-1 truncate">{f.description}</p>}
+						<h3 className='text-[#EDEDEF] font-medium'>{f.name}</h3>
+						{f.description && <p className="text-xs text-[#8A8F98] mt-1 truncate">{f.description}</p>}
 					</GlowCard>
 				))}
 			</Section>
@@ -152,7 +152,7 @@ export default function TopicFlow({ onConfirm }: { onConfirm: (data: { field: Fi
 				{selectedField && (
 					<Section title={`Courses in ${selectedField.name}`}>
 						{loadingCourses ? <LoadingGrid /> : courses.length === 0 ? (
-							<p className="text-neutral-400 text-sm col-span-3">No courses in this field yet.</p>
+							<p className="text-[#8A8F98] text-sm col-span-3">No courses in this field yet.</p>
 						) : courses.map((c) => (
 							<GlowCard
 								key={c._id}
@@ -160,8 +160,8 @@ export default function TopicFlow({ onConfirm }: { onConfirm: (data: { field: Fi
 								selected={selectedCourse?._id === c._id}
 								disabled={!!selectedCourse && selectedCourse._id !== c._id}
 								onClick={() => setSelectedCourse(c)}>
-								<h3 className="text-white font-medium">{c.title}</h3>
-								<p className="text-xs text-neutral-400 mt-1 capitalize">{c.level}</p>
+								<h3 className="text-[#EDEDEF] font-medium">{c.title}</h3>
+								<p className="text-xs text-[#8A8F98] mt-1 capitalize">{c.level}</p>
 							</GlowCard>
 						))}
 					</Section>
@@ -172,7 +172,7 @@ export default function TopicFlow({ onConfirm }: { onConfirm: (data: { field: Fi
 				{selectedCourse && (
 					<Section title='Choose a Topic'>
 						{loadingTopics ? <LoadingGrid /> : topics.length === 0 ? (
-							<p className="text-neutral-400 text-sm col-span-3">No topics in this course yet.</p>
+							<p className="text-[#8A8F98] text-sm col-span-3">No topics in this course yet.</p>
 						) : topics.map((t) => (
 							<GlowCard
 								key={t._id}
@@ -197,15 +197,15 @@ export default function TopicFlow({ onConfirm }: { onConfirm: (data: { field: Fi
 					>
 						<GlowCard className='flex items-center justify-between'>
 							<div>
-								<p className='text-xs text-neutral-400'>Selected path</p>
-								<p className='text-sm text-white'>
+								<p className='text-xs text-[#8A8F98]'>Selected path</p>
+								<p className='text-sm text-[#EDEDEF]'>
 									{selectedField.name} → {selectedCourse.title} →{" "}
-									<span className='text-indigo-400'>{selectedTopic.title}</span>
+									<span className='text-[#5E6AD2]'>{selectedTopic.title}</span>
 								</p>
 							</div>
 							<button
 								onClick={() => onConfirm({ field: selectedField!, course: selectedCourse!, topic: selectedTopic! })}
-								className='rounded-lg bg-indigo-600 px-4 py-2 text-sm text-white flex items-center gap-2 hover:bg-indigo-700 transition-colors'
+								className='rounded-xl bg-[#5E6AD2] px-4 py-2 text-sm text-white flex items-center gap-2 hover:bg-[#5E6AD2]/90 transition-colors'
 							>
 								Continue
 								<ChevronRight className="h-4 w-4" />
@@ -219,7 +219,7 @@ export default function TopicFlow({ onConfirm }: { onConfirm: (data: { field: Fi
 				<motion.button
 					whileTap={{ scale: 0.97 }}
 					onClick={() => onConfirm({ field: selectedField!, course: selectedCourse!, topic: selectedTopic! })}
-					className='mt-4 w-full rounded-xl bg-indigo-600 px-6 py-3 text-sm font-medium text-white flex items-center justify-center gap-2 hover:bg-indigo-700 transition-colors'
+					className='mt-4 w-full rounded-xl bg-[#5E6AD2] px-6 py-3 text-sm font-medium text-white flex items-center justify-center gap-2 hover:bg-[#5E6AD2]/90 transition-colors'
 				>
 					Confirm & Continue
 					<ChevronRight className="h-4 w-4" />

@@ -83,13 +83,25 @@ matchesSearch &&
 }, [filters, search, questions]);
 
 return (
-<section className="min-h-screen bg-neutral-950 px-6 py-6">
-<div className="max-w-7xl mx-auto">
+<section className="min-h-screen bg-[#050506] px-6 py-8 relative overflow-hidden">
+{/* Background gradient blobs */}
+<div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-[#5E6AD2]/10 rounded-full blur-[120px] pointer-events-none" />
+<div className="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-purple-500/8 rounded-full blur-[100px] pointer-events-none" />
+
+<div className="max-w-7xl mx-auto relative z-10">
 {/* Header */}
 <div className="mb-10 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
 <div>
-<h1 className="text-3xl font-semibold text-white">Interview Practice</h1>
-<p className="text-neutral-400 text-sm mt-1">
+<motion.span
+initial={{ opacity: 0, y: 10 }}
+animate={{ opacity: 1, y: 0 }}
+className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/[0.08] bg-white/[0.03] text-xs text-[#8A8F98] font-mono tracking-wider uppercase mb-4"
+>
+<span className="w-1.5 h-1.5 rounded-full bg-[#5E6AD2] animate-pulse" />
+Interview Prep
+</motion.span>
+<h1 className="text-3xl font-semibold bg-gradient-to-b from-white via-white/95 to-white/70 bg-clip-text text-transparent">Interview Practice</h1>
+<p className="text-[#8A8F98] text-sm mt-1">
 Practice curated interview questions with smart filters
 </p>
 </div>
@@ -97,13 +109,13 @@ Practice curated interview questions with smart filters
 <div className="relative w-full md:w-96">
 <Search
 size={16}
-className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400"
+className="absolute left-3 top-1/2 -translate-y-1/2 text-[#8A8F98]"
 />
 <input
 value={search}
 onChange={(e) => setSearch(e.target.value)}
 placeholder="Search questions, company, role..."
-className="w-full rounded-lg border border-white/10 bg-neutral-900 pl-9 pr-3 py-2 text-sm text-white placeholder-neutral-500 focus:border-indigo-400/40 outline-none"
+className="w-full rounded-xl border border-white/[0.08] bg-[#0f0f12] pl-9 pr-3 py-2.5 text-sm text-[#EDEDEF] placeholder-[#8A8F98]/60 focus:border-[#5E6AD2]/50 focus:ring-1 focus:ring-[#5E6AD2]/30 outline-none transition-all duration-200"
 />
 </div>
 </div>
@@ -116,9 +128,9 @@ className="w-full rounded-lg border border-white/10 bg-neutral-900 pl-9 pr-3 py-
 initial={{ opacity: 0, x: -16 }}
 animate={{ opacity: 1, x: 0 }}
 exit={{ opacity: 0, x: -16 }}
-className="sticky top-6 h-fit rounded-xl border border-white/10 bg-neutral-900/80 p-5">
-<div className="flex items-center gap-2 mb-5 text-white">
-<Filter size={16} />
+className="sticky top-6 h-fit rounded-2xl border border-white/[0.08] bg-white/[0.02] backdrop-blur-sm p-5">
+<div className="flex items-center gap-2 mb-5 text-[#EDEDEF]">
+<Filter size={16} className="text-[#5E6AD2]" />
 <span className="font-medium">Filters</span>
 </div>
 
@@ -147,10 +159,10 @@ onChange={handleChange}
 </AnimatePresence>
 
 {/* Questions Area */}
-<div className="rounded-xl border border-white/10 bg-neutral-900/40 p-6 h-[calc(100vh-240px)] overflow-y-auto scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent">
+<div className="rounded-2xl border border-white/[0.08] bg-white/[0.02] p-6 h-[calc(100vh-240px)] overflow-y-auto scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent">
 {loading ? (
 <div className="flex items-center justify-center h-full">
-<Loader2 className="w-8 h-8 animate-spin text-indigo-400" />
+<Loader2 className="w-8 h-8 animate-spin text-[#5E6AD2]" />
 </div>
 ) : (
 <div className="space-y-4">
@@ -159,7 +171,7 @@ filteredQuestions.map((q) => (
 <QuestionCard key={q.id} question={q} />
 ))
 ) : (
-<div className="text-center text-neutral-400 py-10">
+<div className="text-center text-[#8A8F98] py-10">
 {questions.length === 0
 ? "No approved questions available yet."
 : "No questions match your search or filters."}

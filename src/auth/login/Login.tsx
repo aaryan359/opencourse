@@ -33,9 +33,16 @@ export default function Login() {
   };
 
   return (
-    <section className="min-h-screen bg-neutral-950 flex items-center">
-      <Container className="max-w-md">
-        <GlowCard accent="emerald">
+    <section className="min-h-screen bg-[#050506] flex items-center relative overflow-hidden">
+      {/* Background gradient */}
+      <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,#0a0a0f_0%,#050506_50%,#020203_100%)]" />
+      <motion.div
+        className="fixed -top-[30%] left-[20%] w-[500px] h-[500px] rounded-full bg-gradient-to-br from-[#5E6AD2]/15 to-transparent blur-[100px]"
+        animate={{ x: [0, 20, 0], y: [0, 10, 0] }}
+        transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
+      />
+      <Container className="max-w-md relative z-10">
+        <GlowCard accent="indigo">
           <div className="space-y-6">
             {/* Header */}
             <header className="space-y-2">
@@ -112,8 +119,8 @@ export default function Login() {
               className="text-xs text-neutral-500"
             >
               New here?{" "}
-              <a href="/register" className="text-emerald-400 hover:underline">
-                Apply as a contributor
+              <a href="/register" className="text-[#5E6AD2] hover:underline">
+                Create an account
               </a>
             </motion.div>
           </div>
@@ -141,7 +148,7 @@ function Input(props: any) {
   return (
     <input
       {...props}
-      className="w-full rounded-lg bg-neutral-900 border border-neutral-800 px-3 py-2 text-sm text-white placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/40"
+      className="w-full rounded-xl bg-[#0f0f12] border border-white/[0.08] px-4 py-3 text-sm text-white placeholder-[#8A8F98] focus:outline-none focus:border-[#5E6AD2]/50 focus:ring-2 focus:ring-[#5E6AD2]/20 transition-all"
     />
   );
 }

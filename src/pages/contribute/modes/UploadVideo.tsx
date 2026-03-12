@@ -41,18 +41,18 @@ export default function UploadVideo() {
   // Require login to contribute
   if (!user) {
     return (
-      <section className="min-h-screen bg-neutral-950 flex items-center justify-center px-6">
+      <section className="min-h-screen bg-[#050506] flex items-center justify-center px-6">
         <div className="max-w-md text-center space-y-6">
-          <div className="h-20 w-20 rounded-full bg-indigo-500/10 border border-indigo-500/30 flex items-center justify-center mx-auto">
-            <FileVideo className="h-10 w-10 text-indigo-400" />
+          <div className="h-20 w-20 rounded-full bg-[#5E6AD2]/10 border border-[#5E6AD2]/30 flex items-center justify-center mx-auto">
+            <FileVideo className="h-10 w-10 text-[#5E6AD2]" />
           </div>
-          <h2 className="text-2xl font-bold text-white">Sign in to Contribute</h2>
-          <p className="text-neutral-400">You need an account to upload videos. It's free and takes under a minute.</p>
+          <h2 className="text-2xl font-bold text-[#EDEDEF]">Sign in to Contribute</h2>
+          <p className="text-[#8A8F98]">You need an account to upload videos. It's free and takes under a minute.</p>
           <div className="flex gap-3 justify-center">
-            <button onClick={() => navigate("/login")} className="px-6 py-3 rounded-xl bg-indigo-600 text-white font-medium hover:bg-indigo-700 transition-colors">
+            <button onClick={() => navigate("/login")} className="px-6 py-3 rounded-xl bg-[#5E6AD2] text-white font-medium hover:bg-[#5E6AD2]/90 transition-colors">
               Sign In
             </button>
-            <button onClick={() => navigate("/register")} className="px-6 py-3 rounded-xl bg-white/5 border border-white/10 text-white font-medium hover:bg-white/10 transition-colors">
+            <button onClick={() => navigate("/register")} className="px-6 py-3 rounded-xl bg-white/[0.05] border border-white/[0.08] text-white font-medium hover:bg-white/[0.08] transition-colors">
               Create Account
             </button>
           </div>
@@ -81,7 +81,7 @@ export default function UploadVideo() {
   }
 
   return (
-    <section className="min-h-screen bg-neutral-950 py-24">
+    <section className="min-h-screen bg-[#050506] py-24">
       <div className="max-w-7xl mx-auto px-6 space-y-14">
 
         <FlowHeader stage={stage === "success" ? "upload" : stage} />
@@ -121,18 +121,18 @@ export default function UploadVideo() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="flex gap-4 justify-center pt-8 border-t border-white/10"
+            className="flex gap-4 justify-center pt-8 border-t border-white/[0.08]"
           >
             <button
               onClick={() => setStage("upload")}
-              className="px-6 py-3 rounded-xl bg-neutral-900 border border-white/10 text-white hover:bg-neutral-800 transition-colors font-medium"
+              className="px-6 py-3 rounded-xl bg-white/[0.05] border border-white/[0.08] text-[#EDEDEF] hover:bg-white/[0.08] transition-colors font-medium"
             >
               Back
             </button>
             <button
               onClick={handleSubmit}
               disabled={submitting}
-              className="px-8 py-3 rounded-xl bg-indigo-600 text-white hover:bg-indigo-700 disabled:opacity-60 disabled:cursor-not-allowed transition-colors font-medium flex items-center gap-2"
+              className="px-8 py-3 rounded-xl bg-[#5E6AD2] text-white hover:bg-[#5E6AD2]/90 disabled:opacity-60 disabled:cursor-not-allowed transition-colors font-medium flex items-center gap-2"
             >
               {submitting ? (
                 <><span className="animate-spin h-4 w-4 border-2 border-white/30 border-t-white rounded-full" />Submitting...</>

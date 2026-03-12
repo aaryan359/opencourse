@@ -86,37 +86,37 @@ export default function UploadStage({ context, onNext }: { context: any; onNext:
       <GlowCard className="lg:col-span-1 h-fit sticky top-20">
         <div className="space-y-4">
           <div>
-            <p className="text-xs text-neutral-400 uppercase tracking-wider font-semibold">
+            <p className="text-xs text-[#8A8F98] uppercase tracking-wider font-semibold">
               Uploading to
             </p>
-            <h3 className="text-white font-semibold text-lg mt-2">
+            <h3 className="text-[#EDEDEF] font-semibold text-lg mt-2">
               {context.domain.title}
             </h3>
-            <p className="text-sm text-neutral-400 mt-1">
+            <p className="text-sm text-[#8A8F98] mt-1">
               {context.subtopic.title}
             </p>
           </div>
 
-          <div className="pt-4 border-t border-white/10">
-            <p className="text-xs text-neutral-400 mb-2">Focus Area</p>
-            <div className="inline-block px-3 py-1.5 rounded-lg bg-indigo-500/20 text-indigo-400 text-sm font-medium">
+          <div className="pt-4 border-t border-white/[0.08]">
+            <p className="text-xs text-[#8A8F98] mb-2">Focus Area</p>
+            <div className="inline-block px-3 py-1.5 rounded-lg bg-[#5E6AD2]/20 text-[#5E6AD2] text-sm font-medium">
               {context.miniTopic.title}
             </div>
           </div>
 
-          <div className="pt-4 border-t border-white/10 space-y-3">
+          <div className="pt-4 border-t border-white/[0.08] space-y-3">
             <div className="text-xs space-y-2">
               <div className="flex items-start gap-2">
                 <div className="h-1 w-1 rounded-full bg-emerald-400 mt-1.5 flex-shrink-0" />
-                <p className="text-neutral-300">YouTube / hosted URL or file upload</p>
+                <p className="text-[#EDEDEF]/80">YouTube / hosted URL or file upload</p>
               </div>
               <div className="flex items-start gap-2">
                 <div className="h-1 w-1 rounded-full bg-emerald-400 mt-1.5 flex-shrink-0" />
-                <p className="text-neutral-300">MP4, WebM, MOV — max 2GB</p>
+                <p className="text-[#EDEDEF]/80">MP4, WebM, MOV — max 2GB</p>
               </div>
               <div className="flex items-start gap-2">
                 <div className="h-1 w-1 rounded-full bg-emerald-400 mt-1.5 flex-shrink-0" />
-                <p className="text-neutral-300">High quality recommended</p>
+                <p className="text-[#EDEDEF]/80">High quality recommended</p>
               </div>
             </div>
           </div>
@@ -127,27 +127,27 @@ export default function UploadStage({ context, onNext }: { context: any; onNext:
       <div className="lg:col-span-2 space-y-6">
 
         {/* Video Metadata */}
-        <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 space-y-4">
-          <h3 className="text-white font-semibold">Video Details</h3>
+        <div className="rounded-2xl border border-white/[0.08] bg-white/[0.03] p-6 space-y-4">
+          <h3 className="text-[#EDEDEF] font-semibold">Video Details</h3>
           <div className="space-y-3">
             <div>
-              <label className="text-xs text-neutral-400 mb-1 block">Title <span className="text-rose-400">*</span></label>
+              <label className="text-xs text-[#8A8F98] mb-1 block">Title <span className="text-rose-400">*</span></label>
               <input
                 type="text"
                 value={form.title}
                 onChange={e => setForm(f => ({ ...f, title: e.target.value }))}
                 placeholder="e.g. Introduction to Binary Search Trees"
-                className="w-full bg-neutral-900 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-neutral-500 text-sm focus:outline-none focus:border-indigo-500/50 transition-colors"
+                className="w-full bg-[#0f0f12] border border-white/[0.08] rounded-xl px-4 py-3 text-[#EDEDEF] placeholder-[#8A8F98]/60 text-sm focus:outline-none focus:border-[#5E6AD2]/50 focus:ring-1 focus:ring-[#5E6AD2]/30 transition-colors"
               />
             </div>
             <div>
-              <label className="text-xs text-neutral-400 mb-1 block">Description</label>
+              <label className="text-xs text-[#8A8F98] mb-1 block">Description</label>
               <textarea
                 value={form.description}
                 onChange={e => setForm(f => ({ ...f, description: e.target.value }))}
                 placeholder="What will learners gain from this video?"
                 rows={3}
-                className="w-full bg-neutral-900 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-neutral-500 text-sm focus:outline-none focus:border-indigo-500/50 transition-colors resize-none"
+                className="w-full bg-[#0f0f12] border border-white/[0.08] rounded-xl px-4 py-3 text-[#EDEDEF] placeholder-[#8A8F98]/60 text-sm focus:outline-none focus:border-[#5E6AD2]/50 focus:ring-1 focus:ring-[#5E6AD2]/30 transition-colors resize-none"
               />
             </div>
           </div>
@@ -159,8 +159,8 @@ export default function UploadStage({ context, onNext }: { context: any; onNext:
             <button
               key={mode}
               onClick={() => setUploadMode(mode)}
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                uploadMode === mode ? "bg-indigo-600 text-white" : "bg-white/5 text-neutral-400 hover:text-white"
+              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-colors ${
+                uploadMode === mode ? "bg-[#5E6AD2] text-white" : "bg-white/[0.05] text-[#8A8F98] hover:text-white"
               }`}
             >
               {mode === "url" ? <Link className="h-4 w-4" /> : <Upload className="h-4 w-4" />}
@@ -179,15 +179,15 @@ export default function UploadStage({ context, onNext }: { context: any; onNext:
 
         {uploadMode === "url" ? (
           /* URL Input */
-          <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 space-y-3">
-            <h4 className="text-white font-medium flex items-center gap-2"><Link className="h-4 w-4 text-indigo-400" />Video URL</h4>
-            <p className="text-xs text-neutral-400">Paste a YouTube link or any public video URL</p>
+          <div className="rounded-2xl border border-white/[0.08] bg-white/[0.03] p-6 space-y-3">
+            <h4 className="text-[#EDEDEF] font-medium flex items-center gap-2"><Link className="h-4 w-4 text-[#5E6AD2]" />Video URL</h4>
+            <p className="text-xs text-[#8A8F98]">Paste a YouTube link or any public video URL</p>
             <input
               type="url"
               value={form.url}
               onChange={e => setForm(f => ({ ...f, url: e.target.value }))}
               placeholder="https://youtube.com/watch?v=... or https://..."
-              className="w-full bg-neutral-900 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-neutral-500 text-sm focus:outline-none focus:border-indigo-500/50 transition-colors"
+              className="w-full bg-[#0f0f12] border border-white/[0.08] rounded-xl px-4 py-3 text-[#EDEDEF] placeholder-[#8A8F98]/60 text-sm focus:outline-none focus:border-[#5E6AD2]/50 focus:ring-1 focus:ring-[#5E6AD2]/30 transition-colors"
             />
           </div>
         ) : !file ? (
@@ -202,22 +202,22 @@ export default function UploadStage({ context, onNext }: { context: any; onNext:
               relative overflow-hidden rounded-2xl border-2 border-dashed
               p-12 text-center cursor-pointer transition-all
               ${isDragging
-                ? "border-indigo-500/50 bg-indigo-500/10"
-                : "border-white/20 bg-white/[0.03] hover:border-indigo-500/30 hover:bg-indigo-500/5"
+                ? "border-[#5E6AD2]/50 bg-[#5E6AD2]/10"
+                : "border-white/[0.15] bg-white/[0.03] hover:border-[#5E6AD2]/30 hover:bg-[#5E6AD2]/5"
               }
             `}
           >
             <div className="space-y-4">
               <motion.div animate={{ y: isDragging ? -5 : 0 }} className="flex justify-center">
-                <div className="h-20 w-20 rounded-2xl bg-gradient-to-br from-indigo-500/20 to-indigo-400/10 border border-indigo-500/30 flex items-center justify-center">
-                  <Upload className="h-10 w-10 text-indigo-400" />
+                <div className="h-20 w-20 rounded-2xl bg-gradient-to-br from-[#5E6AD2]/20 to-[#5E6AD2]/10 border border-[#5E6AD2]/30 flex items-center justify-center">
+                  <Upload className="h-10 w-10 text-[#5E6AD2]" />
                 </div>
               </motion.div>
               <div>
-                <h4 className="text-xl font-semibold text-white mb-2">{isDragging ? "Drop your video here" : "Upload your video"}</h4>
-                <p className="text-sm text-neutral-400 mb-4">Drag and drop your file or click to browse</p>
+                <h4 className="text-xl font-semibold text-[#EDEDEF] mb-2">{isDragging ? "Drop your video here" : "Upload your video"}</h4>
+                <p className="text-sm text-[#8A8F98] mb-4">Drag and drop your file or click to browse</p>
               </div>
-              <div className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-indigo-500/20 border border-indigo-500/30 text-indigo-400 text-sm font-medium">
+              <div className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#5E6AD2]/20 border border-[#5E6AD2]/30 text-[#5E6AD2] text-sm font-medium">
                 <FileVideo className="h-4 w-4" /> Browse Files
               </div>
             </div>
@@ -225,14 +225,14 @@ export default function UploadStage({ context, onNext }: { context: any; onNext:
         ) : (
           // File selected
           <div className="space-y-4">
-            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="rounded-2xl border border-white/10 bg-white/[0.03] p-6">
+            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="rounded-2xl border border-white/[0.08] bg-white/[0.03] p-6">
               <div className="flex items-start gap-4">
-                <div className="h-16 w-16 rounded-xl bg-gradient-to-br from-indigo-500/20 to-indigo-400/10 border border-indigo-500/30 flex items-center justify-center flex-shrink-0">
-                  <FileVideo className="h-8 w-8 text-indigo-400" />
+                <div className="h-16 w-16 rounded-xl bg-gradient-to-br from-[#5E6AD2]/20 to-[#5E6AD2]/10 border border-[#5E6AD2]/30 flex items-center justify-center flex-shrink-0">
+                  <FileVideo className="h-8 w-8 text-[#5E6AD2]" />
                 </div>
                 <div className="flex-1">
-                  <h4 className="font-semibold text-white mb-1 truncate">{file.name}</h4>
-                  <p className="text-sm text-neutral-400">{formatFileSize(file.size)}</p>
+                  <h4 className="font-semibold text-[#EDEDEF] mb-1 truncate">{file.name}</h4>
+                  <p className="text-sm text-[#8A8F98]">{formatFileSize(file.size)}</p>
                 </div>
                 <button onClick={() => { setFile(null); setUploadProgress(0); setForm(f => ({ ...f, url: "" })) }}
                   className="p-2 rounded-lg hover:bg-rose-500/20 text-rose-400 transition-colors"><X className="h-4 w-4" /></button>
@@ -243,15 +243,15 @@ export default function UploadStage({ context, onNext }: { context: any; onNext:
                   {isUploading ? (
                     <div className="space-y-2">
                       <div className="flex items-center justify-between text-sm">
-                        <span className="text-neutral-400">Uploading...</span>
-                        <span className="text-white">{Math.round(uploadProgress)}%</span>
+                        <span className="text-[#8A8F98]">Uploading...</span>
+                        <span className="text-[#EDEDEF]">{Math.round(uploadProgress)}%</span>
                       </div>
-                      <div className="w-full h-2 rounded-full bg-white/10 overflow-hidden">
-                        <motion.div initial={{ width: 0 }} animate={{ width: `${uploadProgress}%` }} transition={{ duration: 0.3 }} className="h-full bg-gradient-to-r from-indigo-500 to-indigo-400" />
+                      <div className="w-full h-2 rounded-full bg-white/[0.08] overflow-hidden">
+                        <motion.div initial={{ width: 0 }} animate={{ width: `${uploadProgress}%` }} transition={{ duration: 0.3 }} className="h-full bg-gradient-to-r from-[#5E6AD2] to-[#5E6AD2]/80" />
                       </div>
                     </div>
                   ) : (
-                    <button onClick={handleFileUpload} className="w-full py-3 rounded-xl bg-indigo-600 text-white font-medium hover:bg-indigo-700 transition-colors flex items-center justify-center gap-2">
+                    <button onClick={handleFileUpload} className="w-full py-3 rounded-xl bg-[#5E6AD2] text-white font-medium hover:bg-[#5E6AD2]/90 transition-colors flex items-center justify-center gap-2">
                       <Upload className="h-4 w-4" /> Upload File
                     </button>
                   )}
@@ -280,7 +280,7 @@ export default function UploadStage({ context, onNext }: { context: any; onNext:
             <AlertCircle className="h-5 w-5 text-amber-400 flex-shrink-0 mt-0.5" />
             <div className="space-y-2">
               <h4 className="font-semibold text-amber-400">Tips for success</h4>
-              <ul className="text-sm text-neutral-400 space-y-1">
+              <ul className="text-sm text-[#8A8F98] space-y-1">
                 <li>• Ensure video quality is at least 720p</li>
                 <li>• Use clear audio and avoid background noise</li>
                 <li>• Keep videos between 5-30 minutes for best engagement</li>

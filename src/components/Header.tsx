@@ -1,117 +1,204 @@
 import { Link, useLocation } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Container from "./ui/Container";
+import { useAuthStore } from "../store/auth.store";
+import { User, LogOut, ChevronDown, Menu, X } from "lucide-react";
 
 const NAV_ITEMS = [
 	{ label: "Explore", href: "/explore" },
+	{ label: "Courses", href: "/courses" },
 	{ label: "Contribute", href: "/contribute" },
 	{ label: "Interview Prep", href: "/prep" },
-	{ label: "Community", href: "/community" },
 ];
 
 export default function Header() {
 	const [menuOpen, setMenuOpen] = useState(false);
+	const [scrolled, setScrolled] = useState(false);
+	const [userMenuOpen, setUserMenuOpen] = useState(false);
 	const location = useLocation();
+	const { user, logout } = useAuthStore();
+
+	// Handle scroll effect
+	useEffect(() => {
+		const handleScroll = () => setScrolled(window.scrollY > 20);
+		window.addEventListener("scroll", handleScroll);
+		return () => window.removeEventListener("scroll", handleScroll);
+	}, []);
+
+	// Close mobile menu on route change
+	useEffect(() => {
+		setMenuOpen(false);
+		setUserMenuOpen(false);
+	}, [location.pathname]);
 
 	return (
 		<header
-			className='
-        sticky top-0 z-100
-        backdrop-blur-xl
-        bg-neutral-950/60
-        border-b border-white/10
-      '>
+			className={`
+				sticky top-0 z-50
+				transition-all duration-300
+				${scrolled 
+					? "bg-[#050506]/90 backdrop-blur-xl border-b border-white/[0.06] shadow-lg shadow-black/20" 
+					: "bg-transparent border-b border-transparent"
+				}
+			`}>
 			<Container>
 				<div className='flex h-16 items-center justify-between'>
 					{/* Logo */}
-					<Link
-						to='/'
-						className='flex items-center gap-2 group'>
+					<Link to='/' className='flex items-center gap-2 group'>
 						<img
 							src='/logo.png'
-							alt=''
+							alt='OpenCourse'
 							width={100}
 							height={110}
+							className="transition-transform group-hover:scale-105"
 						/>
 					</Link>
 
 					{/* Desktop Nav */}
-					<nav className='hidden md:flex items-center gap-8'>
+					<nav className='hidden md:flex items-center gap-1'>
 						{NAV_ITEMS.map((item) => (
 							<NavItem
 								key={item.href}
 								{...item}
-								active={location.pathname.startsWith(item.href)}
+								active={location.pathname === item.href || location.pathname.startsWith(item.href + "/")}
 							/>
 						))}
 					</nav>
 
-					{/* Right Action */}
-					<div className='hidden md:flex items-center gap-4'>
-						<Link
-							to='/courses'
-							className='
-                                relative inline-flex items-center
-                                rounded-xl px-4 py-2
-                                text-sm font-medium text-white
-                                bg-white/10 hover:bg-white/15
-                                transition
-                            '>
-							Get Started
-						</Link>
+					{/* Right Actions */}
+					<div className='hidden md:flex items-center gap-3'>
+						{user ? (
+							<div className="relative">
+								<button
+									onClick={() => setUserMenuOpen(!userMenuOpen)}
+									className="flex items-center gap-2 px-3 py-2 rounded-xl bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.06] transition-all duration-200"
+								>
+									<div className="w-7 h-7 rounded-lg bg-gradient-to-br from-[#5E6AD2] to-purple-500 flex items-center justify-center">
+										<span className="text-xs font-semibold text-white">
+											{user.username?.charAt(0).toUpperCase() || "U"}
+										</span>
+									</div>
+									<span className="text-sm text-[#EDEDEF] font-medium max-w-[100px] truncate">
+										{user.username}
+									</span>
+									<ChevronDown className={`w-4 h-4 text-[#8A8F98] transition-transform ${userMenuOpen ? "rotate-180" : ""}`} />
+								</button>
+
+								<AnimatePresence>
+									{userMenuOpen && (
+										<motion.div
+											initial={{ opacity: 0, y: 8, scale: 0.96 }}
+											animate={{ opacity: 1, y: 0, scale: 1 }}
+											exit={{ opacity: 0, y: 8, scale: 0.96 }}
+											transition={{ duration: 0.15 }}
+											className="absolute right-0 mt-2 w-48 rounded-xl bg-[#0a0a0c] border border-white/[0.08] shadow-xl shadow-black/30 overflow-hidden"
+										>
+											<Link
+												to="/dashboard"
+												className="flex items-center gap-3 px-4 py-3 text-sm text-[#EDEDEF] hover:bg-white/[0.05] transition-colors"
+											>
+												<User className="w-4 h-4 text-[#8A8F98]" />
+												Dashboard
+											</Link>
+											<button
+												onClick={() => {
+													logout();
+													setUserMenuOpen(false);
+												}}
+												className="flex items-center gap-3 w-full px-4 py-3 text-sm text-rose-400 hover:bg-rose-500/10 transition-colors border-t border-white/[0.06]"
+											>
+												<LogOut className="w-4 h-4" />
+												Sign Out
+											</button>
+										</motion.div>
+									)}
+								</AnimatePresence>
+							</div>
+						) : (
+							<>
+								<Link
+									to="/login"
+									className="px-4 py-2 text-sm font-medium text-[#EDEDEF] hover:text-white transition-colors"
+								>
+									Sign In
+								</Link>
+								<Link
+									to="/register"
+									className="px-4 py-2 rounded-xl text-sm font-medium text-white bg-[#5E6AD2] hover:bg-[#6872D9] transition-all shadow-md shadow-[#5E6AD2]/20"
+								>
+									Get Started
+								</Link>
+							</>
+						)}
 					</div>
 
 					{/* Mobile Toggle */}
 					<button
 						onClick={() => setMenuOpen((v) => !v)}
-						className='
-              md:hidden rounded-xl
-              p-2 text-white
-              bg-white/5 hover:bg-white/10
-              transition
-            '
-						aria-label='Open menu'>
-						<span className='block h-0.5 w-5 bg-white mb-1' />
-						<span className='block h-0.5 w-5 bg-white mb-1' />
-						<span className='block h-0.5 w-5 bg-white' />
+						className='md:hidden p-2 rounded-lg text-white hover:bg-white/[0.05] transition-colors'
+						aria-label='Toggle menu'>
+						{menuOpen ? (
+							<X className="w-5 h-5" />
+						) : (
+							<Menu className="w-5 h-5" />
+						)}
 					</button>
 				</div>
 			</Container>
 
-			{/* ================= Mobile Menu ================= */}
+			{/* Mobile Menu */}
 			<AnimatePresence>
 				{menuOpen && (
 					<motion.div
-						initial={{ opacity: 0, y: -12 }}
-						animate={{ opacity: 1, y: 0 }}
-						exit={{ opacity: 0, y: -12 }}
-						transition={{ duration: 0.25, ease: "easeOut" }}
-						className='
-              md:hidden
-              bg-neutral-950/95 backdrop-blur-xl
-              border-t border-white/10
-            '>
+						initial={{ opacity: 0, height: 0 }}
+						animate={{ opacity: 1, height: "auto" }}
+						exit={{ opacity: 0, height: 0 }}
+						transition={{ duration: 0.2 }}
+						className='md:hidden bg-[#050506]/95 backdrop-blur-xl border-t border-white/[0.06] overflow-hidden'>
 						<Container>
-							<div className='py-6 space-y-4'>
+							<div className='py-4 space-y-2'>
 								{NAV_ITEMS.map((item) => (
 									<MobileNavItem
 										key={item.href}
 										{...item}
-										onClick={() => setMenuOpen(false)}
+										active={location.pathname.startsWith(item.href)}
 									/>
 								))}
 
-								<Link
-									to='/explore'
-									className='
-                    mt-4 block rounded-xl
-                    bg-white text-black
-                    px-4 py-2 text-center
-                    font-semibold
-                  '>
-									Get Started
-								</Link>
+								<div className="pt-4 mt-4 border-t border-white/[0.06] space-y-2">
+									{user ? (
+										<>
+											<Link
+												to="/dashboard"
+												className="block rounded-xl px-4 py-3 text-sm font-medium text-[#EDEDEF] bg-white/[0.03] hover:bg-white/[0.06] transition-colors"
+											>
+												Dashboard
+											</Link>
+											<button
+												onClick={logout}
+												className="w-full rounded-xl px-4 py-3 text-sm font-medium text-rose-400 bg-rose-500/10 hover:bg-rose-500/15 transition-colors text-left"
+											>
+												Sign Out
+											</button>
+										</>
+									) : (
+										<>
+											<Link
+												to="/login"
+												className="block rounded-xl px-4 py-3 text-sm font-medium text-[#EDEDEF] bg-white/[0.03] hover:bg-white/[0.06] transition-colors text-center"
+											>
+												Sign In
+											</Link>
+											<Link
+												to="/register"
+												className="block rounded-xl px-4 py-3 text-sm font-medium text-white bg-[#5E6AD2] hover:bg-[#6872D9] transition-colors text-center"
+											>
+												Get Started
+											</Link>
+										</>
+									)}
+								</div>
 							</div>
 						</Container>
 					</motion.div>
@@ -121,53 +208,42 @@ export default function Header() {
 	);
 }
 
-/* =====================================
-   Desktop Nav Item (micro-interactions)
-===================================== */
-
+/* Desktop Nav Item */
 function NavItem({ label, href, active }: { label: string; href: string; active?: boolean }) {
 	return (
 		<Link
 			to={href}
-			className='
-        relative text-sm font-medium
-        text-neutral-300 hover:text-white
-        transition
-      '>
+			className={`
+				relative px-4 py-2 text-sm font-medium rounded-lg
+				transition-all duration-200
+				${active 
+					? "text-white bg-white/[0.06]" 
+					: "text-[#8A8F98] hover:text-white hover:bg-white/[0.03]"
+				}
+			`}>
 			{label}
-
-			{/* Underline */}
-			<span
-				className={`
-          pointer-events-none
-          absolute -bottom-1 left-0 h-[2px]
-          bg-white
-          transition-all duration-300
-          ${active ? "w-full opacity-100" : "w-0 opacity-0"}
-          group-hover:w-full group-hover:opacity-100
-        `}
-			/>
+			{active && (
+				<motion.div
+					layoutId="nav-indicator"
+					className="absolute bottom-0 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-[#5E6AD2]"
+				/>
+			)}
 		</Link>
 	);
 }
 
-/* =====================================
-   Mobile Nav Item
-===================================== */
-
-function MobileNavItem({ label, href, onClick }: { label: string; href: string; onClick: () => void }) {
+/* Mobile Nav Item */
+function MobileNavItem({ label, href, active }: { label: string; href: string; active?: boolean }) {
 	return (
 		<Link
 			to={href}
-			onClick={onClick}
-			className='
-        block rounded-xl
-        px-4 py-3
-        text-base font-medium
-        text-neutral-200
-        bg-white/5 hover:bg-white/10
-        transition
-      '>
+			className={`
+				block rounded-xl px-4 py-3 text-sm font-medium transition-colors
+				${active 
+					? "text-white bg-[#5E6AD2]/20 border border-[#5E6AD2]/30" 
+					: "text-[#EDEDEF] bg-white/[0.03] hover:bg-white/[0.06]"
+				}
+			`}>
 			{label}
 		</Link>
 	);

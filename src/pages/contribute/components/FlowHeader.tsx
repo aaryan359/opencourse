@@ -13,10 +13,10 @@ export default function FlowHeader({ stage }: any) {
         animate={{ opacity: 1, y: 0 }}
         className="space-y-2"
       >
-        <h1 className="text-4xl md:text-5xl font-bold text-white">
+        <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-b from-white via-white/95 to-white/70 bg-clip-text text-transparent">
           Contribute a Video
         </h1>
-        <p className="text-neutral-400 text-lg">
+        <p className="text-[#8A8F98] text-lg">
           Share your knowledge with thousands of learners
         </p>
       </motion.div>
@@ -34,8 +34,8 @@ export default function FlowHeader({ stage }: any) {
               animate={{
                 backgroundColor:
                   i <= activeIndex
-                    ? "rgba(99,102,241,.9)"
-                    : "rgba(255,255,255,.1)",
+                    ? "rgba(94,106,210,.9)"
+                    : "rgba(255,255,255,.08)",
               }}
               className="h-1.5 flex-1 rounded-full"
             />
@@ -44,8 +44,8 @@ export default function FlowHeader({ stage }: any) {
                 animate={{
                   backgroundColor:
                     i < activeIndex
-                      ? "rgba(99,102,241,.9)"
-                      : "rgba(255,255,255,.1)",
+                      ? "rgba(94,106,210,.9)"
+                      : "rgba(255,255,255,.08)",
                 }}
                 className="h-1 w-8 rounded-full"
               />
@@ -63,8 +63,8 @@ export default function FlowHeader({ stage }: any) {
             transition={{ delay: i * 0.1 }}
             className={`flex items-center gap-2 px-4 py-2 rounded-lg whitespace-nowrap transition-all ${
               i <= activeIndex
-                ? "bg-indigo-500/20 text-indigo-300"
-                : "bg-white/5 text-neutral-500"
+                ? "bg-[#5E6AD2]/20 text-[#5E6AD2]"
+                : "bg-white/[0.05] text-[#8A8F98]"
             }`}
           >
             <span className="text-xs font-semibold">{i + 1}</span>
