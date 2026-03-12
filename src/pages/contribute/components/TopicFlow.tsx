@@ -1,6 +1,27 @@
 import { useState } from "react";
 import GlowCard from "../../../components/ui/GlowCard";
 import { motion, AnimatePresence } from "framer-motion";
+import { ChevronRight, Sparkles } from "lucide-react";
+
+function Section({ title, children }: any) {
+	return (
+		<motion.div
+			initial={{ opacity: 0, y: 20 }}
+			animate={{ opacity: 1, y: 0 }}
+			exit={{ opacity: 0, y: -20 }}
+			transition={{ duration: 0.3 }}
+			className="space-y-4"
+		>
+			<h3 className="text-lg font-semibold text-white flex items-center gap-2">
+				<Sparkles className="h-5 w-5 text-indigo-400" />
+				{title}
+			</h3>
+			<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+				{children}
+			</div>
+		</motion.div>
+	);
+}
 
 export default function TopicFlow({ domains, onConfirm }: any) {
 	const [domain, setDomain] = useState<any>(null);
@@ -76,8 +97,10 @@ export default function TopicFlow({ domains, onConfirm }: any) {
 
 						<button
 							onClick={() => onConfirm({ domain, subtopic, miniTopic: mini })}
-							className='rounded-lg bg-indigo-600 px-4 py-2 text-sm text-white'>
-							Review videos →
+							className='rounded-lg bg-indigo-600 px-4 py-2 text-sm text-white flex items-center gap-2 hover:bg-indigo-700 transition-colors'
+						>
+							Review videos
+							<ChevronRight className="h-4 w-4" />
 						</button>
 					</GlowCard>
 				</div>
@@ -88,24 +111,14 @@ export default function TopicFlow({ domains, onConfirm }: any) {
 					whileTap={{ scale: 0.97 }}
 					onClick={() => onConfirm({ domain, subtopic, miniTopic: mini })}
 					className='
-            mt-8 rounded-xl bg-indigo-600 px-6 py-3
-            text-sm font-medium text-white
+            mt-8 w-full rounded-xl bg-indigo-600 px-6 py-3
+            text-sm font-medium text-white flex items-center justify-center gap-2
+            hover:bg-indigo-700 transition-colors
           '>
-					Confirm & Continue →
+					Confirm & Continue
+					<ChevronRight className="h-4 w-4" />
 				</motion.button>
 			)}
 		</div>
-	);
-}
-
-function Section({ title, children }: any) {
-	return (
-		<motion.div
-			initial={{ opacity: 0, y: 12 }}
-			animate={{ opacity: 1, y: 0 }}
-			className='space-y-4'>
-			<h4 className='text-sm text-neutral-400'>{title}</h4>
-			<div className='grid sm:grid-cols-2 lg:grid-cols-3 gap-4'>{children}</div>
-		</motion.div>
 	);
 }

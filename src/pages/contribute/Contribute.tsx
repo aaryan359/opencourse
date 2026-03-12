@@ -7,7 +7,7 @@ import {
   AlertCircle, CheckCircle, XCircle, Loader2, Plus, Edit,
   Video, FileText, Link, Image as ImageIcon, Globe, Lock,
   BarChart, Users as UsersIcon, TrendingUp as TrendingUpIcon,
-  Award as AwardIcon, Target
+  Award as AwardIcon, Target, MessageCircle
 } from "lucide-react";
 
 // ============================================================================
@@ -261,6 +261,7 @@ function AmbientBackground() {
 // ============================================================================
 
 export default function ContributePage() {
+  const [mode, setMode] = useState<'landing' | 'step'>('landing');
   const [step, setStep] = useState<1 | 2 | 3 | 4>(1);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedSubcategory, setSelectedSubcategory] = useState<string | null>(null);
@@ -422,6 +423,21 @@ export default function ContributePage() {
     [selectedTopic]
   );
 
+  if (mode === 'landing') {
+    return (
+      <div className="min-h-screen bg-[#050506] text-[#EDEDEF] overflow-hidden">
+        <AmbientBackground />
+        <Navigation />
+        
+        <main className="relative z-10 pt-20 pb-20">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <LandingPage onSelectMode={(m) => setMode('step')} />
+          </div>
+        </main>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-[#050506] text-[#EDEDEF] overflow-hidden">
       <AmbientBackground />
@@ -484,6 +500,188 @@ export default function ContributePage() {
           </div>
         </div>
       </main>
+    </div>
+  );
+}
+
+// ============================================================================
+// LANDING PAGE COMPONENT
+// ============================================================================
+
+function LandingPage({ onSelectMode }: { onSelectMode: (mode: 'upload' | 'interview') => void }) {
+  const handleVideoClick = () => {
+    window.location.href = '/contribute-new?type=video';
+  };
+
+  const handleInterviewClick = () => {
+    window.location.href = '/contribute-new?type=interview';
+  };
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -20 }}
+      transition={{ duration: 0.5 }}
+      className="space-y-12"
+    >
+      {/* Header */}
+      <div className="text-center space-y-4">
+        <motion.h1
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+          className="text-5xl md:text-6xl font-bold bg-linear-to-b from-white via-white to-white/80 bg-clip-text text-transparent"
+        >
+          Share Your Knowledge
+        </motion.h1>
+        <motion.p
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="text-lg text-[#8A8F98] max-w-2xl mx-auto"
+        >
+          Contribute to our growing learning community. Share educational videos or interview experiences to help others grow.
+        </motion.p>
+      </div>
+
+      {/* Contribution Types */}
+      <LandingGrid onVideoClick={handleVideoClick} onInterviewClick={handleInterviewClick} />
+
+      {/* Stats Section */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.4 }}
+        className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-12 border-t border-white/6"
+      >
+        <div className="text-center">
+          <div className="text-3xl font-bold text-[#5E6AD2] mb-2">12.5K+</div>
+          <p className="text-sm text-[#8A8F98]">Videos Contributed</p>
+        </div>
+        <div className="text-center">
+          <div className="text-3xl font-bold text-emerald-400 mb-2">850K+</div>
+          <p className="text-sm text-[#8A8F98]">Learners Impacted</p>
+        </div>
+        <div className="text-center">
+          <div className="text-3xl font-bold text-amber-400 mb-2">4.8★</div>
+          <p className="text-sm text-[#8A8F98]">Average Rating</p>
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+}
+
+function LandingGrid({ onVideoClick, onInterviewClick }: { onVideoClick: () => void; onInterviewClick: () => void }) {
+  return (
+    <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+      {/* Video Upload Card */}
+      <motion.button
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.2 }}
+        whileHover={{ y: -8 }}
+        onClick={onVideoClick}
+        className="group text-left"
+      >
+        <div className="relative rounded-3xl border border-white/6 bg-linear-to-b from-white/8 to-white/2 p-8 h-full hover:border-white/10 hover:shadow-[0_8px_32px_rgba(94,106,210,0.2)] transition-all overflow-hidden">
+          {/* Background Glow */}
+          <div className="absolute -top-20 -right-20 w-40 h-40 bg-linear-to-br from-[#5E6AD2]/20 to-indigo-500/10 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-500" />
+          
+          <div className="relative space-y-6">
+            {/* Icon */}
+            <div className="h-16 w-16 rounded-2xl bg-linear-to-br from-[#5E6AD2]/20 to-indigo-500/10 border border-[#5E6AD2]/30 flex items-center justify-center group-hover:border-[#5E6AD2]/50 group-hover:shadow-[0_0_20px_rgba(94,106,210,0.3)] transition-all">
+              <FileVideo className="h-8 w-8 text-[#5E6AD2]" />
+            </div>
+
+            {/* Content */}
+            <div>
+              <h3 className="text-2xl font-bold text-white mb-2 group-hover:text-white transition-colors">
+                Upload a Video
+              </h3>
+              <p className="text-[#8A8F98] leading-relaxed">
+                Share educational videos on any topic. Reach thousands of learners and build your teaching portfolio.
+              </p>
+            </div>
+
+            {/* Features */}
+            <ul className="space-y-3">
+              <li className="flex items-center gap-3 text-sm">
+                <div className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+                <span className="text-[#EDEDEF]">Support MP4, WebM, MOV (up to 2GB)</span>
+              </li>
+              <li className="flex items-center gap-3 text-sm">
+                <div className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+                <span className="text-[#EDEDEF]">Browse 50+ categories</span>
+              </li>
+              <li className="flex items-center gap-3 text-sm">
+                <div className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+                <span className="text-[#EDEDEF]">Get featured & earn rewards</span>
+              </li>
+            </ul>
+
+            {/* CTA */}
+            <div className="pt-6 border-t border-white/6 flex items-center justify-between group-hover:border-white/10">
+              <span className="text-sm font-medium text-[#EDEDEF]">Get started</span>
+              <ChevronRight className="h-5 w-5 text-[#8A8F98] group-hover:text-[#5E6AD2] group-hover:translate-x-1 transition-all" />
+            </div>
+          </div>
+        </div>
+      </motion.button>
+
+      {/* Interview Questions Card */}
+      <motion.button
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.3 }}
+        whileHover={{ y: -8 }}
+        onClick={onInterviewClick}
+        className="group text-left"
+      >
+        <div className="relative rounded-3xl border border-white/6 bg-linear-to-b from-white/8 to-white/2 p-8 h-full hover:border-white/10 hover:shadow-[0_8px_32px_rgba(52,211,153,0.2)] transition-all overflow-hidden">
+          {/* Background Glow */}
+          <div className="absolute -top-20 -right-20 w-40 h-40 bg-linear-to-br from-emerald-500/20 to-green-500/10 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-500" />
+          
+          <div className="relative space-y-6">
+            {/* Icon */}
+            <div className="h-16 w-16 rounded-2xl bg-linear-to-br from-emerald-500/20 to-green-500/10 border border-emerald-500/30 flex items-center justify-center group-hover:border-emerald-500/50 group-hover:shadow-[0_0_20px_rgba(52,211,153,0.3)] transition-all">
+              <MessageCircle className="h-8 w-8 text-emerald-400" />
+            </div>
+
+            {/* Content */}
+            <div>
+              <h3 className="text-2xl font-bold text-white mb-2 group-hover:text-white transition-colors">
+                Interview Questions
+              </h3>
+              <p className="text-[#8A8F98] leading-relaxed">
+                Share interview questions and company insights. Help others prepare and succeed in their tech careers.
+              </p>
+            </div>
+
+            {/* Features */}
+            <ul className="space-y-3">
+              <li className="flex items-center gap-3 text-sm">
+                <div className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+                <span className="text-[#EDEDEF]">Stay completely anonymous</span>
+              </li>
+              <li className="flex items-center gap-3 text-sm">
+                <div className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+                <span className="text-[#EDEDEF]">Share across 100+ companies</span>
+              </li>
+              <li className="flex items-center gap-3 text-sm">
+                <div className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+                <span className="text-[#EDEDEF]">Help peers ace interviews</span>
+              </li>
+            </ul>
+
+            {/* CTA */}
+            <div className="pt-6 border-t border-white/6 flex items-center justify-between group-hover:border-white/10">
+              <span className="text-sm font-medium text-[#EDEDEF]">Get started</span>
+              <ChevronRight className="h-5 w-5 text-[#8A8F98] group-hover:text-emerald-400 group-hover:translate-x-1 transition-all" />
+            </div>
+          </div>
+        </div>
+      </motion.button>
     </div>
   );
 }

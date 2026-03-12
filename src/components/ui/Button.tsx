@@ -14,7 +14,6 @@ export default function Button({
     <button
       {...props}
       className={clsx(
-        // Base
         "relative group overflow-hidden",
         "px-6 py-3 rounded-xl font-semibold",
         "transition-all duration-300",
