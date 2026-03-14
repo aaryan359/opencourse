@@ -6,6 +6,7 @@ import AppLayout from "./layouts/AppLayout";
 import { useAuthStore } from "./store/auth.store";
 
 import Home from "./pages/home/Home";
+import About from "./pages/about/About";
 
 import ContributeNew from "./pages/contribute/ContributeNew";
 import DashboardPage from "./pages/dashboard/DashboardPage";
@@ -52,7 +53,11 @@ function App() {
 					element={<Home />}
 				/>
 
-				
+				<Route
+					path='/about'
+					element={<About />}
+				/>
+
 				<Route
 					path='/contribute/new'
 					element={<ContributeNew />}

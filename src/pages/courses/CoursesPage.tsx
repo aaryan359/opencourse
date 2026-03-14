@@ -158,44 +158,13 @@ export default function CoursesPage() {
               <span className="text-xs font-mono tracking-widest text-[#8A8F98] uppercase">Transform Your Career</span>
             </div>
             
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-semibold tracking-tight leading-none mb-8">
-              <span className="bg-gradient-to-b from-white via-white/95 to-white/70 bg-clip-text text-transparent">
-                Master In-Demand Skills
-              </span>
-              <br />
-              <span className="bg-gradient-to-r from-[#5E6AD2] via-indigo-400 to-[#5E6AD2] bg-[length:200%] bg-clip-text text-transparent">
-                With Expert-Led Courses
-              </span>
-            </h1>
-            
-            <p className="text-lg lg:text-xl text-[#8A8F98] leading-relaxed max-w-3xl mx-auto mb-12">
-              Join professionals who have accelerated their careers through our industry-leading curriculum. 
-              Hands-on projects, real-world applications, and community-driven content.
-            </p>
           </div>
 
-          {/* Stats Section */}
-          <div className="max-w-6xl mx-auto">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-20">
-              <StatCard icon={<Users className="w-6 h-6" />} value="50K+" label="Active Learners" gradient="bg-gradient-to-br from-[#5E6AD2]/20 to-purple-500/10" />
-              <StatCard icon={<Award className="w-6 h-6" />} value="98%" label="Satisfaction Rate" gradient="bg-gradient-to-br from-emerald-500/20 to-teal-500/10" />
-              <StatCard icon={<Code className="w-6 h-6" />} value="300+" label="Hours of Content" gradient="bg-gradient-to-br from-cyan-500/20 to-blue-500/10" />
-              <StatCard icon={<Briefcase className="w-6 h-6" />} value="85%" label="Career Advancement" gradient="bg-gradient-to-br from-amber-500/20 to-orange-500/10" />
-            </div>
-          </div>
+        
 
           {/* Fields / Learning Paths */}
           <div className="max-w-6xl mx-auto">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-6">
-                <span className="bg-gradient-to-b from-white via-white/95 to-white/70 bg-clip-text text-transparent">
-                  Choose Your Learning Path
-                </span>
-              </h2>
-              <p className="text-lg text-[#8A8F98] max-w-3xl mx-auto">
-                Select from our expertly crafted fields designed to take you from beginner to expert.
-              </p>
-            </div>
+            
 
             {loading ? (
               <div className="flex justify-center py-20">
@@ -218,25 +187,7 @@ export default function CoursesPage() {
             )}
           </div>
 
-          {/* Features Section */}
-          <div className="max-w-6xl mx-auto">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-6">
-                <span className="bg-gradient-to-b from-white via-white/95 to-white/70 bg-clip-text text-transparent">
-                  Why Learn With Us
-                </span>
-              </h2>
-            </div>
-
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-20">
-              <FeatureCard icon={<Rocket className="w-6 h-6" />} title="Project-Based Learning" description="Build real-world projects from day one with our comprehensive project library." gradient="bg-gradient-to-br from-[#5E6AD2]/20 to-purple-500/10" />
-              <FeatureCard icon={<MessageSquare className="w-6 h-6" />} title="Community-Driven" description="Learn from and contribute to a global community of passionate learners." gradient="bg-gradient-to-br from-emerald-500/20 to-teal-500/10" />
-              <FeatureCard icon={<Shield className="w-6 h-6" />} title="Job-Ready Curriculum" description="Courses designed to ensure you're ready for real-world challenges." gradient="bg-gradient-to-br from-cyan-500/20 to-blue-500/10" />
-              <FeatureCard icon={<Globe className="w-6 h-6" />} title="Global Community" description="Connect with peers worldwide, collaborate on projects, and grow your network." gradient="bg-gradient-to-br from-amber-500/20 to-orange-500/10" />
-              <FeatureCard icon={<Headphones className="w-6 h-6" />} title="Flexible Learning" description="Learn at your own pace with lifetime access to all course materials." gradient="bg-gradient-to-br from-pink-500/20 to-rose-500/10" />
-              <FeatureCard icon={<TrendingUp className="w-6 h-6" />} title="Track Your Progress" description="Monitor your growth and stay motivated with detailed progress tracking." gradient="bg-gradient-to-br from-violet-500/20 to-purple-500/10" />
-            </div>
-          </div>
+         
         </div>
       </div>
     </div>
