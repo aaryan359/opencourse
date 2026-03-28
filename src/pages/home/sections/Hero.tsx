@@ -7,6 +7,14 @@ import { useNavigate } from "react-router-dom";
 
 export default function Hero() {
   const navigate = useNavigate();
+
+  const handleExploreCourses = () => {
+    navigate("/explore");
+  };
+
+  const handleBecomeContributor = () => {
+    navigate("/contribute");
+  };
   
 	const mx = useMotionValue(0);
 	const my = useMotionValue(0);
@@ -61,8 +69,18 @@ export default function Hero() {
 							</p>
 
 							<div className='mt-10 flex flex-wrap gap-4'>
-								<Button   onClick={() => navigate("/explore")} className='shadow-[0_0_45px_rgba(99,102,241,0.45)]'>Explore Courses</Button>
-								<Button variant='secondary'>Become a Contributor</Button>
+								<Button
+									type='button'
+									onClick={handleExploreCourses}
+									className='shadow-[0_0_45px_rgba(99,102,241,0.45)]'>
+									Explore Courses
+								</Button>
+								<Button
+									type='button'
+									variant='secondary'
+									onClick={handleBecomeContributor}>
+									Become a Contributor
+								</Button>
 							</div>
 
 							<div className='mt-12 grid grid-cols-3 gap-6 max-w-xl'>
@@ -146,23 +164,3 @@ function Stat({ value, label }: { value: string; label: string }) {
 		</div>
 	);
 }
-
-const EyebrowLogo = () => {
-	return (
-		<svg
-			width='66'
-			height='65'
-			viewBox='0 0 66 65'
-			fill='none'
-			xmlns='http://www.w3.org/2000/svg'
-			className='h-3 w-3 text-white'>
-			<path
-				d='M8 8.05571C8 8.05571 54.9009 18.1782 57.8687 30.062C60.8365 41.9458 9.05432 57.4696 9.05432 57.4696'
-				stroke='currentColor'
-				strokeWidth='15'
-				strokeMiterlimit='3.86874'
-				strokeLinecap='round'
-			/>
-		</svg>
-	);
-};
