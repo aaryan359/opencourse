@@ -3,6 +3,7 @@ import Container from "../../../components/ui/Container"
 import { stats } from "../../../utils/data"
 import { Sparkles, TrendingUp, Users, BookOpen, GitBranch, Clock } from "lucide-react"
 import { useEffect, useState } from "react"
+import { useNavigate } from "react-router-dom"
 
 // Icons for each stat
 const statIcons = [
@@ -21,10 +22,12 @@ const statGradients = [
 ]
 
 export default function Stats() {
+  const navigate = useNavigate()
+
   return (
     <section className="relative py-18 bg-[#050506] border-y border-white/[0.06] overflow-hidden">
       {/* Background Effects */}
-      <div className="absolute inset-0">
+      <div className="pointer-events-none absolute inset-0">
         {/* Gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#5E6AD2]/[0.02] to-transparent" />
         
@@ -65,6 +68,7 @@ export default function Stats() {
         </div>
       </div>
 
+      <div className="relative z-10">
       <Container>
         {/* Header with enhanced typography */}
         <div className="relative mb-16 max-w-2xl">
@@ -218,20 +222,29 @@ export default function Stats() {
             </div>
             
             <div className="flex flex-col sm:flex-row gap-3">
-              <button className="px-6 py-3 rounded-lg bg-gradient-to-br from-[#5E6AD2] to-[#6872D9] font-medium text-white hover:shadow-[0_0_0_1px_rgba(94,106,210,0.8),0_8px_24px_rgba(94,106,210,0.4)] transition-all duration-300 hover:-translate-y-1">
+              <button
+                type="button"
+                onClick={() => navigate("/community")}
+                className="px-6 py-3 rounded-lg bg-gradient-to-br from-[#5E6AD2] to-[#6872D9] font-medium text-white hover:shadow-[0_0_0_1px_rgba(94,106,210,0.8),0_8px_24px_rgba(94,106,210,0.4)] transition-all duration-300 hover:-translate-y-1"
+              >
                 Join Community
               </button>
-              <button className="px-6 py-3 rounded-lg border border-white/[0.12] bg-white/[0.05] font-medium text-white hover:bg-white/[0.08] transition-all duration-300">
+              <button
+                type="button"
+                onClick={() => navigate("/dashboard")}
+                className="px-6 py-3 rounded-lg border border-white/[0.12] bg-white/[0.05] font-medium text-white hover:bg-white/[0.08] transition-all duration-300"
+              >
                 View Live Dashboard
               </button>
             </div>
           </div>
         </motion.div>
       </Container>
+      </div>
 
       {/* Background accent elements */}
-      <div className="absolute bottom-0 left-0 w-48 h-48 rounded-full bg-gradient-to-r from-[#5E6AD2]/10 to-purple-500/5 blur-[100px] translate-y-1/2 -translate-x-1/4" />
-      <div className="absolute top-0 right-0 w-48 h-48 rounded-full bg-gradient-to-r from-cyan-500/10 to-blue-500/5 blur-[100px] -translate-y-1/2 translate-x-1/4" />
+      <div className="pointer-events-none absolute bottom-0 left-0 w-48 h-48 rounded-full bg-gradient-to-r from-[#5E6AD2]/10 to-purple-500/5 blur-[100px] translate-y-1/2 -translate-x-1/4" />
+      <div className="pointer-events-none absolute top-0 right-0 w-48 h-48 rounded-full bg-gradient-to-r from-cyan-500/10 to-blue-500/5 blur-[100px] -translate-y-1/2 translate-x-1/4" />
     </section>
   )
 }
