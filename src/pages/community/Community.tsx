@@ -1,6 +1,5 @@
-import { motion, useMotionValue, useSpring, useTransform, useScroll, useInView, AnimatePresence } from "framer-motion";
-import { useEffect, useRef, useState } from "react";
-import { MessageCircle, Users, Sparkles, TrendingUp, Zap, Globe, BookOpen, Award, Clock, Filter, Search, Share2, Heart, ExternalLink, ChevronRight, Menu, X, Star, Users2, BarChart3, Rocket, BadgeCheck } from "lucide-react";
+import { useEffect, useState } from "react";
+import { MessageCircle, Users, Sparkles, TrendingUp, Zap, Globe, BookOpen, Award, Search, Heart, Menu, X, Star, Users2, Rocket, BadgeCheck, Clock } from "lucide-react";
 
 
 function AmbientBackground() {
@@ -17,49 +16,17 @@ function AmbientBackground() {
         }}
       />
       
-      {/* Animated gradient blobs */}
-      <motion.div
+      {/* Gradient blobs (static) */}
+      <div
         className="fixed -top-[40%] -left-[20%] w-[1400px] h-[900px] rounded-full bg-gradient-to-br from-[#5E6AD2]/25 via-indigo-400/15 to-transparent blur-[150px]"
-        animate={{
-          x: [0, 40, -20, 0],
-          y: [0, 20, -10, 0],
-          rotate: [0, 1, -1, 0],
-        }}
-        transition={{
-          duration: 20,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
       />
       
-      <motion.div
+      <div
         className="fixed top-1/3 -left-[10%] w-[800px] h-[600px] rounded-full bg-gradient-to-r from-purple-500/15 via-pink-500/10 to-transparent blur-[120px]"
-        animate={{
-          x: [0, -30, 20, 0],
-          y: [0, -20, 10, 0],
-          rotate: [0, -1, 1, 0],
-        }}
-        transition={{
-          duration: 18,
-          repeat: Infinity,
-          ease: "easeInOut",
-          delay: 0.5,
-        }}
       />
       
-      <motion.div
+      <div
         className="fixed -bottom-[30%] -right-[10%] w-[700px] h-[500px] rounded-full bg-gradient-to-tl from-[#5E6AD2]/12 via-blue-400/10 to-transparent blur-[100px]"
-        animate={{
-          x: [0, 25, -15, 0],
-          y: [0, 15, -5, 0],
-          scale: [1, 1.05, 0.95, 1],
-        }}
-        transition={{
-          duration: 15,
-          repeat: Infinity,
-          ease: "easeInOut",
-          delay: 1,
-        }}
       />
       
       {/* Grid overlay */}
@@ -83,60 +50,10 @@ function AmbientBackground() {
 // ============================================================================
 
 function MouseSpotlightCard({ children, className = "" }: { children: React.ReactNode; className?: string }) {
-  const cardRef = useRef<HTMLDivElement>(null);
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
-  const spotlightOpacity = useMotionValue(0);
-  
-  const spotlightX = useSpring(mouseX, { stiffness: 300, damping: 30 });
-  const spotlightY = useSpring(mouseY, { stiffness: 300, damping: 30 });
-  const opacity = useSpring(spotlightOpacity, { stiffness: 200, damping: 20 });
-
-  useEffect(() => {
-    const updateMousePosition = (ev: MouseEvent) => {
-      if (!cardRef.current) return;
-      
-      const rect = cardRef.current.getBoundingClientRect();
-      mouseX.set(ev.clientX - rect.left);
-      mouseY.set(ev.clientY - rect.top);
-    };
-
-    const handleMouseEnter = () => spotlightOpacity.set(0.15);
-    const handleMouseLeave = () => spotlightOpacity.set(0);
-
-    const card = cardRef.current;
-    if (card) {
-      card.addEventListener("mousemove", updateMousePosition);
-      card.addEventListener("mouseenter", handleMouseEnter);
-      card.addEventListener("mouseleave", handleMouseLeave);
-    }
-
-    return () => {
-      if (card) {
-        card.removeEventListener("mousemove", updateMousePosition);
-        card.removeEventListener("mouseenter", handleMouseEnter);
-        card.removeEventListener("mouseleave", handleMouseLeave);
-      }
-    };
-  }, [mouseX, mouseY, spotlightOpacity]);
-
   return (
     <div 
-      ref={cardRef}
-      className={`relative overflow-hidden rounded-2xl ${className}`}
+      className={`relative overflow-hidden rounded-2xl transition-all ${className}`}
     >
-      {/* Mouse-tracking spotlight */}
-      <motion.div
-        className="absolute w-[300px] h-[300px] rounded-full pointer-events-none"
-        style={{
-          x: useTransform(spotlightX, (x) => `${x - 150}px`),
-          y: useTransform(spotlightY, (y) => `${y - 150}px`),
-          opacity,
-          background: "radial-gradient(circle at center, rgba(94,106,210,0.3) 0%, transparent 70%)",
-          filter: "blur(20px)",
-        }}
-      />
-      
       {/* Content */}
       {children}
     </div>
@@ -169,9 +86,7 @@ function Navigation() {
 
   return (
     <>
-      <motion.nav
-        initial={{ y: -100 }}
-        animate={{ y: 0 }}
+      <nav
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
           scrolled ? "bg-[#050506]/95 backdrop-blur-xl border-b border-white/[0.06]" : "bg-transparent"
         }`}
@@ -179,9 +94,8 @@ function Navigation() {
         <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             {/* Logo */}
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              className="flex items-center gap-3 cursor-pointer"
+            <div
+              className="flex items-center gap-3 cursor-pointer transition-transform hover:scale-105"
             >
               <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-[#5E6AD2] to-indigo-600 flex items-center justify-center shadow-[0_0_40px_rgba(94,106,210,0.3)]">
                 <Users2 className="h-5 w-5 text-white" />
@@ -189,94 +103,67 @@ function Navigation() {
               <span className="text-xl font-semibold bg-gradient-to-b from-white via-white/95 to-white/70 bg-clip-text text-transparent">
                 CodeSphere
               </span>
-            </motion.div>
+            </div>
 
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center gap-8">
               {navItems.map((item) => (
-                <motion.a
+                <a
                   key={item.label}
                   href={item.href}
-                  whileHover={{ y: -2 }}
                   className="text-sm text-[#8A8F98] hover:text-[#EDEDEF] transition-colors relative group"
                 >
                   {item.label}
                   <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-gradient-to-r from-[#5E6AD2] to-transparent group-hover:w-full transition-all duration-300" />
-                </motion.a>
+                </a>
               ))}
               
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.98 }}
-                className="px-5 py-2.5 rounded-lg bg-gradient-to-b from-white/[0.08] to-white/[0.02] border border-white/[0.06] text-sm font-medium text-[#EDEDEF] hover:border-white/[0.1] transition-all"
+              <button
+                className="px-5 py-2.5 rounded-lg bg-gradient-to-b from-white/[0.08] to-white/[0.02] border border-white/[0.06] text-sm font-medium text-[#EDEDEF] hover:border-white/[0.1] transition-all active:scale-95"
               >
                 Join Community
-              </motion.button>
+              </button>
             </div>
 
             {/* Mobile Menu Button */}
-            <motion.button
-              whileTap={{ scale: 0.95 }}
+            <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="md:hidden h-10 w-10 rounded-lg bg-white/[0.05] flex items-center justify-center border border-white/[0.06]"
+              className="md:hidden h-10 w-10 rounded-lg bg-white/[0.05] flex items-center justify-center border border-white/[0.06] transition-transform active:scale-95"
             >
-              <AnimatePresence mode="wait">
-                {isMenuOpen ? (
-                  <motion.div
-                    key="close"
-                    initial={{ rotate: -90, opacity: 0 }}
-                    animate={{ rotate: 0, opacity: 1 }}
-                    exit={{ rotate: 90, opacity: 0 }}
-                  >
-                    <X className="h-5 w-5 text-[#EDEDEF]" />
-                  </motion.div>
-                ) : (
-                  <motion.div
-                    key="menu"
-                    initial={{ rotate: 90, opacity: 0 }}
-                    animate={{ rotate: 0, opacity: 1 }}
-                    exit={{ rotate: -90, opacity: 0 }}
-                  >
-                    <Menu className="h-5 w-5 text-[#EDEDEF]" />
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </motion.button>
+              {isMenuOpen ? (
+                <X className="h-5 w-5 text-[#EDEDEF]" />
+              ) : (
+                <Menu className="h-5 w-5 text-[#EDEDEF]" />
+              )}
+            </button>
           </div>
         </div>
-      </motion.nav>
+      </nav>
 
       {/* Mobile Menu */}
-      <AnimatePresence>
-        {isMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            className="fixed top-16 inset-x-0 z-40 md:hidden bg-[#050506]/95 backdrop-blur-xl border-b border-white/[0.06] overflow-hidden"
-          >
-            <div className="px-6 py-4 space-y-4">
-              {navItems.map((item) => (
-                <motion.a
-                  key={item.label}
-                  href={item.href}
-                  onClick={() => setIsMenuOpen(false)}
-                  whileHover={{ x: 4 }}
-                  className="block py-3 text-[#EDEDEF] text-sm border-b border-white/[0.06] last:border-0"
-                >
-                  {item.label}
-                </motion.a>
-              ))}
-              <motion.button
-                whileTap={{ scale: 0.98 }}
-                className="w-full py-3 rounded-lg bg-gradient-to-b from-[#5E6AD2] to-indigo-600 text-sm font-medium text-white mt-4"
+      {isMenuOpen && (
+        <div
+          className="fixed top-16 inset-x-0 z-40 md:hidden bg-[#050506]/95 backdrop-blur-xl border-b border-white/[0.06] overflow-hidden"
+        >
+          <div className="px-6 py-4 space-y-4">
+            {navItems.map((item) => (
+              <a
+                key={item.label}
+                href={item.href}
+                onClick={() => setIsMenuOpen(false)}
+                className="block py-3 text-[#EDEDEF] text-sm border-b border-white/[0.06] last:border-0 transition-colors hover:text-white"
               >
-                Join Community
-              </motion.button>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+                {item.label}
+              </a>
+            ))}
+            <button
+              className="w-full py-3 rounded-lg bg-gradient-to-b from-[#5E6AD2] to-indigo-600 text-sm font-medium text-white mt-4 transition-transform active:scale-95"
+            >
+              Join Community
+            </button>
+          </div>
+        </div>
+      )}
     </>
   );
 }
@@ -285,45 +172,19 @@ function Navigation() {
 // ENHANCED COMMUNITY PAGE
 // ============================================================================
 
-const containerVariants = {
-  hidden: {},
-  show: {
-    transition: {
-      staggerChildren: 0.08,
-    },
-  },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } },
-};
-
 export default function EnhancedCommunityPage() {
-  const heroRef = useRef(null);
-  const { scrollYProgress } = useScroll({
-    target: heroRef,
-    offset: ["start start", "end start"]
-  });
-
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
-  const heroScale = useTransform(scrollYProgress, [0, 0.5], [1, 0.95]);
-  const heroY = useTransform(scrollYProgress, [0, 0.5], [0, 100]);
-
   return (
     <div className="min-h-screen bg-[#050506] text-[#EDEDEF] overflow-hidden">
       <AmbientBackground />
       <Navigation />
       
-      <motion.div
-        ref={heroRef}
-        style={{ opacity: heroOpacity, scale: heroScale, y: heroY }}
+      <div
         className="relative pt-32 pb-24"
       >
         <div className="max-w-7xl mx-auto px-6">
           <Hero />
         </div>
-      </motion.div>
+      </div>
 
       <div className="relative z-10 space-y-32 pb-32">
         <div className="max-w-7xl mx-auto px-6">
@@ -357,104 +218,52 @@ export default function EnhancedCommunityPage() {
 /* -------------------------------- HERO -------------------------------- */
 
 function Hero() {
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      setMousePosition({ x: e.clientX, y: e.clientY });
-    };
-    window.addEventListener("mousemove", handleMouseMove);
-    return () => window.removeEventListener("mousemove", handleMouseMove);
-  }, []);
-
-  const cursorX = useSpring(mousePosition.x, { stiffness: 150, damping: 20 });
-  const cursorY = useSpring(mousePosition.y, { stiffness: 150, damping: 20 });
-
   return (
-    <>
-      {/* Interactive cursor glow */}
-      <motion.div
-        className="fixed top-0 left-0 w-[600px] h-[600px] rounded-full pointer-events-none z-0"
-        style={{
-          x: useTransform(cursorX, (x) => `${x - 300}px`),
-          y: useTransform(cursorY, (y) => `${y - 300}px`),
-          background: "radial-gradient(circle at center, rgba(94,106,210,0.15) 0%, transparent 50%)",
-          filter: "blur(40px)",
-        }}
-      />
-
-      <div className="relative z-10 text-center space-y-8">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="flex justify-center"
-        >
-          <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-[#5E6AD2]/10 to-indigo-500/10 border border-[#5E6AD2]/20 text-sm text-[#5E6AD2]">
-            <Sparkles className="h-3.5 w-3.5" />
-            Community Driven Learning
-          </span>
-        </motion.div>
-
-        <motion.h1
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.1 }}
-          className="text-5xl md:text-7xl lg:text-8xl font-semibold leading-none tracking-tight"
-        >
-          <span className="bg-gradient-to-b from-white via-white/95 to-white/70 bg-clip-text text-transparent">
-            Learn. Share.
-          </span>{" "}
-          <motion.span
-            className="bg-gradient-to-r from-[#5E6AD2] via-indigo-400 to-[#5E6AD2] bg-clip-text text-transparent bg-[length:200%]"
-            animate={{
-              backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
-            }}
-            transition={{
-              duration: 3,
-              repeat: Infinity,
-              ease: "linear",
-            }}
-          >
-            Grow Together.
-          </motion.span>
-        </motion.h1>
-
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.2 }}
-          className="max-w-2xl mx-auto text-lg text-[#8A8F98] leading-relaxed"
-        >
-          Join a global community of passionate learners and creators. Share knowledge, 
-          collaborate on projects, and accelerate your growth with real-world insights.
-        </motion.p>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.3 }}
-          className="flex flex-col sm:flex-row gap-4 justify-center pt-8"
-        >
-          <motion.button
-            whileHover={{ scale: 1.05, y: -4 }}
-            whileTap={{ scale: 0.98 }}
-            className="px-8 py-4 rounded-lg bg-gradient-to-b from-[#5E6AD2] to-indigo-600 text-white font-medium shadow-[0_0_0_1px_rgba(94,106,210,0.5),0_4px_12px_rgba(94,106,210,0.3),inset_0_1px_0_0_rgba(255,255,255,0.2)] hover:shadow-[0_0_0_1px_rgba(94,106,210,0.6),0_8px_24px_rgba(94,106,210,0.4),inset_0_1px_0_0_rgba(255,255,255,0.3)] transition-all relative overflow-hidden group"
-          >
-            <span className="relative z-10">Join Community Free</span>
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
-          </motion.button>
-
-          <motion.button
-            whileHover={{ scale: 1.05, y: -4 }}
-            whileTap={{ scale: 0.98 }}
-            className="px-8 py-4 rounded-lg bg-gradient-to-b from-white/[0.08] to-white/[0.02] border border-white/[0.06] text-white font-medium hover:border-white/[0.1] hover:shadow-[0_8px_32px_rgba(0,0,0,0.3)] transition-all"
-          >
-            Explore Discussions
-          </motion.button>
-        </motion.div>
+    <div className="relative z-10 text-center space-y-8">
+      <div className="flex justify-center">
+        <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-[#5E6AD2]/10 to-indigo-500/10 border border-[#5E6AD2]/20 text-sm text-[#5E6AD2]">
+          <Sparkles className="h-3.5 w-3.5" />
+          Community Driven Learning
+        </span>
       </div>
-    </>
+
+      <h1
+        className="text-5xl md:text-7xl lg:text-8xl font-semibold leading-none tracking-tight"
+      >
+        <span className="bg-gradient-to-b from-white via-white/95 to-white/70 bg-clip-text text-transparent">
+          Learn. Share.
+        </span>{" "}
+        <span
+          className="bg-gradient-to-r from-[#5E6AD2] via-indigo-400 to-[#5E6AD2] bg-clip-text text-transparent"
+        >
+          Grow Together.
+        </span>
+      </h1>
+
+      <p
+        className="max-w-2xl mx-auto text-lg text-[#8A8F98] leading-relaxed"
+      >
+        Join a global community of passionate learners and creators. Share knowledge, 
+        collaborate on projects, and accelerate your growth with real-world insights.
+      </p>
+
+      <div
+        className="flex flex-col sm:flex-row gap-4 justify-center pt-8"
+      >
+        <button
+          className="px-8 py-4 rounded-lg bg-gradient-to-b from-[#5E6AD2] to-indigo-600 text-white font-medium shadow-[0_0_0_1px_rgba(94,106,210,0.5),0_4px_12px_rgba(94,106,210,0.3),inset_0_1px_0_0_rgba(255,255,255,0.2)] hover:shadow-[0_0_0_1px_rgba(94,106,210,0.6),0_8px_24px_rgba(94,106,210,0.4),inset_0_1px_0_0_rgba(255,255,255,0.3)] transition-all active:scale-95 relative overflow-hidden group"
+        >
+          <span className="relative z-10">Join Community Free</span>
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-[100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
+        </button>
+
+        <button
+          className="px-8 py-4 rounded-lg bg-gradient-to-b from-white/[0.08] to-white/[0.02] border border-white/[0.06] text-white font-medium hover:border-white/[0.1] hover:shadow-[0_8px_32px_rgba(0,0,0,0.3)] transition-all active:scale-95"
+        >
+          Explore Discussions
+        </button>
+      </div>
+    </div>
   );
 }
 
@@ -493,16 +302,12 @@ function EnhancedStats() {
   ];
 
   return (
-    <motion.div
-      variants={containerVariants}
-      initial="hidden"
-      whileInView="show"
-      viewport={{ once: true, margin: "-100px" }}
+    <div
       className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
     >
-      {stats.map((stat, index) => (
-        <motion.div key={stat.label} variants={itemVariants} custom={index}>
-          <MouseSpotlightCard className="p-6 bg-gradient-to-b from-white/[0.08] to-white/[0.02] border border-white/[0.06]">
+      {stats.map((stat) => (
+        <div key={stat.label}>
+          <MouseSpotlightCard className="p-6 bg-gradient-to-b from-white/[0.08] to-white/[0.02] border border-white/[0.06] transition-all hover:border-white/[0.1]">
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-[#5E6AD2]/10 to-indigo-500/10 border border-[#5E6AD2]/20 flex items-center justify-center text-[#5E6AD2]">
@@ -523,9 +328,9 @@ function EnhancedStats() {
               </div>
             </div>
           </MouseSpotlightCard>
-        </motion.div>
+        </div>
       ))}
-    </motion.div>
+    </div>
   );
 }
 
@@ -615,43 +420,37 @@ function FeaturedDiscussions() {
             placeholder="Search discussions, topics, or members..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-12 pr-4 py-3 rounded-xl bg-[#0F0F12] border border-white/[0.1] text-[#EDEDEF] placeholder:text-[#8A8F98] focus:outline-none focus:border-[#5E6AD2] focus:ring-2 focus:ring-[#5E6AD2]/30"
+            className="w-full pl-12 pr-4 py-3 rounded-xl bg-[#0F0F12] border border-white/[0.1] text-[#EDEDEF] placeholder:text-[#8A8F98] focus:outline-none focus:border-[#5E6AD2] focus:ring-2 focus:ring-[#5E6AD2]/30 transition-all"
           />
         </div>
 
         <div className="flex gap-2 overflow-x-auto pb-2">
           {["trending", "recent", "popular", "unanswered", "solved"].map((item) => (
-            <motion.button
+            <button
               key={item}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.98 }}
               onClick={() => setFilter(item)}
-              className={`px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all ${
+              className={`px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all active:scale-95 ${
                 filter === item
                   ? "bg-[#5E6AD2] text-white shadow-[0_0_20px_rgba(94,106,210,0.3)]"
                   : "bg-white/[0.05] text-[#8A8F98] hover:text-[#EDEDEF]"
               }`}
             >
               {item.charAt(0).toUpperCase() + item.slice(1)}
-            </motion.button>
+            </button>
           ))}
         </div>
       </div>
 
       {/* Discussions Grid */}
-      <motion.div
-        variants={containerVariants}
-        initial="hidden"
-        whileInView="show"
-        viewport={{ once: true, margin: "-100px" }}
+      <div
         className="grid gap-6 md:grid-cols-2 lg:grid-cols-3"
       >
-        {discussions.map((discussion, index) => (
-          <motion.div key={discussion.title} variants={itemVariants} custom={index}>
+        {discussions.map((discussion) => (
+          <div key={discussion.title}>
             <EnhancedDiscussionCard {...discussion} />
-          </motion.div>
+          </div>
         ))}
-      </motion.div>
+      </div>
 
     </div>
   );
@@ -667,16 +466,11 @@ function EnhancedDiscussionCard({
   time,
   trending,
 }: any) {
-  const hoverY = useMotionValue(0);
-  const y = useSpring(hoverY, { stiffness: 120, damping: 14 });
   const [isLiked, setIsLiked] = useState(false);
 
   return (
-    <motion.div
-      style={{ y }}
-      onHoverStart={() => hoverY.set(-8)}
-      onHoverEnd={() => hoverY.set(0)}
-      className="h-full"
+    <div
+      className="h-full transition-transform duration-300 hover:-translate-y-2"
     >
       <MouseSpotlightCard className="h-full p-6 bg-gradient-to-b from-white/[0.08] to-white/[0.02] border border-white/[0.06] hover:border-white/[0.1] transition-all group cursor-pointer">
         <div className="space-y-5 h-full flex flex-col">
@@ -699,14 +493,12 @@ function EnhancedDiscussionCard({
               </div>
             </div>
             {trending && (
-              <motion.span
-                animate={{ scale: [1, 1.1, 1] }}
-                transition={{ duration: 2, repeat: Infinity }}
+              <span
                 className="px-2 py-1 rounded-md bg-gradient-to-r from-orange-500/10 to-red-500/10 border border-orange-500/20 text-xs font-medium text-orange-400 flex items-center gap-1"
               >
                 <TrendingUp className="h-3 w-3" />
                 Trending
-              </motion.span>
+              </span>
             )}
           </div>
 
@@ -734,14 +526,13 @@ function EnhancedDiscussionCard({
                 <MessageCircle className="h-4 w-4" />
                 {replies}
               </span>
-              <motion.button
-                whileTap={{ scale: 0.9 }}
+              <button
                 onClick={() => setIsLiked(!isLiked)}
-                className="flex items-center gap-1.5 hover:text-rose-400 transition-colors"
+                className="flex items-center gap-1.5 hover:text-rose-400 transition-colors active:scale-90"
               >
                 <Heart className={`h-4 w-4 ${isLiked ? "fill-rose-400 text-rose-400" : ""}`} />
                 {likes}
-              </motion.button>
+              </button>
               <span className="flex items-center gap-1.5">
                 <Eye className="h-4 w-4" />
                 {views}
@@ -751,7 +542,7 @@ function EnhancedDiscussionCard({
           </div>
         </div>
       </MouseSpotlightCard>
-    </motion.div>
+    </div>
   );
 }
 
@@ -823,15 +614,11 @@ function TopCreators() {
         icon={<Award />}
       />
 
-      <motion.div
-        variants={containerVariants}
-        initial="hidden"
-        whileInView="show"
-        viewport={{ once: true, margin: "-100px" }}
+      <div
         className="grid gap-6 md:grid-cols-2 lg:grid-cols-3"
       >
-        {creators.map((creator, index) => (
-          <motion.div key={creator.name} variants={itemVariants} custom={index}>
+        {creators.map((creator) => (
+          <div key={creator.name}>
             <MouseSpotlightCard className="p-6 bg-gradient-to-b from-white/[0.08] to-white/[0.02] border border-white/[0.06] hover:border-white/[0.1] transition-all">
               <div className="space-y-5">
                 {/* Header */}
@@ -860,13 +647,11 @@ function TopCreators() {
                     </div>
                   </div>
                   
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="px-3 py-1.5 rounded-lg bg-white/[0.05] text-xs text-[#8A8F98] hover:text-[#EDEDEF] border border-white/[0.06] hover:border-white/[0.1] transition-all"
+                  <button
+                    className="px-3 py-1.5 rounded-lg bg-white/[0.05] text-xs text-[#8A8F98] hover:text-[#EDEDEF] border border-white/[0.06] hover:border-white/[0.1] transition-all active:scale-95"
                   >
                     Follow
-                  </motion.button>
+                  </button>
                 </div>
 
                 {/* Expertise */}
@@ -901,9 +686,9 @@ function TopCreators() {
                 </div>
               </div>
             </MouseSpotlightCard>
-          </motion.div>
+          </div>
         ))}
-      </motion.div>
+      </div>
     </div>
   );
 }
@@ -946,15 +731,11 @@ function LiveEvents() {
         icon={<Zap />}
       />
 
-      <motion.div
-        variants={containerVariants}
-        initial="hidden"
-        whileInView="show"
-        viewport={{ once: true, margin: "-100px" }}
+      <div
         className="grid gap-6 md:grid-cols-3"
       >
-        {events.map((event, index) => (
-          <motion.div key={event.title} variants={itemVariants} custom={index}>
+        {events.map((event) => (
+          <div key={event.title}>
             <MouseSpotlightCard className="h-full p-6 bg-gradient-to-b from-white/[0.08] to-white/[0.02] border border-white/[0.06] hover:border-white/[0.1] transition-all">
               <div className="space-y-5 h-full flex flex-col">
                 {/* Event Type */}
@@ -969,14 +750,12 @@ function LiveEvents() {
                     {event.type.charAt(0).toUpperCase() + event.type.slice(1)}
                   </span>
                   {event.live && (
-                    <motion.span
-                      animate={{ opacity: [1, 0.5, 1] }}
-                      transition={{ duration: 1.5, repeat: Infinity }}
+                    <span
                       className="flex items-center gap-1.5 text-xs font-medium text-rose-400"
                     >
-                      <div className="h-2 w-2 rounded-full bg-rose-400" />
+                      <div className="h-2 w-2 rounded-full bg-rose-400 animate-pulse" />
                       Live Soon
-                    </motion.span>
+                    </span>
                   )}
                 </div>
 
@@ -1002,23 +781,21 @@ function LiveEvents() {
                     <Users className="h-4 w-4" />
                     {event.attendees} attending
                   </div>
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.98 }}
-                    className={`px-4 py-2 rounded-lg text-sm font-medium ${
+                  <button
+                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-all active:scale-95 ${
                       event.live
                         ? "bg-gradient-to-b from-[#5E6AD2] to-indigo-600 text-white shadow-[0_0_20px_rgba(94,106,210,0.3)]"
-                        : "bg-white/[0.05] text-[#EDEDEF] border border-white/[0.06]"
+                        : "bg-white/[0.05] text-[#EDEDEF] border border-white/[0.06] hover:border-white/[0.1]"
                     }`}
                   >
                     {event.live ? "Set Reminder" : "Learn More"}
-                  </motion.button>
+                  </button>
                 </div>
               </div>
             </MouseSpotlightCard>
-          </motion.div>
+          </div>
         ))}
-      </motion.div>
+      </div>
     </div>
   );
 }
@@ -1069,15 +846,11 @@ function ResourceHub() {
         icon={<BookOpen />}
       />
 
-      <motion.div
-        variants={containerVariants}
-        initial="hidden"
-        whileInView="show"
-        viewport={{ once: true, margin: "-100px" }}
+      <div
         className="grid gap-6 md:grid-cols-2 lg:grid-cols-4"
       >
-        {resources.map((resource, index) => (
-          <motion.div key={resource.title} variants={itemVariants} custom={index}>
+        {resources.map((resource) => (
+          <div key={resource.title}>
             <MouseSpotlightCard className="h-full p-6 bg-gradient-to-b from-white/[0.08] to-white/[0.02] border border-white/[0.06] hover:border-white/[0.1] transition-all">
               <div className="space-y-4 h-full flex flex-col">
                 {/* Type Badge */}
@@ -1112,19 +885,17 @@ function ResourceHub() {
                       {resource.length}
                     </span>
                   </div>
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="px-3 py-1.5 rounded-lg text-xs font-medium bg-white/[0.05] text-[#EDEDEF] border border-white/[0.06] hover:border-white/[0.1] transition-all"
+                  <button
+                    className="px-3 py-1.5 rounded-lg text-xs font-medium bg-white/[0.05] text-[#EDEDEF] border border-white/[0.06] hover:border-white/[0.1] transition-all active:scale-95"
                   >
                     {resource.premium ? "Unlock" : "Read"}
-                  </motion.button>
+                  </button>
                 </div>
               </div>
             </MouseSpotlightCard>
-          </motion.div>
+          </div>
         ))}
-      </motion.div>
+      </div>
     </div>
   );
 }
@@ -1132,24 +903,12 @@ function ResourceHub() {
 /* --------------------------------- ENHANCED CTA ---------------------------------- */
 
 function EnhancedCTA() {
-  const ref = useRef(null);
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start end", "end start"]
-  });
-
-  const backgroundY = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
-  const opacity = useTransform(scrollYProgress, [0, 0.5, 1], [1, 1, 0.5]);
-
   return (
-    <motion.div
-      ref={ref}
-      style={{ opacity }}
+    <div
       className="relative overflow-hidden rounded-3xl border border-white/[0.06]"
     >
       {/* Animated background */}
-      <motion.div
-        style={{ y: backgroundY }}
+      <div
         className="absolute inset-0 bg-gradient-to-br from-[#5E6AD2]/10 via-indigo-500/5 to-emerald-500/10"
       />
       
@@ -1166,22 +925,16 @@ function EnhancedCTA() {
       />
 
       <div className="relative p-12 md:p-16 text-center">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
+        <div
           className="space-y-8 max-w-3xl mx-auto"
         >
           {/* Icon */}
           <div className="flex justify-center">
-            <motion.div
-              animate={{ rotate: 360 }}
-              transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-              className="h-20 w-20 rounded-2xl bg-gradient-to-br from-[#5E6AD2]/20 to-indigo-500/10 border-2 border-[#5E6AD2]/30 flex items-center justify-center"
+            <div
+              className="h-20 w-20 rounded-2xl bg-gradient-to-br from-[#5E6AD2]/20 to-indigo-500/10 border-2 border-[#5E6AD2]/30 flex items-center justify-center animate-spin"
             >
               <Rocket className="h-10 w-10 text-[#5E6AD2]" />
-            </motion.div>
+            </div>
           </div>
 
           {/* Title */}
@@ -1210,31 +963,27 @@ function EnhancedCTA() {
 
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center pt-8">
-            <motion.button
-              whileHover={{ scale: 1.05, y: -4 }}
-              whileTap={{ scale: 0.98 }}
-              className="group relative px-8 py-4 rounded-xl bg-gradient-to-b from-[#5E6AD2] to-indigo-600 text-white font-medium shadow-[0_0_0_1px_rgba(94,106,210,0.5),0_4px_12px_rgba(94,106,210,0.3),inset_0_1px_0_0_rgba(255,255,255,0.2)] hover:shadow-[0_0_0_1px_rgba(94,106,210,0.6),0_8px_24px_rgba(94,106,210,0.4),inset_0_1px_0_0_rgba(255,255,255,0.3)] transition-all overflow-hidden"
+            <button
+              className="group relative px-8 py-4 rounded-xl bg-gradient-to-b from-[#5E6AD2] to-indigo-600 text-white font-medium shadow-[0_0_0_1px_rgba(94,106,210,0.5),0_4px_12px_rgba(94,106,210,0.3),inset_0_1px_0_0_rgba(255,255,255,0.2)] hover:shadow-[0_0_0_1px_rgba(94,106,210,0.6),0_8px_24px_rgba(94,106,210,0.4),inset_0_1px_0_0_rgba(255,255,255,0.3)] transition-all overflow-hidden active:scale-95"
             >
               <span className="relative z-10">Join Community Free</span>
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
-            </motion.button>
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-[100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
+            </button>
 
-            <motion.button
-              whileHover={{ scale: 1.05, y: -4 }}
-              whileTap={{ scale: 0.98 }}
-              className="px-8 py-4 rounded-xl bg-gradient-to-b from-white/[0.08] to-white/[0.02] border border-white/[0.06] text-[#EDEDEF] font-medium hover:border-white/[0.1] hover:shadow-[0_8px_32px_rgba(0,0,0,0.3)] transition-all"
+            <button
+              className="px-8 py-4 rounded-xl bg-gradient-to-b from-white/[0.08] to-white/[0.02] border border-white/[0.06] text-[#EDEDEF] font-medium hover:border-white/[0.1] hover:shadow-[0_8px_32px_rgba(0,0,0,0.3)] transition-all active:scale-95"
             >
               Explore Features
-            </motion.button>
+            </button>
           </div>
 
           {/* Footer note */}
           <p className="text-sm text-[#8A8F98] pt-8">
             No credit card required • Get started in 30 seconds
           </p>
-        </motion.div>
+        </div>
       </div>
-    </motion.div>
+    </div>
   );
 }
 
@@ -1250,10 +999,7 @@ function SectionHeader({
   icon: React.ReactNode;
 }) {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
+    <div
       className="space-y-4"
     >
       <div className="flex items-center gap-4">
@@ -1269,7 +1015,7 @@ function SectionHeader({
           {subtitle}
         </p>
       )}
-    </motion.div>
+    </div>
   );
 }
 

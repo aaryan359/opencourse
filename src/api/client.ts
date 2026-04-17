@@ -24,6 +24,9 @@ apiClient.interceptors.response.use(
     if (err.response?.status === 401) {
       localStorage.removeItem("oc_token");
       localStorage.removeItem("oc_user");
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(new Event("auth:unauthorized"));
+      }
     }
     return Promise.reject(err);
   }

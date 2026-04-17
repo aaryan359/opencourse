@@ -6,7 +6,6 @@ import ApiResponse from "../utils/ApiResponse";
 import jwt from "jsonwebtoken";
 import type { SignOptions } from "jsonwebtoken";
 
-/* ================= REGISTER ================= */
 export const registerUser = async (req: Request, res: Response) => {
   try {
     const { email, password, username, profile } = req.body;
@@ -18,8 +17,31 @@ export const registerUser = async (req: Request, res: Response) => {
       });
     }
 
+    if (String(password).length < 6) {
+      return ApiResponse.error(res, {
+        message: "Password must be at least 6 characters",
+        statusCode: 400,
+      });
+    }
+
+    const normalizedEmail = String(email).trim().toLowerCase();
+    const normalizedUsername = String(username).trim();
+
+    const normalizedProfile = {
+      firstName: profile?.firstName?.trim() || undefined,
+      lastName: profile?.lastName?.trim() || undefined,
+      avatar: profile?.avatar?.trim() || undefined,
+      bio: profile?.bio?.trim() || undefined,
+      title: profile?.title?.trim() || undefined,
+      skills: Array.isArray(profile?.skills)
+        ? profile.skills
+          .map((skill: unknown) => String(skill).trim())
+          .filter(Boolean)
+        : undefined,
+    };
+
     const existingUser = await User.findOne({
-      $or: [{ email }, { username }],
+      $or: [{ email: normalizedEmail }, { username: normalizedUsername }],
     });
 
     if (existingUser) {
@@ -30,10 +52,10 @@ export const registerUser = async (req: Request, res: Response) => {
     }
 
     const user = await User.create({
-      email,
+      email: normalizedEmail,
       password,
-      username,
-      profile,
+      username: normalizedUsername,
+      profile: normalizedProfile,
     });
 
     const token = jwt.sign(
@@ -47,7 +69,14 @@ export const registerUser = async (req: Request, res: Response) => {
     return ApiResponse.success(res, {
       message: "User registered successfully",
       data: {
-        user,
+        user: {
+          _id: user._id,
+          email: user.email,
+          username: user.username,
+          role: user.role,
+          profile: user.profile,
+          stats: user.stats,
+        },
         token,
       },
       statusCode: 201,
@@ -61,7 +90,10 @@ export const registerUser = async (req: Request, res: Response) => {
   }
 };
 
-/* ================= LOGIN ================= */
+
+
+
+
 export const loginUser = async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
@@ -82,16 +114,23 @@ export const loginUser = async (req: Request, res: Response) => {
       });
     }
 
+    // Admin accounts are NOT allowed through the public login.
+    // They must use POST /admin/login with the adminSecret key.
+    if (user.role === "admin") {
+      return ApiResponse.error(res, {
+        message: "Invalid email or password",  // intentionally vague
+        statusCode: 401,
+      });
+    }
+
     const token = jwt.sign(
       { userId: user._id.toString(), role: user.role },
       process.env.JWT_SECRET as string,
-      {
-        expiresIn: process.env.JWT_EXPIRY as SignOptions["expiresIn"],
-      }
+      { expiresIn: process.env.JWT_EXPIRY as SignOptions["expiresIn"] }
     );
 
-    // Remove password from response
-    const userObject = user.toJSON();
+    const userObject = user.toObject() as unknown as Record<string, unknown>;
+    delete userObject.password;
 
     return ApiResponse.success(res, {
       message: "Login successful",
@@ -100,14 +139,15 @@ export const loginUser = async (req: Request, res: Response) => {
     });
   } catch (error) {
     console.error("Login error:", error);
-    return ApiResponse.error(res, {
-      message: "Login failed",
-      statusCode: 500,
-    });
+    return ApiResponse.error(res, { message: "Login failed", statusCode: 500 });
   }
 };
 
-/* ================= LOGOUT ================= */
+
+
+
+
+
 export const logoutUser = async (_req: Request, res: Response) => {
   return ApiResponse.success(res, {
     message: "Logged out successfully",
@@ -115,7 +155,10 @@ export const logoutUser = async (_req: Request, res: Response) => {
   });
 };
 
-/* ================= GET CURRENT USER ================= */
+
+
+
+
 export const getCurrentUser = async (req: AuthRequest, res: Response) => {
   try {
     if (!req.user?.userId) {
@@ -147,7 +190,11 @@ export const getCurrentUser = async (req: AuthRequest, res: Response) => {
   }
 };
 
-/* ================= REFRESH TOKEN ================= */
+
+
+
+
+
 export const refreshToken = async (req: Request, res: Response) => {
   try {
     const { refreshToken } = req.body;
@@ -185,7 +232,11 @@ export const refreshToken = async (req: Request, res: Response) => {
   }
 };
 
-/* ================= GET PUBLIC USER PROFILE ================= */
+
+
+
+
+
 export const getUserProfile = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
@@ -212,7 +263,9 @@ export const getUserProfile = async (req: Request, res: Response) => {
   }
 };
 
-/* ================= UPDATE OWN PROFILE ================= */
+
+
+
 export const updateProfile = async (req: AuthRequest, res: Response) => {
   try {
     const userId = req.user?.userId;
@@ -251,7 +304,9 @@ export const updateProfile = async (req: AuthRequest, res: Response) => {
   }
 };
 
-/* ================= CHANGE PASSWORD ================= */
+
+
+
 export const changePassword = async (req: AuthRequest, res: Response) => {
   try {
     const userId = req.user?.userId;
@@ -304,7 +359,9 @@ export const changePassword = async (req: AuthRequest, res: Response) => {
   }
 };
 
-/* ================= GET USER STATS ================= */
+
+
+
 export const getUserStats = async (req: AuthRequest, res: Response) => {
   try {
     const userId = req.user?.userId;
@@ -331,7 +388,11 @@ export const getUserStats = async (req: AuthRequest, res: Response) => {
   }
 };
 
-/* ================= GET USER UPLOADS ================= */
+
+
+
+
+
 export const getUserUploads = async (req: AuthRequest, res: Response) => {
   try {
     const userId = req.user?.userId;

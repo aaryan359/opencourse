@@ -1,215 +1,320 @@
-"use client";
-
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Github, Mail, User, Loader2, Eye, EyeOff, CheckCircle2 } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import type { FormEvent } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { Eye, EyeOff } from "lucide-react";
 import { toast } from "react-toastify";
-import GlowCard from "../../components/ui/GlowCard";
-import Button from "../../components/ui/Button";
-import Container from "../../components/ui/Container";
 import { useAuthStore } from "../../store/auth.store";
+import type { Testimonial } from "../../components/ui/sign-in";
+
+const sampleTestimonials: Testimonial[] = [
+  {
+    avatarSrc: "https://randomuser.me/api/portraits/women/33.jpg",
+    name: "Nina Patel",
+    handle: "@ninabuilds",
+    text: "OpenCourse helped me move from beginner to shipping real projects with confidence.",
+  },
+  {
+    avatarSrc: "https://randomuser.me/api/portraits/men/22.jpg",
+    name: "Kevin Ross",
+    handle: "@kevincodes",
+    text: "Clear learning paths, great contributors, and a community that actually helps.",
+  },
+  {
+    avatarSrc: "https://randomuser.me/api/portraits/women/71.jpg",
+    name: "Ava Williams",
+    handle: "@avafrontend",
+    text: "I joined for interview prep and stayed for the quality content across domains.",
+  },
+];
 
 export default function Register() {
-  const { register, loading, error } = useAuthStore();
   const navigate = useNavigate();
+  const { register } = useAuthStore();
 
-  const [form, setForm] = useState({
-    username: "",
-    email: "",
-    password: "",
-    firstName: "",
-    lastName: "",
-  });
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  const update = (key: string, value: string) =>
-    setForm((p) => ({ ...p, [key]: value }));
+  const handleRegister = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
 
-  const submit = async () => {
-    if (!form.username || !form.email || !form.password) {
+    const firstName = String(formData.get("firstName") || "").trim();
+    const lastName = String(formData.get("lastName") || "").trim();
+    const username = String(formData.get("username") || "").trim();
+    const email = String(formData.get("email") || "").trim();
+    const title = String(formData.get("title") || "").trim();
+    const bio = String(formData.get("bio") || "").trim();
+    const avatar = String(formData.get("avatar") || "").trim();
+    const skillsInput = String(formData.get("skills") || "").trim();
+    const password = String(formData.get("password") || "");
+    const confirmPassword = String(formData.get("confirmPassword") || "");
+    const skills = skillsInput
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean);
+
+    if (!username || !email || !password) {
       toast.error("Username, email, and password are required.");
       return;
     }
-    if (form.password.length < 6) {
+
+    if (password.length < 6) {
       toast.error("Password must be at least 6 characters.");
       return;
     }
+
+    if (password !== confirmPassword) {
+      toast.error("Passwords do not match.");
+      return;
+    }
+
     try {
       await register({
-        username: form.username,
-        email: form.email,
-        password: form.password,
+        username,
+        email,
+        password,
         profile: {
-          firstName: form.firstName || undefined,
-          lastName: form.lastName || undefined,
+          firstName: firstName || undefined,
+          lastName: lastName || undefined,
+          title: title || undefined,
+          bio: bio || undefined,
+          avatar: avatar || undefined,
+          skills: skills.length ? skills : undefined,
         },
       });
       toast.success("Account created! Welcome to OpenCourse.");
       navigate("/");
-    } catch {
-      toast.error(error || "Registration failed. Please try again.");
+    } catch (error: any) {
+      toast.error(error?.message || "Registration failed. Please try again.");
     }
   };
 
   return (
-    <section className="min-h-screen bg-[#050506] flex items-center py-12 relative overflow-hidden">
-      {/* Background gradient */}
-      <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,#0a0a0f_0%,#050506_50%,#020203_100%)]" />
-      <motion.div
-        className="fixed -top-[30%] right-[20%] w-[500px] h-[500px] rounded-full bg-gradient-to-br from-[#5E6AD2]/15 to-transparent blur-[100px]"
-        animate={{ x: [0, -20, 0], y: [0, 10, 0] }}
-        transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
-      />
-      <Container className="max-w-xl relative z-10">
-        <GlowCard accent="indigo">
-          <div className="space-y-6">
-            {/* Header */}
-            <header className="space-y-2">
-              <h1 className="text-3xl font-semibold text-white">
-                Join OpenCourse
-              </h1>
-              <p className="text-[#8A8F98] text-sm">
-                Create an account to contribute videos, interview questions, and help learners worldwide.
-              </p>
-            </header>
+    <div className="h-dvh flex flex-col md:flex-row w-dvw bg-[#050506] text-white">
+      <section className="flex-1 flex items-center justify-center p-8">
+        <div className="w-full max-w-md">
+          <div className="flex flex-col gap-6">
+            <h1 className="animate-element animate-delay-100 text-4xl md:text-5xl font-semibold leading-tight">
+              Create Account
+            </h1>
+            <p className="animate-element animate-delay-200 text-neutral-400">
+              Join OpenCourse and start contributing, learning, and tracking your progress.
+            </p>
 
-            {/* OAuth */}
-            <div className="grid grid-cols-2 gap-3">
-              <OAuthButton icon={<Mail />} label="Google" />
-              <OAuthButton icon={<Github />} label="GitHub" />
-            </div>
+            <form className="space-y-5" onSubmit={handleRegister}>
+              <div className="animate-element animate-delay-300 grid grid-cols-2 gap-3">
+                <InputField name="firstName" type="text" label="First Name" placeholder="John" />
+                <InputField name="lastName" type="text" label="Last Name" placeholder="Doe" />
+              </div>
 
-            <div className="flex items-center gap-3 text-neutral-500 text-xs">
-              <div className="h-px flex-1 bg-neutral-800" />
-              or continue with details
-              <div className="h-px flex-1 bg-neutral-800" />
-            </div>
+              <InputField
+                name="username"
+                type="text"
+                label="Username"
+                placeholder="Choose a username"
+                delayClass="animate-delay-400"
+              />
 
-            {/* Form */}
-            <AnimatePresence>
-              <motion.div
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -12 }}
-                transition={{ duration: 0.35 }}
-                className="space-y-4"
+              <InputField
+                name="email"
+                type="email"
+                label="Email Address"
+                placeholder="Enter your email address"
+                delayClass="animate-delay-500"
+              />
+
+              <InputField
+                name="title"
+                type="text"
+                label="Contributor Title"
+                placeholder="Frontend Engineer, Data Analyst, etc."
+                delayClass="animate-delay-600"
+              />
+
+              <InputField
+                name="skills"
+                type="text"
+                label="Skills (comma separated)"
+                placeholder="React, Node.js, System Design"
+                delayClass="animate-delay-700"
+              />
+
+              <InputField
+                name="avatar"
+                type="url"
+                label="Avatar URL (optional)"
+                placeholder="https://..."
+                delayClass="animate-delay-800"
+              />
+
+              <TextAreaField
+                name="bio"
+                label="Short Bio"
+                placeholder="Tell learners what you contribute and your experience."
+                delayClass="animate-delay-900"
+              />
+
+              <PasswordField
+                name="password"
+                label="Password"
+                placeholder="Create your password"
+                show={showPassword}
+                setShow={setShowPassword}
+                delayClass="animate-delay-600"
+              />
+
+              <PasswordField
+                name="confirmPassword"
+                label="Confirm Password"
+                placeholder="Re-enter your password"
+                show={showConfirmPassword}
+                setShow={setShowConfirmPassword}
+                delayClass="animate-delay-700"
+              />
+
+              <button
+                type="submit"
+                className="animate-element animate-delay-800 w-full rounded-2xl bg-violet-600 py-4 font-medium text-white hover:bg-violet-500 transition-colors"
               >
-                <div className="grid grid-cols-2 gap-3">
-                  <Input
-                    icon={<User className="w-4 h-4" />}
-                    placeholder="First name"
-                    value={form.firstName}
-                    onChange={(e: any) => update("firstName", e.target.value)}
-                  />
-                  <Input
-                    icon={<User className="w-4 h-4" />}
-                    placeholder="Last name"
-                    value={form.lastName}
-                    onChange={(e: any) => update("lastName", e.target.value)}
-                  />
-                </div>
+                Create Account
+              </button>
+            </form>
 
-                <Input
-                  icon={<User className="w-4 h-4" />}
-                  placeholder="Username (required)"
-                  value={form.username}
-                  onChange={(e: any) => update("username", e.target.value)}
-                />
-
-                <Input
-                  icon={<Mail className="w-4 h-4" />}
-                  placeholder="Email address (required)"
-                  type="email"
-                  value={form.email}
-                  onChange={(e: any) => update("email", e.target.value)}
-                />
-
-                <div className="relative">
-                  <Input
-                    icon={<User className="w-4 h-4" />}
-                    placeholder="Password (min 6 chars, required)"
-                    type={showPassword ? "text" : "password"}
-                    value={form.password}
-                    onChange={(e: any) => update("password", e.target.value)}
-                    onKeyDown={(e: any) => e.key === "Enter" && submit()}
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-200 transition-colors"
-                  >
-                    {showPassword ? (
-                      <EyeOff className="w-4 h-4" />
-                    ) : (
-                      <Eye className="w-4 h-4" />
-                    )}
-                  </button>
-                </div>
-
-                {error && (
-                  <p className="text-sm text-red-400 bg-red-500/10 border border-red-500/20 rounded-lg px-3 py-2">
-                    {error}
-                  </p>
-                )}
-
-                <div className="rounded-lg bg-neutral-900 border border-neutral-800 p-3 text-xs text-neutral-400">
-                  <CheckCircle2 className="inline w-4 h-4 text-emerald-400 mr-1" />
-                  Your account will be available immediately. Most contributors
-                  are approved instantly.
-                </div>
-
-                <Button
-                  loading={loading}
-                  className="w-full"
-                  onClick={submit}
-                  disabled={!form.username || !form.email || !form.password || loading}
-                >
-                  {loading ? (
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                  ) : (
-                    "Create Account"
-                  )}
-                </Button>
-
-                <p className="text-xs text-neutral-500 text-center">
-                  Already have an account?{" "}
-                  <a href="/login" className="text-indigo-400 hover:underline">
-                    Sign In
-                  </a>
-                </p>
-              </motion.div>
-            </AnimatePresence>
+            <p className="animate-element animate-delay-900 text-center text-sm text-neutral-400">
+              Already have an account?{" "}
+              <Link to="/login" className="text-violet-400 hover:underline transition-colors">
+                Sign In
+              </Link>
+            </p>
           </div>
-        </GlowCard>
-      </Container>
-    </section>
+        </div>
+      </section>
+
+      <section className="hidden md:block flex-1 relative p-4">
+        <div
+          className="animate-slide-right animate-delay-300 absolute inset-4 rounded-3xl bg-cover bg-center"
+          style={{
+            backgroundImage:
+              "url(https://images.unsplash.com/photo-1518770660439-4636190af475?w=2160&q=80)",
+          }}
+        ></div>
+
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-4 px-8 w-full justify-center">
+          <TestimonialCard testimonial={sampleTestimonials[0]} delay="animate-delay-1000" />
+          <div className="hidden xl:flex">
+            <TestimonialCard testimonial={sampleTestimonials[1]} delay="animate-delay-1200" />
+          </div>
+          <div className="hidden 2xl:flex">
+            <TestimonialCard testimonial={sampleTestimonials[2]} delay="animate-delay-1400" />
+          </div>
+        </div>
+      </section>
+    </div>
   );
 }
 
-function OAuthButton({ icon, label }: { icon: React.ReactNode; label: string }) {
+function InputField({
+  name,
+  label,
+  type,
+  placeholder,
+  delayClass,
+}: {
+  name: string;
+  label: string;
+  type: string;
+  placeholder: string;
+  delayClass?: string;
+}) {
   return (
-    <motion.button
-      whileHover={{ y: -1 }}
-      whileTap={{ scale: 0.98 }}
-      className="flex items-center justify-center gap-2 rounded-xl border border-white/[0.08] bg-white/[0.03] px-4 py-2.5 text-sm text-[#EDEDEF] hover:bg-white/[0.06] hover:border-white/[0.12] transition-all"
-    >
-      {icon}
-      {label}
-    </motion.button>
+    <div className={`animate-element ${delayClass || ""}`}>
+      <label className="text-sm font-medium text-neutral-400">{label}</label>
+      <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm transition-colors focus-within:border-violet-400/70 focus-within:bg-violet-500/10">
+        <input
+          name={name}
+          type={type}
+          placeholder={placeholder}
+          className="w-full bg-transparent text-sm p-4 rounded-2xl focus:outline-none"
+        />
+      </div>
+    </div>
   );
 }
 
-function Input({ icon, ...props }: any) {
+function PasswordField({
+  name,
+  label,
+  placeholder,
+  show,
+  setShow,
+  delayClass,
+}: {
+  name: string;
+  label: string;
+  placeholder: string;
+  show: boolean;
+  setShow: (value: boolean) => void;
+  delayClass?: string;
+}) {
   return (
-    <div className="relative">
-      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[#8A8F98]">
-        {icon}
-      </span>
-      <input
-        {...props}
-        className="w-full rounded-xl bg-[#0f0f12] border border-white/[0.08] pl-10 pr-3 py-3 text-sm text-white placeholder-[#8A8F98] focus:outline-none focus:border-[#5E6AD2]/50 focus:ring-2 focus:ring-[#5E6AD2]/20 transition-all"
-      />
+    <div className={`animate-element ${delayClass || ""}`}>
+      <label className="text-sm font-medium text-neutral-400">{label}</label>
+      <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm transition-colors focus-within:border-violet-400/70 focus-within:bg-violet-500/10">
+        <div className="relative">
+          <input
+            name={name}
+            type={show ? "text" : "password"}
+            placeholder={placeholder}
+            className="w-full bg-transparent text-sm p-4 pr-12 rounded-2xl focus:outline-none"
+          />
+          <button type="button" onClick={() => setShow(!show)} className="absolute inset-y-0 right-3 flex items-center">
+            {show ? (
+              <EyeOff className="w-5 h-5 text-neutral-400 hover:text-white transition-colors" />
+            ) : (
+              <Eye className="w-5 h-5 text-neutral-400 hover:text-white transition-colors" />
+            )}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function TestimonialCard({ testimonial, delay }: { testimonial: Testimonial; delay: string }) {
+  return (
+    <div className={`animate-testimonial ${delay} flex items-start gap-3 rounded-3xl bg-white/15 backdrop-blur-xl border border-white/10 p-5 w-64`}>
+      <img src={testimonial.avatarSrc} className="h-10 w-10 object-cover rounded-2xl" alt="avatar" />
+      <div className="text-sm leading-snug">
+        <p className="flex items-center gap-1 font-medium text-white">{testimonial.name}</p>
+        <p className="text-neutral-300">{testimonial.handle}</p>
+        <p className="mt-1 text-neutral-200">{testimonial.text}</p>
+      </div>
+    </div>
+  );
+}
+
+function TextAreaField({
+  name,
+  label,
+  placeholder,
+  delayClass,
+}: {
+  name: string;
+  label: string;
+  placeholder: string;
+  delayClass?: string;
+}) {
+  return (
+    <div className={`animate-element ${delayClass || ""}`}>
+      <label className="text-sm font-medium text-neutral-400">{label}</label>
+      <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm transition-colors focus-within:border-violet-400/70 focus-within:bg-violet-500/10">
+        <textarea
+          name={name}
+          rows={3}
+          placeholder={placeholder}
+          className="w-full bg-transparent text-sm p-4 rounded-2xl resize-none focus:outline-none"
+        />
+      </div>
     </div>
   );
 }

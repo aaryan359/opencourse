@@ -1,176 +1,217 @@
-// ============================================
-// FILE: CourseOverviewPage.tsx
-// ============================================
-import { useState, useEffect } from 'react';
-import { Link, useParams, useNavigate } from 'react-router-dom';
-import { ArrowRight, Star, BookOpen, TrendingUp, Target, CheckCircle2, Play, Loader2 } from 'lucide-react';
-import { BackgroundEffects } from '../../components/ui/BackgroundEffects';
-import { coursesApi, topicsApi } from '../../api/courses.api';
+import { useState, useEffect } from "react";
+import { useParams, Link } from "react-router-dom";
+import { publicApi } from "../../api/public.api";
+
+// ─── Constants ────────────────────────────────────────────────────────────────
+const C = {
+  bg: "#02020a",
+  card: "rgba(255,255,255,0.025)",
+  border: "rgba(255,255,255,0.07)",
+  accent: "#5E6AD2",
+  purple: "#8B5CF6",
+  text: "#ededef",
+  sub: "#6b7280",
+  faint: "#4b5563",
+  green: "#10b981",
+  videoBg: "rgba(255,255,255,0.015)"
+};
 
 export default function CourseOverviewPage() {
-  const { fieldSlug, courseSlug } = useParams<{ fieldSlug: string; courseSlug: string }>();
-  const navigate = useNavigate();
+  const { courseSlug } = useParams<{ courseSlug: string }>();
+
   const [course, setCourse] = useState<any>(null);
   const [topics, setTopics] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
 
+  // Expanded topic state
+  const [expandedTopic, setExpandedTopic] = useState<string | null>(null);
+  // Videos loaded per topic: { [topicId]: videoList }
+  const [topicVideos, setTopicVideos] = useState<Record<string, any[]>>({});
+  const [loadingVideos, setLoadingVideos] = useState<string | null>(null);
+
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  // 1. Fetch Course by Slug
   useEffect(() => {
     if (!courseSlug) return;
     setLoading(true);
-    coursesApi.getCourseBySlug(courseSlug)
-      .then((res) => {
+
+    publicApi.getCourseBySlug(courseSlug)
+      .then(res => {
         const c = res.data?.data;
-        if (!c) { setError('Course not found'); return; }
+        if (!c) throw new Error("Course not found");
         setCourse(c);
-        return topicsApi.listTopicsByCourse(c._id);
+        // 2. Fetch Topics for Course
+        return publicApi.listTopics(c._id);
       })
-      .then((topicsRes) => { if (topicsRes) setTopics(topicsRes.data?.data ?? []); })
-      .catch(() => setError('Failed to load course details.'))
+      .then(res => setTopics(res.data?.data || []))
+      .catch(err => setError(err?.response?.data?.message || err.message || "Failed to load course"))
       .finally(() => setLoading(false));
   }, [courseSlug]);
 
-  if (loading) return (
-    <div className="min-h-screen bg-[#050506] flex items-center justify-center">
-      <Loader2 className="w-8 h-8 animate-spin text-[#5E6AD2]" />
-    </div>
-  );
+  // Expand topic & load videos
+  const toggleTopic = async (topicId: string) => {
+    if (expandedTopic === topicId) {
+      setExpandedTopic(null);
+      return;
+    }
 
-  if (error || !course) return (
-    <div className="min-h-screen bg-[#050506] text-white flex items-center justify-center">
-      <div className="text-center">
-        <p className="text-[#8A8F98] mb-4">{error || 'Course not found'}</p>
-        <Link to={`/courses/${fieldSlug}`} className="text-[#5E6AD2] underline">Back to courses</Link>
-      </div>
-    </div>
-  );
+    setExpandedTopic(topicId);
 
-  return (
-    <div className="min-h-screen bg-[#050506] text-[#EDEDEF] relative overflow-hidden">
-      <BackgroundEffects />
-
-      <div className="relative z-10 container mx-auto px-6 py-20 max-w-5xl">
-        {/* Back Button */}
-        <Link to={`/courses/${fieldSlug}`} className="flex items-center gap-2 text-[#8A8F98] hover:text-white transition-colors mb-8 group">
-          <ArrowRight className="w-4 h-4 rotate-180 group-hover:-translate-x-1 transition-transform" />
-          <span>Back to courses</span>
-        </Link>
-
-        {/* Header */}
-        <div className="mb-12">
-          <h1 className="text-6xl font-semibold tracking-tight leading-tight bg-gradient-to-b from-white via-white/95 to-white/70 bg-clip-text text-transparent mb-6">
-            {course.title}
-          </h1>
-          <p className="text-xl text-[#8A8F98] leading-relaxed max-w-3xl">{course.description}</p>
-
-          {/* Meta Stats */}
-          <div className="flex flex-wrap gap-6 mt-8 text-sm">
-            <StatCard icon={<TrendingUp className="w-5 h-5 text-green-400" />} value={course.level} label="Level" color="green" />
-            <StatCard icon={<BookOpen className="w-5 h-5 text-purple-400" />} value={`${topics.length} Topics`} label="Comprehensive" color="purple" />
-          </div>
-        </div>
-
-        {/* Enroll CTA */}
-        <button
-          onClick={() => navigate(`/courses/${fieldSlug}/${courseSlug}/learn`)}
-          className="w-full sm:w-auto group relative px-8 py-4 rounded-xl bg-[#5E6AD2] text-white font-semibold text-lg shadow-[0_0_0_1px_rgba(94,106,210,0.5),0_8px_24px_rgba(94,106,210,0.4),inset_0_1px_0_0_rgba(255,255,255,0.2)] hover:bg-[#6872D9] transition-all duration-300 hover:shadow-[0_0_0_1px_rgba(94,106,210,0.6),0_12px_32px_rgba(94,106,210,0.5)] hover:-translate-y-0.5 active:translate-y-0 mb-16"
-        >
-          <span className="flex items-center justify-center gap-2">
-            Start Learning
-            <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-          </span>
-        </button>
-
-        {/* Content Grid */}
-        <div className="grid lg:grid-cols-3 gap-8">
-          {/* Left Column */}
-          <div className="lg:col-span-2 space-y-8">
-            {/* Course Modules / Topics */}
-            <section className="rounded-2xl border border-white/[0.06] bg-gradient-to-b from-white/[0.08] to-white/[0.02] p-8">
-              <div className="flex items-center gap-3 mb-6">
-                <BookOpen className="w-6 h-6 text-[#5E6AD2]" />
-                <h2 className="text-2xl font-semibold">Course Topics</h2>
-              </div>
-              {topics.length === 0 ? (
-                <p className="text-[#8A8F98] text-sm">No topics added yet. Check back soon!</p>
-              ) : (
-                <div className="space-y-3">
-                  {topics.map((topic, idx) => (
-                    <div key={topic._id} className="flex items-center justify-between p-4 rounded-xl bg-white/[0.03] border border-white/[0.06] hover:border-white/[0.12] hover:bg-white/[0.05] transition-all group cursor-pointer"
-                      onClick={() => navigate(`/courses/${fieldSlug}/${courseSlug}/learn`)}>
-                      <div className="flex items-center gap-4">
-                        <div className="w-8 h-8 rounded-lg bg-[#5E6AD2]/20 border border-[#5E6AD2]/30 flex items-center justify-center text-sm font-semibold text-[#5E6AD2]">
-                          {idx + 1}
-                        </div>
-                        <div>
-                          <h3 className="font-medium group-hover:text-white transition-colors">{topic.title}</h3>
-                        </div>
-                      </div>
-                      <Play className="w-5 h-5 text-[#8A8F98] group-hover:text-[#5E6AD2] transition-colors" />
-                    </div>
-                  ))}
-                </div>
-              )}
-            </section>
-
-            {/* Description */}
-            {course.description && (
-              <section className="rounded-2xl border border-white/[0.06] bg-gradient-to-b from-white/[0.08] to-white/[0.02] p-8">
-                <div className="flex items-center gap-3 mb-6">
-                  <Target className="w-6 h-6 text-[#5E6AD2]" />
-                  <h2 className="text-2xl font-semibold">About This Course</h2>
-                </div>
-                <p className="text-[#8A8F98] leading-relaxed">{course.description}</p>
-              </section>
-            )}
-          </div>
-
-          {/* Right Column */}
-          <div className="space-y-6">
-            <section className="rounded-2xl border border-white/[0.06] bg-gradient-to-b from-white/[0.08] to-white/[0.02] p-6 sticky top-6">
-              <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                <CheckCircle2 className="w-5 h-5 text-[#5E6AD2]" />
-                Course Info
-              </h3>
-              <ul className="space-y-3">
-                <li className="flex items-center gap-2 text-sm text-[#8A8F98]">
-                  <span className="text-[#5E6AD2]">•</span>
-                  <span>Level: <span className="text-white capitalize">{course.level}</span></span>
-                </li>
-                <li className="flex items-center gap-2 text-sm text-[#8A8F98]">
-                  <span className="text-[#5E6AD2]">•</span>
-                  <span>{topics.length} topics to explore</span>
-                </li>
-                <li className="flex items-center gap-2 text-sm text-[#8A8F98]">
-                  <span className="text-[#5E6AD2]">•</span>
-                  <span>Community-contributed videos</span>
-                </li>
-              </ul>
-            </section>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function StatCard({ icon, value, label, color }: { icon: React.ReactNode; value: string; label: string; color: string }) {
-  const gradients: Record<string, string> = {
-    yellow: 'from-yellow-500/20 to-yellow-600/10 border-yellow-500/30',
-    blue: 'from-blue-500/20 to-blue-600/10 border-blue-500/30',
-    purple: 'from-purple-500/20 to-purple-600/10 border-purple-500/30',
-    green: 'from-green-500/20 to-green-600/10 border-green-500/30',
+    // Load videos if not cached
+    if (!topicVideos[topicId]) {
+      setLoadingVideos(topicId);
+      try {
+        const res = await publicApi.listVideos(topicId);
+        // Only keep approved videos for public view
+        const approvedVideos = (res.data?.data || []).filter((v: any) => v.status === "approved");
+        setTopicVideos(prev => ({ ...prev, [topicId]: approvedVideos }));
+      } catch (err) {
+        console.error("Failed to load videos for topic", err);
+      } finally {
+        setLoadingVideos(null);
+      }
+    }
   };
 
+  if (loading) {
+    return <div style={{ minHeight: "100vh", background: C.bg, display: "flex", alignItems: "center", justifyContent: "center", color: C.sub }}>Loading course...</div>;
+  }
+
+  if (error || !course) {
+    return (
+      <div style={{ minHeight: "100vh", background: C.bg, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", color: C.text }}>
+        <h2 style={{ fontSize: 24, marginBottom: 16 }}>{error || "Course Not Found"}</h2>
+        <Link to="/courses" style={{ color: C.accent, textDecoration: "none", fontWeight: 600 }}>← Back to Catalog</Link>
+      </div>
+    );
+  }
+
   return (
-    <div className="flex items-center gap-2">
-      <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${gradients[color] ?? gradients.blue} border flex items-center justify-center`}>
-        {icon}
+    <div style={{ minHeight: "100vh", background: C.bg, color: C.text, fontFamily: "'Inter',system-ui,sans-serif", paddingBottom: 100 }}>
+
+      {/* ─── Hero Section ────────────────────────────────────────────────────── */}
+      <div style={{ position: "relative", padding: "80px 24px", borderBottom: `1px solid ${C.border}`, overflow: "hidden" }}>
+        {/* Background Blur */}
+        <div style={{ position: "absolute", top: -100, left: "20%", width: 600, height: 600, background: `linear-gradient(135deg, ${C.accent}20, ${C.purple}20)`, filter: "blur(100px)", borderRadius: "50%", zIndex: 0, opacity: 0.6 }} />
+
+        <div style={{ maxWidth: 1000, margin: "0 auto", position: "relative", zIndex: 1, display: "flex", gap: 40, flexWrap: "wrap", alignItems: "center" }}>
+
+          <div style={{ flex: "1 1 500px" }}>
+            <Link to="/courses" style={{ display: "inline-flex", alignItems: "center", gap: 8, color: C.sub, textDecoration: "none", fontSize: 14, fontWeight: 500, marginBottom: 24, transition: "color 0.2s" }} onMouseEnter={e => e.currentTarget.style.color = C.text} onMouseLeave={e => e.currentTarget.style.color = C.sub}>
+              <span style={{ fontSize: 18 }}>←</span> Course Catalog
+            </Link>
+
+            <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
+              <span style={{ padding: "4px 12px", background: "rgba(255,255,255,0.05)", borderRadius: 30, fontSize: 12, fontWeight: 600, color: C.accent, border: `1px solid ${C.accent}40`, textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                {course.field?.name || "General"}
+              </span>
+              <span style={{ padding: "4px 12px", background: course.level === "beginner" ? C.green + "18" : course.level === "advanced" ? C.purple + "18" : "#3B82F618", color: course.level === "beginner" ? C.green : course.level === "advanced" ? C.purple : "#3B82F6", borderRadius: 30, fontSize: 12, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                {course.level}
+              </span>
+            </div>
+
+            <h1 style={{ fontSize: 48, fontWeight: 800, margin: "0 0 20px", letterSpacing: "-0.03em", lineHeight: 1.1 }}>
+              {course.title}
+            </h1>
+
+            <p style={{ fontSize: 16, color: C.sub, lineHeight: 1.6, margin: "0 0 30px", maxWidth: 600 }}>
+              {course.description}
+            </p>
+
+            <div style={{ display: "flex", alignItems: "center", gap: 16, color: C.faint, fontSize: 14 }}>
+              <span>Created by <strong style={{ color: C.text }}>{course.createdBy?.username || "Community"}</strong></span>
+              <span>•</span>
+              <span>{topics.length} Topics</span>
+              <span>•</span>
+              <span>{new Date(course.createdAt).toLocaleDateString()}</span>
+            </div>
+          </div>
+
+          {course.thumbnail && (
+            <div style={{ flexShrink: 0, width: "100%", maxWidth: 400, borderRadius: 24, overflow: "hidden", border: `1px solid ${C.border}`, boxShadow: `0 30px 60px rgba(0,0,0,0.5)`, background: C.card }}>
+              <img src={course.thumbnail} alt={course.title} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", aspectRatio: "16/10" }} />
+            </div>
+          )}
+        </div>
       </div>
-      <div>
-        <div className="font-semibold text-white capitalize">{value}</div>
-        <div className="text-[#8A8F98] text-xs">{label}</div>
+
+      {/* ─── Syllabus / Topics ───────────────────────────────────────────────── */}
+      <div style={{ maxWidth: 800, margin: "0 auto", padding: "60px 24px" }}>
+        <h2 style={{ fontSize: 24, fontWeight: 700, margin: "0 0 30px", display: "flex", alignItems: "center", gap: 12 }}>
+          <span style={{ color: C.accent }}>●</span> Course Curriculum
+        </h2>
+
+        {topics.length === 0 ? (
+          <div style={{ padding: 40, textAlign: "center", background: C.card, borderRadius: 20, border: `1px solid ${C.border}`, color: C.sub }}>
+            No topics have been added to this course yet.
+          </div>
+        ) : (
+          <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+            {topics.map((topic, index) => (
+              <div key={topic._id} style={{ background: C.card, borderRadius: 20, border: `1px solid ${expandedTopic === topic._id ? C.accent + "60" : C.border}`, overflow: "hidden", transition: "all 0.3s" }}>
+
+                {/* Topic Header (Clickable) */}
+                <div
+                  onClick={() => toggleTopic(topic._id)}
+                  style={{ padding: "20px 24px", display: "flex", alignItems: "center", cursor: "pointer", background: expandedTopic === topic._id ? "rgba(94,106,210,0.05)" : "transparent", transition: "background 0.2s" }}
+                  onMouseEnter={e => e.currentTarget.style.background = expandedTopic === topic._id ? "rgba(94,106,210,0.05)" : "rgba(255,255,255,0.02)"}
+                  onMouseLeave={e => e.currentTarget.style.background = expandedTopic === topic._id ? "rgba(94,106,210,0.05)" : "transparent"}
+                >
+                  <div style={{ width: 36, height: 36, borderRadius: 10, background: expandedTopic === topic._id ? C.accent : "rgba(255,255,255,0.05)", color: expandedTopic === topic._id ? "#fff" : C.faint, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 700, flexShrink: 0, marginRight: 16, transition: "all 0.3s" }}>
+                    {index + 1}
+                  </div>
+                  <div style={{ flex: 1 }}>
+                    <h3 style={{ margin: 0, fontSize: 16, fontWeight: 600, color: expandedTopic === topic._id ? C.text : "#d1d5db", transition: "color 0.2s" }}>
+                      {topic.title}
+                    </h3>
+                    {topic.description && (
+                      <p style={{ margin: "4px 0 0", fontSize: 13, color: C.sub }}>{topic.description}</p>
+                    )}
+                  </div>
+                  <div style={{ width: 24, height: 24, borderRadius: "50%", background: "rgba(255,255,255,0.05)", display: "flex", alignItems: "center", justifyContent: "center", color: C.sub, transform: expandedTopic === topic._id ? "rotate(180deg)" : "rotate(0deg)", transition: "transform 0.3s" }}>
+                    ↓
+                  </div>
+                </div>
+
+                {/* Expanded Video List */}
+                {expandedTopic === topic._id && (
+                  <div style={{ borderTop: `1px solid ${C.border}`, background: C.videoBg, padding: 12 }}>
+                    {loadingVideos === topic._id ? (
+                      <div style={{ padding: 30, textAlign: "center", color: C.sub, fontSize: 13 }}>Loading videos...</div>
+                    ) : (topicVideos[topic._id] || []).length === 0 ? (
+                      <div style={{ padding: 30, textAlign: "center", color: C.faint, fontSize: 13 }}>
+                        No videos available for this topic yet.
+                      </div>
+                    ) : (
+                      <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                        {(topicVideos[topic._id] || []).map((video: any) => (
+                          <div key={video._id} style={{ display: "flex", alignItems: "center", gap: 16, padding: "12px 16px", borderRadius: 12, background: "rgba(255,255,255,0.02)", transition: "background 0.2s" }}>
+                            <div style={{ width: 40, height: 30, borderRadius: 6, background: "rgba(255,255,255,0.05)", display: "flex", alignItems: "center", justifyContent: "center", color: C.faint }}>
+                              ▶
+                            </div>
+                            <div style={{ flex: 1 }}>
+                              <h4 style={{ margin: 0, fontSize: 14, fontWeight: 500, color: C.text }}>{video.title}</h4>
+                              {video.description && <p style={{ margin: "2px 0 0", fontSize: 12, color: C.sub }}>{String(video.description).slice(0, 80)}</p>}
+                            </div>
+                            <div style={{ fontSize: 12, color: C.faint, background: "rgba(255,255,255,0.03)", padding: "4px 10px", borderRadius: 20 }}>
+                              By {video.uploadedBy?.username || "User"}
+                            </div>
+                            {/* NOTE: Right now, clicking watch does nothing because we don't have a video player page, 
+                                but later we can link it. For now, they just see the list. */}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )}
+
+              </div>
+            ))}
+          </div>
+        )}
       </div>
+
     </div>
   );
 }

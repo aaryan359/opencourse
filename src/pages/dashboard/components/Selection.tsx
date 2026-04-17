@@ -16,12 +16,12 @@ export default function Section({ title, children, contentClassName = "" }: Sect
 			{/* Horizontal Scroll Container */}
 			<div
 				className={`
-          overflow-x-auto
-          no-scrollbar
-          -mx-1
-          px-1
-          ${contentClassName}
-        `}>
+				overflow-x-auto
+				no-scrollbar
+				-mx-1
+				px-1
+				${contentClassName}
+				`}>
 				{children}
 			</div>
 		</section>

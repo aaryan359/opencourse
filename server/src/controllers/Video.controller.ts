@@ -5,7 +5,11 @@ import { Topic } from "../models/Topic";
 import { User } from "../models/User";
 import ApiResponse from "../utils/ApiResponse";
 
-/* ================= LIST VIDEOS BY COURSE (PUBLIC) ================= */
+
+
+
+
+
 export const listVideosByCourse = async (req: AuthRequest, res: Response) => {
   try {
     const { courseId } = req.params;

@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import Hero from "./sections/Hero";
-import Stats from "./sections/Stats"
 
 import Contributors from "./sections/Contributors";
 import CTA from "./sections/CTA";
@@ -21,19 +20,18 @@ export default function Home() {
 	return (
 		<>
 			<Hero />
-      <div className="flex flex-wrap mx-auto gap-8 p-20 max-w-7xl">
-        {fields.map((field: any) => (
+      <div className="mx-auto grid max-w-7xl grid-cols-1 gap-8 px-6 py-16 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        {fields.map((field: any, index: number) => (
           <Domains
             key={field._id}
             domain={{ name: field.name, contributors: field.courseCount ?? 0 }}
-            index={0}
+            index={index}
           />
         ))}
       </div>
 
      
 			
-			<Stats/>
 			<Interview />
 			<Contributors />
 			<CTA />

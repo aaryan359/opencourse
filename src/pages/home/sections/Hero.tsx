@@ -61,7 +61,7 @@ export default function Hero() {
 							</p>
 
 							<div className='mt-10 flex flex-wrap gap-4'>
-								<Button   onClick={() => navigate("/explore")} className='shadow-[0_0_45px_rgba(99,102,241,0.45)]'>Explore Courses</Button>
+								<Button   onClick={() => navigate("/courses")} className='shadow-[0_0_45px_rgba(99,102,241,0.45)]'>Browse Courses</Button>
 								<Button variant='secondary'>Become a Contributor</Button>
 							</div>
 

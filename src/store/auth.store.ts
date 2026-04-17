@@ -1,90 +1,77 @@
-import { create } from "zustand";
-import { authApi, type LoginPayload, type RegisterPayload } from "../api/auth.api";
+import { useMemo } from "react";
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
+import { authApi } from "../api/auth.api";
+import {
+  clearAuthError,
+  initializeAuth,
+  loginUserThunk,
+  logoutAuth,
+  registerUserThunk,
+} from "../redux/auth/auth.slice";
+import type { AuthUser, LoginPayload, RegisterPayload } from "../types";
 
-export interface AuthUser {
-  _id: string;
-  email: string;
-  username: string;
-  role: "student" | "instructor" | "admin" | "super_admin";
-  profile: {
-    firstName?: string;
-    lastName?: string;
-    avatar?: string;
-    bio?: string;
-    title?: string;
-  };
-}
-
-interface AuthState {
+type AuthStoreView = {
   user: AuthUser | null;
   token: string | null;
   loading: boolean;
   error: string | null;
-
   login: (payload: LoginPayload) => Promise<void>;
   register: (payload: RegisterPayload) => Promise<void>;
   logout: () => void;
   clearError: () => void;
   initFromStorage: () => void;
+};
+
+const identitySelector = (state: AuthStoreView) => state;
+
+// Compatibility hook that keeps existing component usage unchanged while using Redux.
+export function useAuthStore(): AuthStoreView;
+export function useAuthStore<T>(selector: (state: AuthStoreView) => T): T;
+export function useAuthStore<T>(selector?: (state: AuthStoreView) => T): T | AuthStoreView {
+  const dispatch = useAppDispatch();
+  const auth = useAppSelector((s) => s.auth);
+
+  const actions = useMemo(
+    () => ({
+      login: async (payload: LoginPayload) => {
+        try {
+          await dispatch(loginUserThunk(payload)).unwrap();
+        } catch (error: any) {
+          throw new Error(String(error || "Login failed."));
+        }
+      },
+      register: async (payload: RegisterPayload) => {
+        try {
+          await dispatch(registerUserThunk(payload)).unwrap();
+        } catch (error: any) {
+          throw new Error(String(error || "Registration failed."));
+        }
+      },
+      logout: () => {
+        void authApi.logout().catch(() => undefined);
+        dispatch(logoutAuth());
+      },
+      clearError: () => {
+        dispatch(clearAuthError());
+      },
+      initFromStorage: () => {
+        void dispatch(initializeAuth());
+      },
+    }),
+    [dispatch]
+  );
+
+  const storeView = useMemo<AuthStoreView>(
+    () => ({
+      user: auth.user,
+      token: auth.token,
+      loading: auth.loading,
+      error: auth.error,
+      ...actions,
+    }),
+    [auth.user, auth.token, auth.loading, auth.error, actions]
+  );
+
+  const safeSelector = (selector ?? identitySelector) as (state: AuthStoreView) => T;
+  return safeSelector(storeView);
 }
-
-export const useAuthStore = create<AuthState>((set) => ({
-  user: null,
-  token: null,
-  loading: false,
-  error: null,
-
-  initFromStorage: () => {
-    const token = localStorage.getItem("oc_token");
-    const raw = localStorage.getItem("oc_user");
-    if (token && raw) {
-      try {
-        const user = JSON.parse(raw);
-        set({ token, user });
-      } catch {
-        localStorage.removeItem("oc_token");
-        localStorage.removeItem("oc_user");
-      }
-    }
-  },
-
-  login: async (payload) => {
-    set({ loading: true, error: null });
-    try {
-      const res = await authApi.login(payload);
-      const { token, user } = res.data.data;
-      localStorage.setItem("oc_token", token);
-      localStorage.setItem("oc_user", JSON.stringify(user));
-      set({ token, user, loading: false });
-    } catch (err: any) {
-      const msg =
-        err.response?.data?.message || "Login failed. Please try again.";
-      set({ error: msg, loading: false });
-      throw new Error(msg);
-    }
-  },
-
-  register: async (payload) => {
-    set({ loading: true, error: null });
-    try {
-      const res = await authApi.register(payload);
-      const { token, user } = res.data.data;
-      localStorage.setItem("oc_token", token);
-      localStorage.setItem("oc_user", JSON.stringify(user));
-      set({ token, user, loading: false });
-    } catch (err: any) {
-      const msg =
-        err.response?.data?.message || "Registration failed. Please try again.";
-      set({ error: msg, loading: false });
-      throw new Error(msg);
-    }
-  },
-
-  logout: () => {
-    localStorage.removeItem("oc_token");
-    localStorage.removeItem("oc_user");
-    set({ user: null, token: null });
-  },
-
-  clearError: () => set({ error: null }),
-}));

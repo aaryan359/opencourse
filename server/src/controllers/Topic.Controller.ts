@@ -4,7 +4,10 @@ import { Topic } from "../models/Topic";
 import { Course } from "../models/Course";
 import ApiResponse from "../utils/ApiResponse";
 
-/* ================= LIST TOPICS BY COURSE (PUBLIC) ================= */
+
+
+
+
 export const listTopicsByCourse = async (req: AuthRequest, res: Response) => {
   try {
     const { courseId } = req.params;
@@ -35,7 +38,8 @@ export const listTopicsByCourse = async (req: AuthRequest, res: Response) => {
   }
 };
 
-/* ================= GET TOPIC BY ID (PUBLIC) ================= */
+
+
 export const getTopicById = async (req: AuthRequest, res: Response) => {
   try {
     const { id } = req.params;
@@ -62,7 +66,9 @@ export const getTopicById = async (req: AuthRequest, res: Response) => {
   }
 };
 
-/* ================= CREATE TOPIC (ADMIN/INSTRUCTOR) ================= */
+
+
+
 export const createTopic = async (req: AuthRequest, res: Response) => {
   try {
     const { courseId } = req.params;
@@ -106,7 +112,9 @@ export const createTopic = async (req: AuthRequest, res: Response) => {
   }
 };
 
-/* ================= UPDATE TOPIC (ADMIN/INSTRUCTOR) ================= */
+
+
+
 export const updateTopic = async (req: AuthRequest, res: Response) => {
   try {
     const { id } = req.params;
@@ -138,7 +146,9 @@ export const updateTopic = async (req: AuthRequest, res: Response) => {
   }
 };
 
-/* ================= DELETE TOPIC (ADMIN/INSTRUCTOR) ================= */
+
+
+
 export const deleteTopic = async (req: AuthRequest, res: Response) => {
   try {
     const { id } = req.params;
@@ -164,32 +174,4 @@ export const deleteTopic = async (req: AuthRequest, res: Response) => {
   }
 };
 
-/* ================= REORDER TOPICS (ADMIN/INSTRUCTOR) ================= */
-export const reorderTopics = async (req: AuthRequest, res: Response) => {
-  try {
-    const { topics } = req.body; // Array of { id, order }
 
-    if (!Array.isArray(topics) || topics.length === 0) {
-      return ApiResponse.error(res, {
-        message: "Topics array is required",
-        statusCode: 400,
-      });
-    }
-
-    const updatePromises = topics.map(({ id, order }) =>
-      Topic.findByIdAndUpdate(id, { order })
-    );
-
-    await Promise.all(updatePromises);
-
-    return ApiResponse.success(res, {
-      message: "Topics reordered successfully",
-    });
-  } catch (error) {
-    console.error("Reorder topics error:", error);
-    return ApiResponse.error(res, {
-      message: "Failed to reorder topics",
-      statusCode: 500,
-    });
-  }
-};

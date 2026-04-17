@@ -1,13 +1,11 @@
 import { Link, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import Container from "./ui/Container";
 import { useAuthStore } from "../store/auth.store";
 import { User, LogOut, ChevronDown, Menu, X } from "lucide-react";
 
 const NAV_ITEMS = [
 	{ label: "About", href: "/about" },
-	{ label: "Explore", href: "/explore" },
 	{ label: "Courses", href: "/courses" },
 	{ label: "Contribute", href: "/contribute" },
 	{ label: "Interview Prep", href: "/prep" },
@@ -52,7 +50,7 @@ export default function Header() {
 							alt='OpenCourse'
 							width={100}
 							height={110}
-							className="transition-transform group-hover:scale-105"
+							className="transition-transform duration-200 group-hover:scale-105"
 						/>
 					</Link>
 
@@ -83,38 +81,41 @@ export default function Header() {
 									<span className="text-sm text-[#EDEDEF] font-medium max-w-[100px] truncate">
 										{user.username}
 									</span>
-									<ChevronDown className={`w-4 h-4 text-[#8A8F98] transition-transform ${userMenuOpen ? "rotate-180" : ""}`} />
+									<ChevronDown className={`w-4 h-4 text-[#8A8F98] transition-transform duration-200 ${userMenuOpen ? "rotate-180" : ""}`} />
 								</button>
 
-								<AnimatePresence>
-									{userMenuOpen && (
-										<motion.div
-											initial={{ opacity: 0, y: 8, scale: 0.96 }}
-											animate={{ opacity: 1, y: 0, scale: 1 }}
-											exit={{ opacity: 0, y: 8, scale: 0.96 }}
-											transition={{ duration: 0.15 }}
-											className="absolute right-0 mt-2 w-48 rounded-xl bg-[#0a0a0c] border border-white/[0.08] shadow-xl shadow-black/30 overflow-hidden"
+								{userMenuOpen && (
+									<div
+										className="absolute right-0 mt-2 w-48 rounded-xl bg-[#0a0a0c] border border-white/[0.08] shadow-xl shadow-black/30 overflow-hidden"
+									>
+										<Link
+											to="/dashboard"
+											className="flex items-center gap-3 px-4 py-3 text-sm text-[#EDEDEF] hover:bg-white/[0.05] transition-colors"
 										>
+											<User className="w-4 h-4 text-[#8A8F98]" />
+											Dashboard
+										</Link>
+										{(user.role === "admin" || user.role === "super_admin") && (
 											<Link
-												to="/dashboard"
-												className="flex items-center gap-3 px-4 py-3 text-sm text-[#EDEDEF] hover:bg-white/[0.05] transition-colors"
+												to="/admin/contributions"
+												className="flex items-center gap-3 px-4 py-3 text-sm text-[#EDEDEF] hover:bg-white/[0.05] transition-colors border-t border-white/[0.06]"
 											>
 												<User className="w-4 h-4 text-[#8A8F98]" />
-												Dashboard
+												Admin Panel
 											</Link>
-											<button
-												onClick={() => {
-													logout();
-													setUserMenuOpen(false);
-												}}
-												className="flex items-center gap-3 w-full px-4 py-3 text-sm text-rose-400 hover:bg-rose-500/10 transition-colors border-t border-white/[0.06]"
-											>
-												<LogOut className="w-4 h-4" />
-												Sign Out
-											</button>
-										</motion.div>
-									)}
-								</AnimatePresence>
+										)}
+										<button
+											onClick={() => {
+												logout();
+												setUserMenuOpen(false);
+											}}
+											className="flex items-center gap-3 w-full px-4 py-3 text-sm text-rose-400 hover:bg-rose-500/10 transition-colors border-t border-white/[0.06]"
+										>
+											<LogOut className="w-4 h-4" />
+											Sign Out
+										</button>
+									</div>
+								)}
 							</div>
 						) : (
 							<>
@@ -149,62 +150,63 @@ export default function Header() {
 			</Container>
 
 			{/* Mobile Menu */}
-			<AnimatePresence>
-				{menuOpen && (
-					<motion.div
-						initial={{ opacity: 0, height: 0 }}
-						animate={{ opacity: 1, height: "auto" }}
-						exit={{ opacity: 0, height: 0 }}
-						transition={{ duration: 0.2 }}
-						className='md:hidden bg-[#050506]/95 backdrop-blur-xl border-t border-white/[0.06] overflow-hidden'>
-						<Container>
-							<div className='py-4 space-y-2'>
-								{NAV_ITEMS.map((item) => (
-									<MobileNavItem
-										key={item.href}
-										{...item}
-										active={location.pathname.startsWith(item.href)}
-									/>
-								))}
+			{menuOpen && (
+				<div className='md:hidden bg-[#050506]/95 backdrop-blur-xl border-t border-white/[0.06] overflow-hidden'>
+					<Container>
+						<div className='py-4 space-y-2'>
+							{NAV_ITEMS.map((item) => (
+								<MobileNavItem
+									key={item.href}
+									{...item}
+									active={location.pathname.startsWith(item.href)}
+								/>
+							))}
 
-								<div className="pt-4 mt-4 border-t border-white/[0.06] space-y-2">
-									{user ? (
-										<>
+							<div className="pt-4 mt-4 border-t border-white/[0.06] space-y-2">
+								{user ? (
+									<>
+										<Link
+											to="/dashboard"
+											className="block rounded-xl px-4 py-3 text-sm font-medium text-[#EDEDEF] bg-white/[0.03] hover:bg-white/[0.06] transition-colors"
+										>
+											Dashboard
+										</Link>
+										{(user.role === "admin" || user.role === "super_admin") && (
 											<Link
-												to="/dashboard"
+												to="/admin/contributions"
 												className="block rounded-xl px-4 py-3 text-sm font-medium text-[#EDEDEF] bg-white/[0.03] hover:bg-white/[0.06] transition-colors"
 											>
-												Dashboard
+												Admin Panel
 											</Link>
-											<button
-												onClick={logout}
-												className="w-full rounded-xl px-4 py-3 text-sm font-medium text-rose-400 bg-rose-500/10 hover:bg-rose-500/15 transition-colors text-left"
-											>
-												Sign Out
-											</button>
-										</>
-									) : (
-										<>
-											<Link
-												to="/login"
-												className="block rounded-xl px-4 py-3 text-sm font-medium text-[#EDEDEF] bg-white/[0.03] hover:bg-white/[0.06] transition-colors text-center"
-											>
-												Sign In
-											</Link>
-											<Link
-												to="/register"
-												className="block rounded-xl px-4 py-3 text-sm font-medium text-white bg-[#5E6AD2] hover:bg-[#6872D9] transition-colors text-center"
-											>
-												Get Started
-											</Link>
-										</>
-									)}
-								</div>
+										)}
+										<button
+											onClick={logout}
+											className="w-full rounded-xl px-4 py-3 text-sm font-medium text-rose-400 bg-rose-500/10 hover:bg-rose-500/15 transition-colors text-left"
+										>
+											Sign Out
+										</button>
+									</>
+								) : (
+									<>
+										<Link
+											to="/login"
+											className="block rounded-xl px-4 py-3 text-sm font-medium text-[#EDEDEF] bg-white/[0.03] hover:bg-white/[0.06] transition-colors text-center"
+										>
+											Sign In
+										</Link>
+										<Link
+											to="/register"
+											className="block rounded-xl px-4 py-3 text-sm font-medium text-white bg-[#5E6AD2] hover:bg-[#6872D9] transition-colors text-center"
+										>
+											Get Started
+										</Link>
+									</>
+								)}
 							</div>
-						</Container>
-					</motion.div>
-				)}
-			</AnimatePresence>
+						</div>
+					</Container>
+				</div>
+			)}
 		</header>
 	);
 }
@@ -224,8 +226,7 @@ function NavItem({ label, href, active }: { label: string; href: string; active?
 			`}>
 			{label}
 			{active && (
-				<motion.div
-					layoutId="nav-indicator"
+				<div
 					className="absolute bottom-0 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-[#5E6AD2]"
 				/>
 			)}

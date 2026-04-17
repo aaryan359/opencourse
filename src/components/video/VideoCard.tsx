@@ -1,4 +1,3 @@
-import { motion } from "framer-motion";
 import type { Video } from "../../types/videos.types";
 
 type VideoCardProps = {
@@ -8,9 +7,7 @@ type VideoCardProps = {
 
 export default function VideoCard({ video, onClick }: VideoCardProps) {
   return (
-    <motion.article
-      whileHover={{ y: -3 }}
-      transition={{ type: "spring", stiffness: 240, damping: 22 }}
+    <article
       onClick={onClick}
       tabIndex={0}
       role="button"
@@ -18,23 +15,20 @@ export default function VideoCard({ video, onClick }: VideoCardProps) {
       className="
         group relative cursor-pointer overflow-hidden
         rounded-2xl
-        border border-white/10
+        border border-white/10 hover:border-white/20
         bg-white/[0.025]
         backdrop-blur
-        transition-colors
-        hover:border-white/20
+        transition-colors duration-200
         focus-visible:outline-none
         focus-visible:ring-2 focus-visible:ring-indigo-500/40
       "
     >
       {/* ===== THUMBNAIL ===== */}
       <div className="relative aspect-video overflow-hidden">
-        <motion.img
+        <img
           src={video.thumbnail}
           alt={video.title}
-          className="h-full w-full object-cover"
-          whileHover={{ scale: 1.03 }}
-          transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+          className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-300"
         />
 
         {/* Gradient overlay (better depth than flat black) */}
@@ -42,22 +36,21 @@ export default function VideoCard({ video, onClick }: VideoCardProps) {
 
         {/* Play button */}
         <div className="absolute inset-0 flex items-center justify-center">
-          <motion.div
-            initial={{ scale: 0.9, opacity: 0 }}
-            whileHover={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.2 }}
+          <div
             className="
               flex h-14 w-14 items-center justify-center
               rounded-full
-              bg-black/60 backdrop-blur
+              bg-black/60 group-hover:bg-black/80 backdrop-blur
               ring-1 ring-white/20
               shadow-lg
+              transition-all duration-200
+              group-hover:scale-110
             "
           >
             <svg width="22" height="22" viewBox="0 0 24 24" fill="white">
               <path d="M8 5v14l11-7z" />
             </svg>
-          </motion.div>
+          </div>
         </div>
 
         {/* Duration */}
@@ -121,6 +114,6 @@ export default function VideoCard({ video, onClick }: VideoCardProps) {
           </div>
         </div>
       </div>
-    </motion.article>
+    </article>
   );
 }

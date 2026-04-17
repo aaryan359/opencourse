@@ -1,28 +1,20 @@
 import apiClient from "./client";
+import type { LoginPayload, RegisterPayload, AuthResponse } from "../types";
 
-export interface RegisterPayload {
-  email: string;
-  password: string;
-  username: string;
-  profile?: {
-    firstName?: string;
-    lastName?: string;
-  };
-}
-
-export interface LoginPayload {
-  email: string;
-  password: string;
-}
+type ApiEnvelope<T> = {
+  success: boolean;
+  message: string;
+  data: T;
+};
 
 export const authApi = {
   register: (payload: RegisterPayload) =>
-    apiClient.post("/auth/register", payload),
+    apiClient.post<ApiEnvelope<AuthResponse>>("/auth/register", payload),
 
   login: (payload: LoginPayload) =>
-    apiClient.post("/auth/login", payload),
+    apiClient.post<ApiEnvelope<AuthResponse>>("/auth/login", payload),
 
   logout: () => apiClient.post("/auth/logout"),
 
-  me: () => apiClient.get("/auth/me"),
+  me: () => apiClient.get<ApiEnvelope<any>>("/auth/me"),
 };

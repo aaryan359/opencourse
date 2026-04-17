@@ -2,17 +2,16 @@ import type { Response, NextFunction } from "express";
 import type { AuthRequest } from "../middlewares/auth.middleware";
 import ApiResponse from "../utils/ApiResponse";
 
-/* ================= ROLE AUTHORIZATION MIDDLEWARE ================= */
-
+/**
+ * Generic role guard — pass one or more allowed roles.
+ * Must come AFTER authMiddleware (which attaches req.user).
+ */
 export const requireRole = (...allowedRoles: string[]) => {
   return (req: AuthRequest, res: Response, next: NextFunction): void => {
     const userRole = req.user?.role;
 
     if (!userRole) {
-      ApiResponse.error(res, {
-        message: "User role not found",
-        statusCode: 403,
-      });
+      ApiResponse.error(res, { message: "Unauthorized", statusCode: 401 });
       return;
     }
 
@@ -28,14 +27,11 @@ export const requireRole = (...allowedRoles: string[]) => {
   };
 };
 
-/* ================= SPECIFIC ROLE MIDDLEWARES ================= */
+/** Only admin accounts */
+export const requireAdmin = requireRole("admin");
 
-export const requireAdmin = requireRole("admin", "super_admin");
+/** Contributors AND admins (admin can do anything a contributor can) */
+export const requireContributor = requireRole("contributor", "admin");
 
-export const requireInstructor = requireRole(
-  "instructor",
-  "admin",
-  "super_admin"
-);
-
-export const requireSuperAdmin = requireRole("super_admin");
+/** Alias kept for existing routes that use requireInstructor */
+export const requireInstructor = requireContributor;

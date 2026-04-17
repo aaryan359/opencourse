@@ -1,18 +1,25 @@
-// src/routes/ProtectedRoute.jsx
 import { Navigate, Outlet } from "react-router-dom";
-// import { isAuthenticated } from "../auth";
+import { useAuthStore } from "../store/auth.store";
+import type { UserRole } from "../types";
 
-let isAuthenticated = true;
+type ProtectedRouteProps = {
+  allowedRoles?: UserRole[];
+};
 
-const ProtectedRoute = () => {
-	return isAuthenticated ? (
-		<Outlet />
-	) : (
-		<Navigate
-			to='/login'
-			replace
-		/>
-	);
+const ProtectedRoute = ({ allowedRoles }: ProtectedRouteProps) => {
+  const user = useAuthStore((s) => s.user);
+  const token = useAuthStore((s) => s.token);
+  const isAuthenticated = Boolean(user && token);
+
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
+
+  if (allowedRoles && user && !allowedRoles.includes(user.role)) {
+    return <Navigate to="/dashboard" replace />;
+  }
+
+  return <Outlet />;
 };
 
 export default ProtectedRoute;

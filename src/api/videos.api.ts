@@ -7,17 +7,14 @@ export interface UploadVideoPayload {
 }
 
 export const videosApi = {
-  listByCourse: (courseId: string) =>
-    apiClient.get(`/courses/${courseId}/videos`),
+  listByCourse: (courseId: string) => apiClient.get(`/courses/${courseId}/videos`),
 
-  listByTopic: (topicId: string) =>
-    apiClient.get(`/topics/${topicId}/videos`),
+  listByTopic: (topicId: string) => apiClient.get(`/topics/${topicId}/videos`),
 
   getById: (id: string) => apiClient.get(`/videos/${id}`),
 
-  upload: (topicId: string, payload: UploadVideoPayload) =>
-    apiClient.post(`/topics/${topicId}/videos`, payload),
+  upload: (topicId: string, payload: UploadVideoPayload) => apiClient.post(`/topics/${topicId}/videos`, payload),
 
-  getUserVideos: (params?: Record<string, unknown>) =>
-    apiClient.get("/users/me/videos", { params }),
+  getUserVideos: (params?: Record<string, unknown>) => apiClient.get("/users/me/videos", { params }),
+
 };

@@ -4,13 +4,31 @@ import { InterviewQuestion } from "../models/InterviewQuestion";
 import type { IInterviewQuestion } from "../types/InterviewQuestion.type";
 import ApiResponse from "../utils/ApiResponse";
 import mongoose from "mongoose";
+import jwt from "jsonwebtoken";
 
-/* ================= SUBMIT (PUBLIC / AUTHENTICATED) ================= */
+
+
 export const submitInterviewQuestions = async (req: Request, res: Response) => {
   try {
     const { company, role, qaPairs, isAnonymous } = req.body;
     const authReq = req as AuthRequest;
-    const userId = authReq.user?.userId;
+
+    // Attach user when a valid bearer token is present; still allows anonymous/public submission.
+    let userId = authReq.user?.userId;
+    if (!userId) {
+      const authHeader = req.headers.authorization;
+      if (authHeader?.startsWith("Bearer ") && process.env.JWT_SECRET) {
+        const token = authHeader.split(" ")[1];
+        try {
+          const payload = jwt.verify(token, process.env.JWT_SECRET) as {
+            userId?: string;
+          };
+          userId = payload.userId;
+        } catch {
+          // ignore invalid token for this public endpoint
+        }
+      }
+    }
 
     if (!company || !role || !qaPairs || !Array.isArray(qaPairs) || qaPairs.length === 0) {
       return ApiResponse.error(res, {
@@ -61,7 +79,7 @@ export const submitInterviewQuestions = async (req: Request, res: Response) => {
   }
 };
 
-/* ================= LIST APPROVED (PUBLIC) ================= */
+
 export const listInterviewQuestions = async (req: Request, res: Response) => {
   try {
     const { company, role, difficulty, page = 1, limit = 20 } = req.query;
@@ -114,7 +132,10 @@ export const listInterviewQuestions = async (req: Request, res: Response) => {
   }
 };
 
-/* ================= GET DISTINCT COMPANIES (PUBLIC) ================= */
+
+
+
+
 export const getCompanies = async (_req: Request, res: Response) => {
   try {
     const companies = await InterviewQuestion.distinct("company", { status: "approved" });
@@ -124,7 +145,9 @@ export const getCompanies = async (_req: Request, res: Response) => {
   }
 };
 
-/* ================= GET DISTINCT ROLES (PUBLIC) ================= */
+
+
+
 export const getRoles = async (_req: Request, res: Response) => {
   try {
     const roles = await InterviewQuestion.distinct("role", { status: "approved" });
@@ -134,7 +157,7 @@ export const getRoles = async (_req: Request, res: Response) => {
   }
 };
 
-/* ================= GET BY ID (PUBLIC) ================= */
+
 export const getInterviewQuestionById = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
@@ -148,7 +171,9 @@ export const getInterviewQuestionById = async (req: Request, res: Response) => {
   }
 };
 
-/* ================= ADMIN: LIST PENDING ================= */
+
+
+
 export const getPendingInterviewQuestions = async (_req: Request, res: Response) => {
   try {
     const docs = await InterviewQuestion.find({ status: "pending" })
@@ -160,7 +185,49 @@ export const getPendingInterviewQuestions = async (_req: Request, res: Response)
   }
 };
 
-/* ================= ADMIN: APPROVE ================= */
+
+
+
+
+export const getAllInterviewQuestions = async (req: Request, res: Response) => {
+  try {
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 20;
+    const skip = (page - 1) * limit;
+    const status = req.query.status as string | undefined;
+
+    const filter: Record<string, unknown> = {};
+    if (status) {
+      filter.status = status;
+    }
+
+    const [docs, total] = await Promise.all([
+      InterviewQuestion.find(filter)
+        .populate("submittedBy", "username email role")
+        .populate("reviewedBy", "username")
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit),
+      InterviewQuestion.countDocuments(filter),
+    ]);
+
+    return ApiResponse.success(res, {
+      data: docs,
+      message: "Interview questions retrieved successfully",
+      meta: {
+        total,
+        page,
+        limit,
+        totalPages: Math.ceil(total / limit),
+      },
+    });
+  } catch {
+    return ApiResponse.error(res, { message: "Failed", statusCode: 500 });
+  }
+};
+
+
+
 export const approveInterviewQuestion = async (req: AuthRequest, res: Response) => {
   try {
     const { id } = req.params;
@@ -176,7 +243,9 @@ export const approveInterviewQuestion = async (req: AuthRequest, res: Response) 
   }
 };
 
-/* ================= ADMIN: REJECT ================= */
+
+
+
 export const rejectInterviewQuestion = async (req: AuthRequest, res: Response) => {
   try {
     const { id } = req.params;

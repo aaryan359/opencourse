@@ -1,10 +1,23 @@
 import type { Response } from "express";
 import type { AuthRequest } from "../middlewares/auth.middleware";
 import { Course } from "../models/Course";
-// import { Enrollment } from "../models/Enrollment.js";
+import { Field } from "../models/Field";
 import ApiResponse from "../utils/ApiResponse";
 
-/* ================= LIST ALL PUBLISHED COURSES (PUBLIC) ================= */
+export const listFields = async (req: AuthRequest, res: Response) => {
+  try {
+    const fields = await Field.find().sort({ name: 1 });
+    return ApiResponse.success(res, { data: fields });
+  } catch (error) {
+    console.error("List fields error:", error);
+    return ApiResponse.error(res, {
+      message: "Failed to retrieve fields",
+      statusCode: 500,
+    });
+  }
+};
+
+
 export const listCourses = async (req: AuthRequest, res: Response) => {
   try {
     const page = parseInt(req.query.page as string) || 1;
@@ -50,7 +63,10 @@ export const listCourses = async (req: AuthRequest, res: Response) => {
   }
 };
 
-/* ================= GET COURSE BY SLUG (PUBLIC) ================= */
+
+
+
+
 export const getCourseBySlug = async (req: AuthRequest, res: Response) => {
   try {
     const { slug } = req.params;
@@ -78,7 +94,11 @@ export const getCourseBySlug = async (req: AuthRequest, res: Response) => {
   }
 };
 
-/* ================= GET COURSES BY FIELD (PUBLIC) ================= */
+
+
+
+
+
 export const getCoursesByField = async (req: AuthRequest, res: Response) => {
   try {
     const { fieldSlug } = req.params;
@@ -110,7 +130,13 @@ export const getCoursesByField = async (req: AuthRequest, res: Response) => {
   }
 };
 
-/* ================= CREATE COURSE (ADMIN/INSTRUCTOR) ================= */
+
+
+
+
+
+
+
 export const createCourse = async (req: AuthRequest, res: Response) => {
   try {
     const { title, slug, description, field, level, thumbnail } = req.body;
@@ -156,7 +182,10 @@ export const createCourse = async (req: AuthRequest, res: Response) => {
   }
 };
 
-/* ================= UPDATE COURSE (ADMIN/INSTRUCTOR) ================= */
+
+
+
+
 export const updateCourse = async (req: AuthRequest, res: Response) => {
   try {
     const { id } = req.params;
@@ -187,7 +216,9 @@ export const updateCourse = async (req: AuthRequest, res: Response) => {
   }
 };
 
-/* ================= DELETE COURSE (ADMIN/INSTRUCTOR) ================= */
+
+
+
 export const deleteCourse = async (req: AuthRequest, res: Response) => {
   try {
     const { id } = req.params;
@@ -213,7 +244,10 @@ export const deleteCourse = async (req: AuthRequest, res: Response) => {
   }
 };
 
-/* ================= PUBLISH/UNPUBLISH COURSE (ADMIN/INSTRUCTOR) ================= */
+
+
+
+
 export const togglePublishCourse = async (req: AuthRequest, res: Response) => {
   try {
     const { id } = req.params;

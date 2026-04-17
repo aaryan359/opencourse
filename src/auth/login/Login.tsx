@@ -1,154 +1,64 @@
-"use client";
-
-import { useState } from "react";
-import { motion } from "framer-motion";
-import { Github, Mail, Loader2, Eye, EyeOff } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import GlowCard from "../../components/ui/GlowCard";
-import Button from "../../components/ui/Button";
-import Container from "../../components/ui/Container";
+import { SignInPage, type Testimonial } from "../../components/ui/sign-in";
 import { useAuthStore } from "../../store/auth.store";
+import type { FormEvent } from "react";
 
+const sampleTestimonials: Testimonial[] = [
+  {
+    avatarSrc: "https://randomuser.me/api/portraits/women/57.jpg",
+    name: "Sarah Chen",
+    handle: "@sarahdigital",
+    text: "Amazing platform! The user experience is seamless and the features are exactly what I needed.",
+  },
+  {
+    avatarSrc: "https://randomuser.me/api/portraits/men/64.jpg",
+    name: "Marcus Johnson",
+    handle: "@marcustech",
+    text: "This service has transformed how I work. Clean design, powerful features, and excellent support.",
+  },
+  {
+    avatarSrc: "https://randomuser.me/api/portraits/men/32.jpg",
+    name: "David Martinez",
+    handle: "@davidcreates",
+    text: "I've tried many platforms, but this one stands out. Intuitive, reliable, and genuinely helpful for productivity.",
+  },
+];
 
 export default function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-  const { login, loading, error } = useAuthStore();
   const navigate = useNavigate();
+  const { login } = useAuthStore();
 
-  const handleLogin = async () => {
+  const handleSignIn = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    const email = String(formData.get("email") || "").trim();
+    const password = String(formData.get("password") || "");
+
     if (!email || !password) {
       toast.error("Please enter your email and password.");
       return;
     }
+
     try {
       await login({ email, password });
       toast.success("Welcome back!");
       navigate("/");
-    } catch {
-      toast.error(error || "Login failed. Please try again.");
+    } catch (error: any) {
+      toast.error(error?.message || "Login failed. Please try again.");
     }
   };
 
   return (
-    <section className="min-h-screen bg-[#050506] flex items-center relative overflow-hidden">
-      {/* Background gradient */}
-      <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,#0a0a0f_0%,#050506_50%,#020203_100%)]" />
-      <motion.div
-        className="fixed -top-[30%] left-[20%] w-[500px] h-[500px] rounded-full bg-gradient-to-br from-[#5E6AD2]/15 to-transparent blur-[100px]"
-        animate={{ x: [0, 20, 0], y: [0, 10, 0] }}
-        transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
-      />
-      <Container className="max-w-md relative z-10">
-        <GlowCard accent="indigo">
-          <div className="space-y-6">
-            {/* Header */}
-            <header className="space-y-2">
-              <h1 className="text-3xl font-semibold text-white">
-                Welcome Back
-              </h1>
-              <p className="text-neutral-400 text-sm">
-                Sign in to contribute, manage courses, or upload interview
-                questions. Watching courses does not require login.
-              </p>
-            </header>
-
-            {/* OAuth Login */}
-            <div className="grid grid-cols-2 gap-3">
-              <OAuthButton icon={<Mail />} label="Google" />
-              <OAuthButton icon={<Github />} label="GitHub" />
-            </div>
-
-            <div className="flex items-center gap-3 text-neutral-500 text-xs">
-              <div className="h-px flex-1 bg-neutral-800" />
-              or continue with email
-              <div className="h-px flex-1 bg-neutral-800" />
-            </div>
-
-            {/* Email Login */}
-            <div className="space-y-4">
-              <Input
-                placeholder="Email address"
-                type="email"
-                value={email}
-                onChange={(e: any) => setEmail(e.target.value)}
-              />
-              <div className="relative">
-                <Input
-                  placeholder="Password"
-                  type={showPassword ? "text" : "password"}
-                  value={password}
-                  onChange={(e: any) => setPassword(e.target.value)}
-                  onKeyDown={(e: any) => e.key === "Enter" && handleLogin()}
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-200 transition-colors"
-                >
-                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                </button>
-              </div>
-
-              {error && (
-                <p className="text-sm text-red-400 bg-red-500/10 border border-red-500/20 rounded-lg px-3 py-2">
-                  {error}
-                </p>
-              )}
-
-              <Button
-                className="w-full"
-                onClick={handleLogin}
-                disabled={!email || !password || loading}
-              >
-                {loading ? (
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                ) : (
-                  "Sign In"
-                )}
-              </Button>
-            </div>
-
-            {/* Footer */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.3 }}
-              className="text-xs text-neutral-500"
-            >
-              New here?{" "}
-              <a href="/register" className="text-[#5E6AD2] hover:underline">
-                Create an account
-              </a>
-            </motion.div>
-          </div>
-        </GlowCard>
-      </Container>
-    </section>
-  );
-}
-
-
-function OAuthButton({ icon, label }: { icon: React.ReactNode; label: string }) {
-  return (
-    <motion.button
-      whileHover={{ y: -1 }}
-      whileTap={{ scale: 0.97 }}
-      className="flex items-center justify-center gap-2 rounded-lg border border-neutral-800 bg-neutral-900 px-4 py-2 text-sm text-neutral-200 hover:border-neutral-700"
-    >
-      {icon}
-      {label}
-    </motion.button>
-  );
-}
-
-function Input(props: any) {
-  return (
-    <input
-      {...props}
-      className="w-full rounded-xl bg-[#0f0f12] border border-white/[0.08] px-4 py-3 text-sm text-white placeholder-[#8A8F98] focus:outline-none focus:border-[#5E6AD2]/50 focus:ring-2 focus:ring-[#5E6AD2]/20 transition-all"
+    <SignInPage
+      title={<span className="font-light text-white tracking-tighter">Welcome Back</span>}
+      description="Sign in to continue learning, contributing, and tracking your progress."
+      heroImageSrc="https://images.unsplash.com/photo-1642615835477-d303d7dc9ee9?w=2160&q=80"
+      testimonials={sampleTestimonials}
+      onSignIn={handleSignIn}
+      onGoogleSignIn={() => toast.info("Google sign-in is not connected yet.")}
+      onResetPassword={() => toast.info("Password reset flow is not connected yet.")}
+      onCreateAccount={() => navigate("/register")}
     />
   );
 }

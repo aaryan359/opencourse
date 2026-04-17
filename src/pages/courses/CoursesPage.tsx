@@ -1,194 +1,175 @@
-import { Link } from 'react-router-dom';
-import { ArrowRight, Briefcase, Sparkles, TrendingUp, Users, CheckCircle, Award, Play, Code, MessageSquare, Rocket, Shield, Globe, Headphones, BookOpen, Loader2 } from 'lucide-react';
-import { useState, useRef, useEffect } from 'react';
-import { BackgroundEffects } from '../../components/ui/BackgroundEffects';
-import { MouseSpotlight } from '../../components/mouse/MouseTrack';
-import Button from '../../components/ui/Button';
-import { fieldsApi } from '../../api/courses.api';
+import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import { publicApi } from "../../api/public.api";
 
-
-// 3. Card Component with Mouse Tracking
-function TrackCard({ to, icon, title, description, gradient, count, features, stats }:any
-) {
-  const cardRef = useRef<HTMLDivElement>(null);
-  const [mousePosition, setMousePosition] = useState({ x: 50, y: 50 });
-  const [isHovering, setIsHovering] = useState(false);
-
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (!cardRef.current) return;
-    
-    const rect = cardRef.current.getBoundingClientRect();
-    setMousePosition({
-      x: ((e.clientX - rect.left) / rect.width) * 100,
-      y: ((e.clientY - rect.top) / rect.height) * 100
-    });
-  };
-
-  return (
-    <Link to={to} className="block">
-      <div
-        ref={cardRef}
-        className="group relative rounded-2xl bg-gradient-to-b from-white/[0.08] to-white/[0.02] border border-white/[0.06] p-8 transition-all duration-300 hover:-translate-y-1 overflow-hidden"
-        onMouseMove={handleMouseMove}
-        onMouseEnter={() => setIsHovering(true)}
-        onMouseLeave={() => setIsHovering(false)}
-        style={{
-          boxShadow: '0 0 0 1px rgba(255,255,255,0.06), 0 2px 20px rgba(0,0,0,0.4), 0 0 40px rgba(0,0,0,0.2)',
-        }}
-      >
-        {/* Mouse-tracking spotlight */}
-        <div 
-          className="absolute inset-0 pointer-events-none transition-opacity duration-300"
-          style={{
-            background: `radial-gradient(circle at ${mousePosition.x}% ${mousePosition.y}%, rgba(94,106,210,0.08) 0%, transparent 80%)`,
-            opacity: isHovering ? 1 : 0
-          }}
-        />
-        
-        {/* Icon */}
-        <div className={`w-16 h-16 rounded-xl ${gradient} border border-white/10 flex items-center justify-center mb-6 group-hover:scale-105 transition-transform duration-300`}>
-          {icon}
-        </div>
-        
-        {/* Content */}
-        <h3 className="text-2xl font-semibold mb-3 group-hover:text-white transition-colors">
-          {title}
-        </h3>
-        
-        <p className="text-[#8A8F98] mb-6 leading-relaxed">
-          {description}
-        </p>
-        
-        {/* Stats */}
-        {stats && (
-          <div className="grid grid-cols-2 gap-4 mb-6">
-            {stats.map((stat, index) => (
-              <div key={index} className="text-center">
-                <div className="text-2xl font-semibold text-white mb-1">{stat.value}</div>
-                <div className="text-xs text-[#8A8F98]">{stat.label}</div>
-              </div>
-            ))}
-          </div>
-        )}
-        
-        {/* Features */}
-        {features && (
-          <ul className="space-y-2 mb-6">
-            {features.map((feature, index) => (
-              <li key={index} className="flex items-center gap-3 text-sm text-[#8A8F98] group-hover:text-white/80 transition-colors">
-                <CheckCircle className="w-4 h-4 text-[#5E6AD2] flex-shrink-0" />
-                <span>{feature}</span>
-              </li>
-            ))}
-          </ul>
-        )}
-        
-        {/* Footer */}
-        <div className="flex items-center justify-between pt-6 border-t border-white/[0.06]">
-          <span className="text-sm text-[#5E6AD2] font-medium">{count}</span>
-           <Button    children={       <ArrowRight className="w-5 h-5 text-[#eeeff5] group-hover:translate-x-2 transition-transform duration-300" />}/>
-        </div>
-      </div>
-    </Link>
-  );
-}
-
-// 4. Stat Card Component
-function StatCard({ icon, value, label, gradient }:any) {
-  return (
-    <div className="group relative rounded-xl bg-gradient-to-b from-white/[0.06] to-white/[0.02] border border-white/[0.06] p-6 transition-all duration-300 hover:-translate-y-1">
-      <div className={`w-12 h-12 rounded-lg ${gradient} border border-white/10 flex items-center justify-center mb-4`}>
-        {icon}
-      </div>
-      <div className="text-3xl font-semibold text-white mb-2">{value}</div>
-      <div className="text-sm text-[#8A8F98]">{label}</div>
-    </div>
-  );
-}
-
-// 5. Feature Card Component
-function FeatureCard({ icon, title, description, gradient }) {
-  return (
-    <div className="group relative rounded-xl bg-gradient-to-b from-white/[0.06] to-white/[0.02] border border-white/[0.06] p-6 transition-all duration-300 hover:-translate-y-1">
-      <div className={`w-12 h-12 rounded-lg ${gradient} border border-white/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
-        {icon}
-      </div>
-      <h4 className="text-lg font-semibold text-white mb-3">{title}</h4>
-      <p className="text-sm text-[#8A8F98] leading-relaxed">{description}</p>
-    </div>
-  );
-}
-
-
-
-
-
-// Fallback gradient palette per field index
-const GRADIENTS = [
-  "bg-gradient-to-br from-[#5E6AD2]/30 via-purple-500/20 to-transparent",
-  "bg-gradient-to-br from-emerald-500/30 via-teal-500/20 to-transparent",
-  "bg-gradient-to-br from-pink-500/30 via-rose-500/20 to-transparent",
-  "bg-gradient-to-br from-cyan-500/30 via-blue-500/20 to-transparent",
-  "bg-gradient-to-br from-amber-500/30 via-orange-500/20 to-transparent",
-  "bg-gradient-to-br from-violet-500/30 via-purple-500/20 to-transparent",
-];
+// ─── Constants & Types ────────────────────────────────────────────────────────
+const C = {
+  bg: "#02020a",
+  card: "rgba(255,255,255,0.025)",
+  border: "rgba(255,255,255,0.07)",
+  accent: "#5E6AD2",
+  text: "#ededef",
+  sub: "#6b7280",
+  faint: "#4b5563",
+  green: "#10b981",
+  purple: "#8B5CF6",
+};
 
 export default function CoursesPage() {
   const [fields, setFields] = useState<any[]>([]);
+  const [courses, setCourses] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const [selectedField, setSelectedField] = useState<string | null>(null);
+  const [selectedLevel, setSelectedLevel] = useState<string | null>(null);
+
   useEffect(() => {
-    fieldsApi.listFields()
-      .then((res) => setFields(res.data?.data ?? []))
-      .catch(() => {})
-      .finally(() => setLoading(false));
+    // 1. Fetch fields
+    publicApi.listFields().then(res => setFields(res.data?.data || [])).catch(() => { });
   }, []);
 
+  useEffect(() => {
+    // 2. Fetch courses — with field & level filters
+    setLoading(true);
+    publicApi.listCourses({
+      field: selectedField || undefined,
+      level: selectedLevel || undefined,
+      limit: 100
+    })
+      .then(res => setCourses(res.data?.data || []))
+      .catch(() => { })
+      .finally(() => setLoading(false));
+  }, [selectedField, selectedLevel]);
+
   return (
-    <div className="min-h-screen bg-[#050506] text-[#EDEDEF] relative overflow-hidden">
-      <BackgroundEffects />
-      <MouseSpotlight />
-      
-      <div className="relative z-10">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-10 max-w-7xl">
-          {/* Header */}
-          <div className="max-w-4xl mx-auto text-center mb-16">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/[0.06] bg-white/[0.03] backdrop-blur-sm mb-8">
-              <Sparkles className="w-4 h-4 text-[#5E6AD2]" />
-              <span className="text-xs font-mono tracking-widest text-[#8A8F98] uppercase">Transform Your Career</span>
-            </div>
-            
-          </div>
+    <div style={{ minHeight: "100vh", background: C.bg, color: C.text, fontFamily: "'Inter',system-ui,sans-serif", padding: "40px 24px" }}>
+      <div style={{ maxWidth: 1100, margin: "0 auto" }}>
 
-        
-
-          {/* Fields / Learning Paths */}
-          <div className="max-w-6xl mx-auto">
-            
-
-            {loading ? (
-              <div className="flex justify-center py-20">
-                <Loader2 className="w-8 h-8 animate-spin text-[#5E6AD2]" />
-              </div>
-            ) : (
-              <div className="grid lg:grid-cols-2 gap-8 mb-20">
-                {fields.map((field, idx) => (
-                  <TrackCard
-                    key={field._id}
-                    to={`/courses/${field.slug}`}
-                    icon={<BookOpen className="w-8 h-8" />}
-                    title={field.name}
-                    description={field.description || `Explore ${field.name} courses and build real-world skills.`}
-                    gradient={GRADIENTS[idx % GRADIENTS.length]}
-                    count={`${field.slug}`}
-                  />
-                ))}
-              </div>
-            )}
-          </div>
-
-         
+        {/* Filter Bar */}
+        <div style={{ display: "flex", gap: 10, flexWrap: "wrap", justifyContent: "center", marginBottom: 16 }}>
+          <button
+            onClick={() => setSelectedField(null)}
+            style={{
+              padding: "10px 20px", borderRadius: 30, fontSize: 13, fontWeight: 600, cursor: "pointer", transition: "all 0.2s",
+              border: `1px solid ${selectedField === null ? C.accent : C.border}`,
+              background: selectedField === null ? C.accent : "rgba(255,255,255,0.03)",
+              color: selectedField === null ? "#fff" : C.text,
+            }}
+          >
+            All Fields
+          </button>
+          {fields.map(f => (
+            <button
+              key={f._id}
+              onClick={() => setSelectedField(f._id)}
+              style={{
+                padding: "10px 20px", borderRadius: 30, fontSize: 13, fontWeight: 600, cursor: "pointer", transition: "all 0.2s",
+                border: `1px solid ${selectedField === f._id ? C.accent : C.border}`,
+                background: selectedField === f._id ? C.accent : "rgba(255,255,255,0.03)",
+                color: selectedField === f._id ? "#fff" : C.text,
+              }}
+            >
+              {f.name}
+            </button>
+          ))}
         </div>
+
+        <div style={{ display: "flex", gap: 10, flexWrap: "wrap", justifyContent: "center", marginBottom: 30 }}>
+          <button
+            onClick={() => setSelectedLevel(null)}
+            style={{
+              padding: "8px 16px", borderRadius: 30, fontSize: 12, fontWeight: 600, cursor: "pointer", transition: "all 0.2s",
+              border: `1px solid ${selectedLevel === null ? C.purple : C.border}`,
+              background: selectedLevel === null ? C.purple : "rgba(255,255,255,0.02)",
+              color: selectedLevel === null ? "#fff" : C.sub,
+            }}
+          >
+            All Levels
+          </button>
+          {["beginner", "intermediate", "advanced"].map(lvl => (
+            <button
+              key={lvl}
+              onClick={() => setSelectedLevel(lvl)}
+              style={{
+                padding: "8px 16px", borderRadius: 30, fontSize: 12, fontWeight: 600, cursor: "pointer", transition: "all 0.2s", textTransform: "capitalize",
+                border: `1px solid ${selectedLevel === lvl ? C.purple : C.border}`,
+                background: selectedLevel === lvl ? C.purple : "rgba(255,255,255,0.02)",
+                color: selectedLevel === lvl ? "#fff" : C.sub,
+              }}
+            >
+              {lvl}
+            </button>
+          ))}
+        </div>
+
+        {/* Course Grid */}
+        {loading ? (
+          <div style={{ textAlign: "center", padding: "80px 0", color: C.sub, fontSize: 16 }}>Loading courses...</div>
+        ) : courses.length === 0 ? (
+          <div style={{ textAlign: "center", padding: "80px 0", color: C.sub, fontSize: 16 }}>
+            No courses found for this category.
+          </div>
+        ) : (
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: 24 }}>
+            {courses.map(course => (
+              <Link
+                key={course._id}
+                to={`/courses/${course.slug}`}
+                style={{
+                  display: "flex", flexDirection: "column", textDecoration: "none", color: "inherit",
+                  background: C.card, border: `1px solid ${C.border}`, borderRadius: 20, overflow: "hidden",
+                  transition: "transform 0.2s, box-shadow 0.2s, border-color 0.2s",
+                }}
+                onMouseEnter={e => {
+                  e.currentTarget.style.transform = "translateY(-4px)";
+                  e.currentTarget.style.borderColor = C.accent + "80";
+                  e.currentTarget.style.boxShadow = `0 12px 32px ${C.accent}20`;
+                }}
+                onMouseLeave={e => {
+                  e.currentTarget.style.transform = "none";
+                  e.currentTarget.style.borderColor = C.border;
+                  e.currentTarget.style.boxShadow = "none";
+                }}
+              >
+                <div style={{ height: 160, background: "rgba(255,255,255,0.02)", position: "relative" }}>
+                  {course.thumbnail ? (
+                    <img src={course.thumbnail} alt={course.title} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                  ) : (
+                    <div style={{ width: "100%", height: "100%", background: `linear-gradient(135deg, ${C.accent}40, ${C.purple}20)`, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                      <span style={{ fontSize: 40, opacity: 0.5 }}>📚</span>
+                    </div>
+                  )}
+                  {/* Level Badge Overlay */}
+                  <div style={{ position: "absolute", top: 12, right: 12, background: "rgba(0,0,0,0.6)", backdropFilter: "blur(4px)", padding: "4px 10px", borderRadius: 8, fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em", color: course.level === "beginner" ? C.green : course.level === "advanced" ? C.purple : "#3B82F6", border: "1px solid rgba(255,255,255,0.1)" }}>
+                    {course.level}
+                  </div>
+                </div>
+
+                <div style={{ padding: 24, display: "flex", flexDirection: "column", flex: 1 }}>
+                  <div style={{ fontSize: 11, color: C.accent, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 8 }}>
+                    {course.field?.name || "General"}
+                  </div>
+                  <h3 style={{ margin: "0 0 12px", fontSize: 18, fontWeight: 700, lineHeight: 1.4, color: "#fff" }}>
+                    {course.title}
+                  </h3>
+                  <p style={{ margin: 0, fontSize: 13, color: C.sub, lineHeight: 1.5, flex: 1, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
+                    {course.description}
+                  </p>
+
+                  <div style={{ marginTop: 24, paddingTop: 16, borderTop: `1px solid ${C.border}`, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                    <span style={{ fontSize: 12, color: C.faint, fontWeight: 500 }}>
+                      By {course.createdBy?.username || "Community"}
+                    </span>
+                    <span style={{ fontSize: 12, color: C.accent, fontWeight: 600, display: "flex", alignItems: "center", gap: 4 }}>
+                      Start Learning <span style={{ fontSize: 16 }}>→</span>
+                    </span>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        )}
+
       </div>
     </div>
   );

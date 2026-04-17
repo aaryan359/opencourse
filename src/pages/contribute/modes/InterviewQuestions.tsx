@@ -747,10 +747,10 @@ function SuccessStage({ company, role }: any) {
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            onClick={() => window.location.href = '/explore'}
+            onClick={() => window.location.href = '/courses'}
             className="px-6 py-3 rounded-xl bg-white/5 border border-white/10 text-[#EDEDEF] hover:bg-white/10 transition-all font-medium"
           >
-            Explore More
+            View Courses
           </motion.button>
           <motion.button
             whileHover={{ scale: 1.05 }}

@@ -1,5 +1,4 @@
 import clsx from "clsx";
-import { motion } from "framer-motion";
 
 type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   variant?: "primary" | "secondary" | "ghost" | "danger";
@@ -19,12 +18,9 @@ export default function Button({
   const isDisabled = disabled || loading;
 
   return (
-    <motion.button
+    <button
       {...(props as any)}
       disabled={isDisabled}
-      whileHover={!isDisabled ? { y: -2 } : undefined}
-      whileTap={!isDisabled ? { scale: 0.98 } : undefined}
-      transition={{ type: "spring", stiffness: 400, damping: 25 }}
       className={clsx(
         "relative group overflow-hidden inline-flex items-center justify-center gap-2",
         "font-semibold rounded-xl",
@@ -40,7 +36,7 @@ export default function Button({
         variant === "primary" && [
           "bg-[#5E6AD2] text-white",
           "shadow-[0_4px_20px_rgba(94,106,210,0.35)]",
-          !isDisabled && "hover:bg-[#6872D9] hover:shadow-[0_8px_30px_rgba(94,106,210,0.45)]",
+          !isDisabled && "hover:bg-[#6872D9] hover:shadow-[0_8px_30px_rgba(94,106,210,0.45)] active:scale-95",
         ],
 
         variant === "secondary" && [
@@ -86,6 +82,6 @@ export default function Button({
 
       {/* Content */}
       <span className="relative z-10">{children}</span>
-    </motion.button>
+    </button>
   );
 }
