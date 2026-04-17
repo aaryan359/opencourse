@@ -12,7 +12,7 @@ export default function Home() {
   const [fields, setFields] = useState<any[]>([]);
 
   useEffect(() => {
-    fieldsApi.listFields()
+    fieldsApi.getAllFields()
       .then((res: any) => setFields(res.data?.data ?? []))
       .catch(() => {});
   }, []);

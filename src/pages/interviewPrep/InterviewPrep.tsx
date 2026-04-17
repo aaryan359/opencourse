@@ -19,7 +19,7 @@ questiontype: "theory" | "practical";
 };
 
 export default function StartPrep() {
-const [showFilters, setShowFilters] = useState(true);
+const showFilters = true;
 const [search, setSearch] = useState("");
 const [questions, setQuestions] = useState<Question[]>([]);
 const [loading, setLoading] = useState(true);

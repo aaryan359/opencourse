@@ -8,7 +8,9 @@
     "build": "tsc",
     "start": "node dist/server.js",
     "dev": "nodemon --exec ts-node src/server.ts",
-    "lint": "eslint 'src/**/*.ts'"
+    "lint": "eslint 'src/**/*.ts'",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "format:check": "prettier --check \"src/**/*.ts\""
   },
   "dependencies": {
     "@types/cors": "^2.8.19",
@@ -27,6 +29,7 @@
     "@types/express": "^5.0.6",
     "@types/node": "^25.0.6",
     "nodemon": "^3.1.11",
+    "prettier": "^3.8.3",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3"
   }

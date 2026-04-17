@@ -1,17 +1,9 @@
-
 import type { ErrorOptions, SuccessOptions } from '../types/ApiResponse.type';
-import type { Response } from 'express'
+import type { Response } from 'express';
 
 class ApiResponse {
-
     static success<T>(res: Response, options: SuccessOptions<T> = {}): Response {
-
-        const {
-            data = null,
-            message = 'Success',
-            statusCode = 200,
-            meta,
-        } = options;
+        const { data = null, message = 'Success', statusCode = 200, meta } = options;
 
         const response: {
             success: true;
@@ -31,16 +23,13 @@ class ApiResponse {
         return res.status(statusCode).json(response);
     }
 
-
     static error(res: Response, options: ErrorOptions = {}): Response {
-
         const {
             error = 'Internal Server Error',
             message = 'An error occurred',
             statusCode = 500,
             details,
         } = options;
-
 
         const response: {
             success: false;
@@ -53,7 +42,6 @@ class ApiResponse {
             message,
         };
 
-
         if (details && process.env.NODE_ENV !== 'production') {
             response.details = details;
         }
@@ -61,6 +49,5 @@ class ApiResponse {
         return res.status(statusCode).json(response);
     }
 }
-
 
 export default ApiResponse;

@@ -1,36 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
-import { adminApi, type AdminVideoStatus } from "../../api/admin.api";
+import { adminApi } from "../../api/admin.api";
 import { Loader2, CheckCircle2, XCircle } from "lucide-react";
+import type { AdminContributionStatus, AdminVideoItem, AdminInterviewItem } from "../../types";
 
-type VideoItem = {
-  _id: string;
-  title: string;
-  status: AdminVideoStatus;
-  reviewNote?: string;
-  uploadedBy?: { username?: string; email?: string } | string;
-  course?: { title?: string };
-  topic?: { title?: string };
-  createdAt?: string;
-};
-
-type InterviewPair = {
-  question: string;
-  answer: string;
-  difficulty: "easy" | "medium" | "hard";
-};
-
-type InterviewItem = {
-  _id: string;
-  company: string;
-  role: string;
-  status: AdminVideoStatus;
-  isAnonymous: boolean;
-  submittedBy?: { username?: string; email?: string } | string;
-  qaPairs: InterviewPair[];
-  createdAt?: string;
-};
-
-const statusClasses: Record<AdminVideoStatus, string> = {
+const statusClasses: Record<AdminContributionStatus, string> = {
   pending: "bg-amber-500/15 text-amber-300 border-amber-500/30",
   approved: "bg-emerald-500/15 text-emerald-300 border-emerald-500/30",
   rejected: "bg-rose-500/15 text-rose-300 border-rose-500/30",
@@ -39,11 +12,11 @@ const statusClasses: Record<AdminVideoStatus, string> = {
 export default function AdminContributionsPage() {
   const [loading, setLoading] = useState(true);
   const [busyId, setBusyId] = useState<string | null>(null);
-  const [videoStatusFilter, setVideoStatusFilter] = useState<"all" | AdminVideoStatus>("all");
-  const [iqStatusFilter, setIqStatusFilter] = useState<"all" | AdminVideoStatus>("all");
+  const [videoStatusFilter, setVideoStatusFilter] = useState<"all" | AdminContributionStatus>("all");
+  const [iqStatusFilter, setIqStatusFilter] = useState<"all" | AdminContributionStatus>("all");
 
-  const [videos, setVideos] = useState<VideoItem[]>([]);
-  const [interviews, setInterviews] = useState<InterviewItem[]>([]);
+  const [videos, setVideos] = useState<AdminVideoItem[]>([]);
+  const [interviews, setInterviews] = useState<AdminInterviewItem[]>([]);
 
   const loadAll = async () => {
     setLoading(true);

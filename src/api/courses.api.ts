@@ -1,4 +1,5 @@
 import apiClient from "./client";
+import type { ApiEnvelope, Course, Topic } from "../types";
 
 
 // --------------------
@@ -18,13 +19,13 @@ export const fieldsApi = {
 // Courses API
 export const coursesApi = {
   getAllCourses: (params?: Record<string, unknown>) => {
-    return apiClient.get("/course/getcourses", {
+    return apiClient.get<ApiEnvelope<Course[]>>("/course/getcourses", {
       params: params,
     });
   },
 
   getCourseBySlug: (slug: string) => {
-    return apiClient.get(`/course/getcourse/${slug}`);
+    return apiClient.get<ApiEnvelope<Course>>(`/course/getcourse/${slug}`);
   },
 
   getCoursesByFieldSlug: (fieldSlug: string) => {
@@ -33,5 +34,9 @@ export const coursesApi = {
 
   enrollInCourse: (courseId: string) => {
     return apiClient.post(`/courses/${courseId}/enroll`);
+  },
+
+  getTopicsByCourseId: (courseId: string) => {
+    return apiClient.get<ApiEnvelope<Topic[]>>(`/topic/courses/${courseId}/topics`);
   },
 };

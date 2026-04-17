@@ -1,7 +1,8 @@
 import { Link, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Container from "./ui/Container";
-import { useAuthStore } from "../store/auth.store";
+import { useAppDispatch, useAppSelector } from "../redux/hook";
+import { logoutUser } from "../redux/slice/authSlice";
 import { User, LogOut, ChevronDown, Menu, X } from "lucide-react";
 
 const NAV_ITEMS = [
@@ -16,7 +17,12 @@ export default function Header() {
 	const [scrolled, setScrolled] = useState(false);
 	const [userMenuOpen, setUserMenuOpen] = useState(false);
 	const location = useLocation();
-	const { user, logout } = useAuthStore();
+	const dispatch = useAppDispatch();
+	const user = useAppSelector((state) => state.auth.user);
+
+	const logout = () => {
+		void dispatch(logoutUser());
+	};
 
 	// Handle scroll effect
 	useEffect(() => {
@@ -37,7 +43,7 @@ export default function Header() {
 				sticky top-0 z-50
 				transition-all duration-300
 				${scrolled 
-					? "bg-[#050506]/90 backdrop-blur-xl border-b border-white/[0.06] shadow-lg shadow-black/20" 
+					? "bg-[#050506]/90 backdrop-blur-xl border-b border-white/6 shadow-lg shadow-black/20" 
 					: "bg-transparent border-b border-transparent"
 				}
 			`}>
@@ -71,14 +77,14 @@ export default function Header() {
 							<div className="relative">
 								<button
 									onClick={() => setUserMenuOpen(!userMenuOpen)}
-									className="flex items-center gap-2 px-3 py-2 rounded-xl bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.06] transition-all duration-200"
+									className="flex items-center gap-2 px-3 py-2 rounded-xl bg-white/3 hover:bg-white/6 border border-white/6 transition-all duration-200"
 								>
-									<div className="w-7 h-7 rounded-lg bg-gradient-to-br from-[#5E6AD2] to-purple-500 flex items-center justify-center">
+									<div className="w-7 h-7 rounded-lg bg-linear-to-br from-[#5E6AD2] to-purple-500 flex items-center justify-center">
 										<span className="text-xs font-semibold text-white">
 											{user.username?.charAt(0).toUpperCase() || "U"}
 										</span>
 									</div>
-									<span className="text-sm text-[#EDEDEF] font-medium max-w-[100px] truncate">
+									<span className="text-sm text-[#EDEDEF] font-medium max-w-25 truncate">
 										{user.username}
 									</span>
 									<ChevronDown className={`w-4 h-4 text-[#8A8F98] transition-transform duration-200 ${userMenuOpen ? "rotate-180" : ""}`} />
@@ -86,11 +92,11 @@ export default function Header() {
 
 								{userMenuOpen && (
 									<div
-										className="absolute right-0 mt-2 w-48 rounded-xl bg-[#0a0a0c] border border-white/[0.08] shadow-xl shadow-black/30 overflow-hidden"
+										className="absolute right-0 mt-2 w-48 rounded-xl bg-[#0a0a0c] border border-white/8 shadow-xl shadow-black/30 overflow-hidden"
 									>
 										<Link
 											to="/dashboard"
-											className="flex items-center gap-3 px-4 py-3 text-sm text-[#EDEDEF] hover:bg-white/[0.05] transition-colors"
+											className="flex items-center gap-3 px-4 py-3 text-sm text-[#EDEDEF] hover:bg-white/5 transition-colors"
 										>
 											<User className="w-4 h-4 text-[#8A8F98]" />
 											Dashboard
@@ -98,7 +104,7 @@ export default function Header() {
 										{(user.role === "admin" || user.role === "super_admin") && (
 											<Link
 												to="/admin/contributions"
-												className="flex items-center gap-3 px-4 py-3 text-sm text-[#EDEDEF] hover:bg-white/[0.05] transition-colors border-t border-white/[0.06]"
+												className="flex items-center gap-3 px-4 py-3 text-sm text-[#EDEDEF] hover:bg-white/5 transition-colors border-t border-white/6"
 											>
 												<User className="w-4 h-4 text-[#8A8F98]" />
 												Admin Panel
@@ -109,7 +115,7 @@ export default function Header() {
 												logout();
 												setUserMenuOpen(false);
 											}}
-											className="flex items-center gap-3 w-full px-4 py-3 text-sm text-rose-400 hover:bg-rose-500/10 transition-colors border-t border-white/[0.06]"
+											className="flex items-center gap-3 w-full px-4 py-3 text-sm text-rose-400 hover:bg-rose-500/10 transition-colors border-t border-white/6"
 										>
 											<LogOut className="w-4 h-4" />
 											Sign Out
@@ -138,7 +144,7 @@ export default function Header() {
 					{/* Mobile Toggle */}
 					<button
 						onClick={() => setMenuOpen((v) => !v)}
-						className='md:hidden p-2 rounded-lg text-white hover:bg-white/[0.05] transition-colors'
+						className='md:hidden p-2 rounded-lg text-white hover:bg-white/5 transition-colors'
 						aria-label='Toggle menu'>
 						{menuOpen ? (
 							<X className="w-5 h-5" />
@@ -151,7 +157,7 @@ export default function Header() {
 
 			{/* Mobile Menu */}
 			{menuOpen && (
-				<div className='md:hidden bg-[#050506]/95 backdrop-blur-xl border-t border-white/[0.06] overflow-hidden'>
+				<div className='md:hidden bg-[#050506]/95 backdrop-blur-xl border-t border-white/6 overflow-hidden'>
 					<Container>
 						<div className='py-4 space-y-2'>
 							{NAV_ITEMS.map((item) => (
@@ -162,19 +168,19 @@ export default function Header() {
 								/>
 							))}
 
-							<div className="pt-4 mt-4 border-t border-white/[0.06] space-y-2">
+							<div className="pt-4 mt-4 border-t border-white/6 space-y-2">
 								{user ? (
 									<>
 										<Link
 											to="/dashboard"
-											className="block rounded-xl px-4 py-3 text-sm font-medium text-[#EDEDEF] bg-white/[0.03] hover:bg-white/[0.06] transition-colors"
+											className="block rounded-xl px-4 py-3 text-sm font-medium text-[#EDEDEF] bg-white/3 hover:bg-white/6 transition-colors"
 										>
 											Dashboard
 										</Link>
 										{(user.role === "admin" || user.role === "super_admin") && (
 											<Link
 												to="/admin/contributions"
-												className="block rounded-xl px-4 py-3 text-sm font-medium text-[#EDEDEF] bg-white/[0.03] hover:bg-white/[0.06] transition-colors"
+												className="block rounded-xl px-4 py-3 text-sm font-medium text-[#EDEDEF] bg-white/3 hover:bg-white/6 transition-colors"
 											>
 												Admin Panel
 											</Link>
@@ -190,7 +196,7 @@ export default function Header() {
 									<>
 										<Link
 											to="/login"
-											className="block rounded-xl px-4 py-3 text-sm font-medium text-[#EDEDEF] bg-white/[0.03] hover:bg-white/[0.06] transition-colors text-center"
+											className="block rounded-xl px-4 py-3 text-sm font-medium text-[#EDEDEF] bg-white/3 hover:bg-white/6 transition-colors text-center"
 										>
 											Sign In
 										</Link>
@@ -220,8 +226,8 @@ function NavItem({ label, href, active }: { label: string; href: string; active?
 				relative px-4 py-2 text-sm font-medium rounded-lg
 				transition-all duration-200
 				${active 
-					? "text-white bg-white/[0.06]" 
-					: "text-[#8A8F98] hover:text-white hover:bg-white/[0.03]"
+					? "text-white bg-white/6" 
+					: "text-[#8A8F98] hover:text-white hover:bg-white/3"
 				}
 			`}>
 			{label}
@@ -243,7 +249,7 @@ function MobileNavItem({ label, href, active }: { label: string; href: string; a
 				block rounded-xl px-4 py-3 text-sm font-medium transition-colors
 				${active 
 					? "text-white bg-[#5E6AD2]/20 border border-[#5E6AD2]/30" 
-					: "text-[#EDEDEF] bg-white/[0.03] hover:bg-white/[0.06]"
+					: "text-[#EDEDEF] bg-white/3 hover:bg-white/6"
 				}
 			`}>
 			{label}

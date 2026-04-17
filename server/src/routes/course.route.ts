@@ -1,12 +1,9 @@
-import { Router } from "express";
-import * as CourseController from "../controllers/Course.controller";
-
+import { Router } from 'express';
+import * as CourseController from '../controllers/Course.controller';
 
 const courseRouter = Router();
 
-
-courseRouter.get("/getcourses", CourseController.listCourses);
-courseRouter.get("/getcourse/:slug", CourseController.getCourseBySlug);
-courseRouter.get("/getfields", CourseController.listFields);
+courseRouter.get('/getcourses', CourseController.listCourses);
+courseRouter.get('/getfields', CourseController.listFields);
 
 export default courseRouter;

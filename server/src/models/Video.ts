@@ -1,5 +1,5 @@
-import mongoose, { Schema, Model } from "mongoose";
-import type { IVideo } from "../types/Video.type.js";
+import mongoose, { Schema, Model } from 'mongoose';
+import type { IVideo } from '../types/Video.type.js';
 
 const VideoSchema = new Schema<IVideo>(
     {
@@ -33,14 +33,13 @@ const VideoSchema = new Schema<IVideo>(
 
         tags: [{ type: String, trim: true, lowercase: true }],
 
-
         /**
          * The topic this video belongs to.
          * Contributors choose an existing topic when uploading.
          */
         topic: {
             type: Schema.Types.ObjectId,
-            ref: "Topic",
+            ref: 'Topic',
             required: true,
         },
 
@@ -50,18 +49,16 @@ const VideoSchema = new Schema<IVideo>(
          */
         course: {
             type: Schema.Types.ObjectId,
-            ref: "Course",
+            ref: 'Course',
             required: true,
         },
-
 
         /** The contributor who uploaded this video */
         uploadedBy: {
             type: Schema.Types.ObjectId,
-            ref: "User",
+            ref: 'User',
             required: true,
         },
-
 
         /**
          * Status flow:
@@ -71,14 +68,14 @@ const VideoSchema = new Schema<IVideo>(
          */
         status: {
             type: String,
-            enum: ["pending", "approved", "rejected"],
-            default: "pending",
+            enum: ['pending', 'approved', 'rejected'],
+            default: 'pending',
         },
 
         /** Admin who reviewed this video */
         reviewedBy: {
             type: Schema.Types.ObjectId,
-            ref: "User",
+            ref: 'User',
         },
 
         /** Reason shown to contributor when their video is rejected */
@@ -86,7 +83,6 @@ const VideoSchema = new Schema<IVideo>(
             type: String,
             trim: true,
         },
-
 
         /** Incremented on each unique view */
         views: {
@@ -105,9 +101,8 @@ const VideoSchema = new Schema<IVideo>(
     },
     {
         timestamps: true,
-    }
+    },
 );
-
 
 // Public feed: "show all approved videos in a course"
 VideoSchema.index({ course: 1, status: 1, createdAt: -1 });
@@ -121,4 +116,4 @@ VideoSchema.index({ status: 1, createdAt: 1 });
 // Contributor's own uploads
 VideoSchema.index({ uploadedBy: 1, createdAt: -1 });
 
-export const Video: Model<IVideo> = mongoose.model<IVideo>("Video", VideoSchema);
+export const Video: Model<IVideo> = mongoose.model<IVideo>('Video', VideoSchema);

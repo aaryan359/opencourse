@@ -1,23 +1,28 @@
-import { Router } from "express";
-import { authMiddleware } from "../middlewares/auth.middleware";
-import { requireInstructor } from "../middlewares/role.middleware";
+import { Router } from 'express';
+import { authMiddleware } from '../middlewares/auth.middleware';
+import { requireInstructor } from '../middlewares/role.middleware';
 
-
-import * as VideoController from "../controllers/Video.controller";
-
+import * as VideoController from '../controllers/Video.controller';
 
 const videoRouter = Router();
 
-
-videoRouter.get("/courses/:courseId/videos", VideoController.listVideosByCourse);
-videoRouter.get("/topics/:topicId/videos", VideoController.listVideosByTopic);
-videoRouter.get("/videos/:id", VideoController.getVideoById);
-
+videoRouter.get('/courses/:courseId/videos', VideoController.listVideosByCourse);
+videoRouter.get('/topics/:topicId/videos', VideoController.listVideosByTopic);
+videoRouter.get('/videos/:id', VideoController.getVideoById);
 
 // Only approved contributors can upload
-videoRouter.post("/topics/:topicId/videos", authMiddleware, requireInstructor, VideoController.uploadVideo);
+videoRouter.post(
+    '/topics/:topicId/videos',
+    authMiddleware,
+    requireInstructor,
+    VideoController.uploadVideo,
+);
 
-videoRouter.get("/users/me/videos", authMiddleware, requireInstructor, VideoController.getUserVideos);
-
+videoRouter.get(
+    '/users/me/videos',
+    authMiddleware,
+    requireInstructor,
+    VideoController.getUserVideos,
+);
 
 export default videoRouter;

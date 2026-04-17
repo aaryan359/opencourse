@@ -1,21 +1,43 @@
-import type { Video } from "./videos.types";
+export type CourseLevel = 'beginner' | 'intermediate' | 'advanced';
 
+export interface CourseField {
+  _id: string;
+  name: string;
+  slug: string;
+}
 
-export type MiniTopic = {
-  id: string;
+export interface Course {
+  _id: string;
   title: string;
-  videos: Video[];
-};
-
-export type SubTopic = {
-  id: string;
-  title: string;
-  miniTopics: MiniTopic[];
-};
-
-export type Course = {
-  id: string;
-  title: string;
+  slug: string;
   description: string;
-  subtopics: SubTopic[];
-};
+  level: CourseLevel;
+  thumbnail?: string;
+  isPublished: boolean;
+  createdAt: string;
+  updatedAt?: string;
+  field: CourseField;
+}
+
+export interface CourseTopicRef {
+  _id: string;
+  title: string;
+  slug?: string;
+}
+
+export interface Topic {
+  _id: string;
+  title: string;
+  order: number;
+  createdAt: string;
+  updatedAt: string;
+  course?: CourseTopicRef | string;
+}
+
+export type CourseSortOption =
+  | 'newest'
+  | 'oldest'
+  | 'title-asc'
+  | 'title-desc'
+  | 'level-asc'
+  | 'level-desc';

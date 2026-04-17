@@ -1,4 +1,9 @@
 import axios from "axios";
+import {
+  ADMIN_TOKEN_KEY,
+  getStoredToken,
+} from "@/redux/helper/token";
+import { clearAdminStorage } from "@/redux/helper/storage";
 
 const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:4000/api/v1";
 
@@ -11,7 +16,7 @@ const adminClient = axios.create({
 });
 
 adminClient.interceptors.request.use((config) => {
-  const token = localStorage.getItem("oc_admin_token");
+  const token = getStoredToken(ADMIN_TOKEN_KEY);
   if (token) config.headers.Authorization = `Bearer ${token}`;
   return config;
 });
@@ -20,8 +25,7 @@ adminClient.interceptors.response.use(
   (res) => res,
   (err) => {
     if (err.response?.status === 401) {
-      localStorage.removeItem("oc_admin_token");
-      localStorage.removeItem("oc_admin_user");
+      clearAdminStorage();
       window.dispatchEvent(new Event("admin:unauthorized"));
     }
     return Promise.reject(err);

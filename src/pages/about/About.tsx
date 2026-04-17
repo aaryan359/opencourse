@@ -8,6 +8,8 @@ interface FeatureCardProps {
   gradient: string;
 }
 
+
+
 function FeatureCard({ icon, title, description, gradient }: FeatureCardProps) {
   return (
     <div className={`group relative overflow-hidden rounded-2xl p-8 h-full transition-all duration-300 hover:scale-105 cursor-pointer ${gradient} border border-white/[0.08] hover:border-white/[0.12] bg-white/[0.02] backdrop-blur-sm`}>
@@ -48,6 +50,9 @@ function FeatureCard({ icon, title, description, gradient }: FeatureCardProps) {
     </div>
   );
 }
+
+
+
 
 function StatCard({ icon: Icon, label, value }: { icon: React.ComponentType<any>; label: string; value: string }) {
   return (

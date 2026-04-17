@@ -2,7 +2,6 @@ import { motion } from "framer-motion"
 import Container from "../../../components/ui/Container"
 import { stats } from "../../../utils/data"
 import { Sparkles, TrendingUp, Users, BookOpen, GitBranch, Clock } from "lucide-react"
-import { useEffect, useState } from "react"
 
 // Icons for each stat
 const statIcons = [
@@ -259,29 +258,6 @@ function AnimatedCounter({ value }: { value: string }) {
       </motion.span>
     </motion.div>
   )
-}
-
-// Optional: Add mouse tracking for gradient effect
-function useMouseTracker(ref: React.RefObject<HTMLElement>) {
-  const [mousePosition, setMousePosition] = useState({ x: 50, y: 50 });
-
-  useEffect(() => {
-    if (!ref.current) return;
-
-    const handleMouseMove = (e: MouseEvent) => {
-      const rect = ref.current!.getBoundingClientRect();
-      const x = ((e.clientX - rect.left) / rect.width) * 100;
-      const y = ((e.clientY - rect.top) / rect.height) * 100;
-      setMousePosition({ x, y });
-    };
-
-    const element = ref.current;
-    element.addEventListener('mousemove', handleMouseMove);
-    
-    return () => element.removeEventListener('mousemove', handleMouseMove);
-  }, [ref]);
-
-  return mousePosition;
 }
 
 // If you want to use mouse tracking in the cards, add this hook and update the card:

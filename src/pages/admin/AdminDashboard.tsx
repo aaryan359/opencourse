@@ -1,6 +1,11 @@
 import { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAdminStore } from "../../store/adminAuth.store";
+import { useAppDispatch, useAppSelector } from "../../redux/hook";
+import {
+  forceAdminLogout,
+  initializeAdminAuth,
+  logoutAdmin,
+} from "../../redux/slice/adminSlice";
 import { adminApi } from "../../api/admin.api";
 import apiClient from "../../api/client";
 
@@ -41,7 +46,7 @@ const Chip = ({ label, active, onClick }: { label: string; active: boolean; onCl
   </button>
 );
 
-const Btn = ({ children, onClick, color = C.accent, small = false, disabled = false }: { children: React.ReactNode; onClick?: () => void; color?: string; small?: boolean; disabled?: boolean }) => (
+const Btn = ({ children, onClick, color = C.accent, small = false, disabled = false }: { children: React.ReactNode; onClick?: React.MouseEventHandler<HTMLButtonElement>; color?: string; small?: boolean; disabled?: boolean }) => (
   <button onClick={onClick} disabled={disabled} style={{ padding: small ? "4px 10px" : "9px 18px", borderRadius: small ? 7 : 10, border: `1px solid ${color}40`, background: `${color}18`, color, fontSize: small ? 11 : 13, fontWeight: 600, cursor: disabled ? "not-allowed" : "pointer", opacity: disabled ? 0.5 : 1, transition: "all 0.15s" }}>
     {children}
   </button>
@@ -131,7 +136,8 @@ function InfoRow({ label, value }: { label: string; value: React.ReactNode }) {
 // ─── Main ─────────────────────────────────────────────────────────────────────
 export default function AdminDashboard() {
   const navigate = useNavigate();
-  const { admin, logout, init } = useAdminStore();
+  const dispatch = useAppDispatch();
+  const admin = useAppSelector((state) => state.admin.admin);
 
   const [tab, setTab] = useState<Tab>("overview");
   const [busy, setBusy] = useState(false);
@@ -183,13 +189,17 @@ export default function AdminDashboard() {
   };
 
   // ─ Session guard ─
-  useEffect(() => { init(); }, [init]);
+  useEffect(() => { void dispatch(initializeAdminAuth()); }, [dispatch]);
   useEffect(() => { if (!admin) navigate("/admin/login", { replace: true }); }, [admin, navigate]);
   useEffect(() => {
-    const h = () => { logout(); navigate("/admin/login"); };
+    const h = () => {
+      void dispatch(logoutAdmin());
+      dispatch(forceAdminLogout());
+      navigate("/admin/login");
+    };
     window.addEventListener("admin:unauthorized", h);
     return () => window.removeEventListener("admin:unauthorized", h);
-  }, [logout, navigate]);
+  }, [dispatch, navigate]);
 
   // ─ Fields (for create course) ─
   useEffect(() => { adminApi.listFields().then(r => setFields(r.data.data)).catch(() => { }); }, []);
@@ -316,7 +326,7 @@ export default function AdminDashboard() {
             <p style={{ margin: 0, fontSize: 12, fontWeight: 600, color: C.text }}>{admin.username}</p>
             <p style={{ margin: 0, fontSize: 11, color: C.faint }}>{admin.email}</p>
           </div>
-          <button onClick={() => { logout(); navigate("/admin/login"); }} style={{ display: "flex", alignItems: "center", gap: 8, padding: "8px 12px", borderRadius: 10, border: "none", cursor: "pointer", width: "100%", background: "rgba(239,68,68,0.08)", color: C.red, fontSize: 12, fontWeight: 500 }}>
+          <button onClick={() => { void dispatch(logoutAdmin()); navigate("/admin/login"); }} style={{ display: "flex", alignItems: "center", gap: 8, padding: "8px 12px", borderRadius: 10, border: "none", cursor: "pointer", width: "100%", background: "rgba(239,68,68,0.08)", color: C.red, fontSize: 12, fontWeight: 500 }}>
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" /><polyline points="16 17 21 12 16 7" /><line x1="21" y1="12" x2="9" y2="12" /></svg>
             Sign out
           </button>

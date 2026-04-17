@@ -1,64 +1,102 @@
-import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
-import { SignInPage, type Testimonial } from "../../components/ui/sign-in";
-import { useAuthStore } from "../../store/auth.store";
-import type { FormEvent } from "react";
-
-const sampleTestimonials: Testimonial[] = [
-  {
-    avatarSrc: "https://randomuser.me/api/portraits/women/57.jpg",
-    name: "Sarah Chen",
-    handle: "@sarahdigital",
-    text: "Amazing platform! The user experience is seamless and the features are exactly what I needed.",
-  },
-  {
-    avatarSrc: "https://randomuser.me/api/portraits/men/64.jpg",
-    name: "Marcus Johnson",
-    handle: "@marcustech",
-    text: "This service has transformed how I work. Clean design, powerful features, and excellent support.",
-  },
-  {
-    avatarSrc: "https://randomuser.me/api/portraits/men/32.jpg",
-    name: "David Martinez",
-    handle: "@davidcreates",
-    text: "I've tried many platforms, but this one stands out. Intuitive, reliable, and genuinely helpful for productivity.",
-  },
-];
+import { useState, type FormEvent } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import Button from '@/components/ui/Button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { useAppDispatch, useAppSelector } from '@/redux/hook';
+import { loginUser } from '@/redux/slice/authSlice';
 
 export default function Login() {
-  const navigate = useNavigate();
-  const { login } = useAuthStore();
+	const navigate = useNavigate();
+	const dispatch = useAppDispatch();
+	const loading = useAppSelector((state) => state.auth.loading);
+	const [email, setEmail] = useState('');
+	const [password, setPassword] = useState('');
 
-  const handleSignIn = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const formData = new FormData(event.currentTarget);
-    const email = String(formData.get("email") || "").trim();
-    const password = String(formData.get("password") || "");
+	const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
+		event.preventDefault();
 
-    if (!email || !password) {
-      toast.error("Please enter your email and password.");
-      return;
-    }
+		if (!email.trim() || !password) {
+			toast.error('Email and password are required.');
+			return;
+		}
 
-    try {
-      await login({ email, password });
-      toast.success("Welcome back!");
-      navigate("/");
-    } catch (error: any) {
-      toast.error(error?.message || "Login failed. Please try again.");
-    }
-  };
+		try {
+			await dispatch(loginUser({ email: email.trim(), password })).unwrap();
+			toast.success('Welcome back!');
+			navigate('/');
+		} catch (error: unknown) {
+			const message =
+				error instanceof Error ? error.message : 'Login failed. Please try again.';
+			toast.error(message);
+		}
+	};
 
-  return (
-    <SignInPage
-      title={<span className="font-light text-white tracking-tighter">Welcome Back</span>}
-      description="Sign in to continue learning, contributing, and tracking your progress."
-      heroImageSrc="https://images.unsplash.com/photo-1642615835477-d303d7dc9ee9?w=2160&q=80"
-      testimonials={sampleTestimonials}
-      onSignIn={handleSignIn}
-      onGoogleSignIn={() => toast.info("Google sign-in is not connected yet.")}
-      onResetPassword={() => toast.info("Password reset flow is not connected yet.")}
-      onCreateAccount={() => navigate("/register")}
-    />
-  );
+	return (
+		<section className='flex min-h-screen bg-[#050506] px-4 py-16 md:py-24'>
+			<div className='m-auto grid w-full max-w-5xl overflow-hidden rounded-2xl border border-white/10 bg-[#0b0b10] shadow-2xl md:grid-cols-2'>
+				<div className='relative hidden min-h-120 md:block'>
+					<img
+						src='https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1200&q=80'
+						alt='Developers collaborating'
+						className='h-full w-full object-cover'
+					/>
+					<div className='absolute inset-0 bg-black/30' />
+					<div className='absolute bottom-6 left-6 right-6 text-white'>
+						<p className='text-sm opacity-90'>OpenCourse</p>
+						<h2 className='text-2xl font-semibold'>Learn from community, build with confidence.</h2>
+					</div>
+				</div>
+
+				<form onSubmit={onSubmit} className='space-y-5 p-8 text-zinc-100 md:p-10'>
+					<div>
+						<h1 className='text-2xl font-semibold text-zinc-100'>Sign In</h1>
+						<p className='mt-1 text-sm text-zinc-400'>Welcome back to OpenCourse.</p>
+					</div>
+
+					<div className='space-y-2'>
+						<Label htmlFor='email' className='text-zinc-300'>
+							Email
+						</Label>
+						<Input
+							id='email'
+							type='email'
+							value={email}
+							onChange={(e) => setEmail(e.target.value)}
+							placeholder='you@example.com'
+							className='border-white/10 bg-[#121218] text-zinc-100 placeholder:text-zinc-500 focus-visible:ring-indigo-500/50'
+							required
+						/>
+					</div>
+
+					<div className='space-y-2'>
+						<Label htmlFor='password' className='text-zinc-300'>
+							Password
+						</Label>
+						<Input
+							id='password'
+							type='password'
+							value={password}
+							onChange={(e) => setPassword(e.target.value)}
+							placeholder='Enter your password'
+							className='border-white/10 bg-[#121218] text-zinc-100 placeholder:text-zinc-500 focus-visible:ring-indigo-500/50'
+							required
+						/>
+					</div>
+
+					<Button type='submit' className='w-full' disabled={loading}>
+						{loading ? 'Signing in...' : 'Sign In'}
+					</Button>
+
+					<p className='text-center text-sm text-zinc-400'>
+						Don&apos;t have an account?{' '}
+						<Link to='/register' className='font-medium text-indigo-400 hover:underline'>
+							Create one
+						</Link>
+					</p>
+				</form>
+			</div>
+		</section>
+	);
 }

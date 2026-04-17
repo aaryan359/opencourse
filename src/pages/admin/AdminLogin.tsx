@@ -1,10 +1,15 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAdminStore } from "../../store/adminAuth.store";
+import { useAppDispatch, useAppSelector } from "../../redux/hook";
+import {
+  initializeAdminAuth,
+  loginAdmin,
+} from "../../redux/slice/adminSlice";
 
 export default function AdminLogin() {
   const navigate = useNavigate();
-  const { login, loading, error, admin, init } = useAdminStore();
+  const dispatch = useAppDispatch();
+  const { admin, loading, error } = useAppSelector((state) => state.admin);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -13,8 +18,8 @@ export default function AdminLogin() {
   const [localError, setLocalError] = useState("");
 
   useEffect(() => {
-    init();
-  }, [init]);
+    void dispatch(initializeAdminAuth());
+  }, [dispatch]);
 
   useEffect(() => {
     if (admin) navigate("/admin/dashboard", { replace: true });
@@ -28,10 +33,16 @@ export default function AdminLogin() {
       return;
     }
     try {
-      await login(email.trim(), password, secret.trim());
+      await dispatch(
+        loginAdmin({
+          email: email.trim(),
+          password,
+          adminSecret: secret.trim(),
+        }),
+      ).unwrap();
       navigate("/admin/dashboard", { replace: true });
-    } catch (err: any) {
-      setLocalError(err.message);
+    } catch (err: unknown) {
+      setLocalError(err instanceof Error ? err.message : "Admin login failed.");
     }
   };
 
@@ -41,7 +52,7 @@ export default function AdminLogin() {
     <div className="min-h-screen flex" style={{ background: "#02020a" }}>
       {/* Left — branding panel */}
       <div
-        className="hidden lg:flex flex-col justify-between w-[420px] shrink-0 p-10 relative overflow-hidden"
+        className="hidden lg:flex flex-col justify-between w-105 shrink-0 p-10 relative overflow-hidden"
         style={{
           background: "linear-gradient(160deg, #0a0a14 0%, #0d0d1a 100%)",
           borderRight: "1px solid rgba(255,255,255,0.06)",
