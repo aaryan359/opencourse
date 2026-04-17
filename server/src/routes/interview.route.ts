@@ -1,7 +1,13 @@
 import { Router } from "express";
-
+import { authMiddleware } from "../middlewares/auth.middleware";
+import { requireInstructor } from "../middlewares/role.middleware";
 import * as InterviewQuestionController from "../controllers/InterviewQuestion.Controller";
 
-const router = Router();
+const interviewRouter = Router();
 
-router.post("/interview-questions", InterviewQuestionController.submitInterviewQuestions);
+interviewRouter.post("/submit", authMiddleware, requireInstructor, InterviewQuestionController.submitInterviewQuestions);
+
+interviewRouter.get("/getquestions", InterviewQuestionController.getAllInterviewQuestions);
+
+
+export default interviewRouter;

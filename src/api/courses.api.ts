@@ -1,25 +1,37 @@
 import apiClient from "./client";
 
+
+// --------------------
+// Fields API
+// --------------------
 export const fieldsApi = {
-  listFields: () => apiClient.get("/fields"),
-  getFieldBySlug: (slug: string) => apiClient.get(`/fields/${slug}`),
+  getAllFields: () => {
+    return apiClient.get("/fields");
+  },
+
+  getFieldBySlug: (slug: string) => {
+    return apiClient.get(`/fields/${slug}`);
+  },
 };
 
+
+// Courses API
 export const coursesApi = {
-  listCourses: (params?: Record<string, unknown>) =>
-    apiClient.get("/courses", { params }),
-  getCourseBySlug: (slug: string) => apiClient.get(`/courses/${slug}`),
-  getCoursesByField: (fieldSlug: string) =>
-    apiClient.get(`/fields/${fieldSlug}/courses`),
-  enrollInCourse: (courseId: string) =>
-    apiClient.post(`/courses/${courseId}/enroll`),
+  getAllCourses: (params?: Record<string, unknown>) => {
+    return apiClient.get("/course/getcourses", {
+      params: params,
+    });
+  },
+
+  getCourseBySlug: (slug: string) => {
+    return apiClient.get(`/course/getcourse/${slug}`);
+  },
+
+  getCoursesByFieldSlug: (fieldSlug: string) => {
+    return apiClient.get(`/fields/${fieldSlug}/courses`);
+  },
+
+  enrollInCourse: (courseId: string) => {
+    return apiClient.post(`/courses/${courseId}/enroll`);
+  },
 };
-
-
-
-
-
-
-
-
-

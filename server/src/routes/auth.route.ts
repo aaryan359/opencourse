@@ -3,11 +3,14 @@ import { authMiddleware } from "../middlewares/auth.middleware";
 import * as UserController from "../controllers/User.controller";
 
 
-const router = Router();
+const authRouter = Router();
 
 
-router.post("/auth/register", UserController.registerUser);
-router.post("/auth/login", UserController.loginUser);
-router.post("/auth/logout", authMiddleware, UserController.logoutUser);
-router.get("/auth/me", authMiddleware, UserController.getCurrentUser);
-router.post("/auth/refresh", UserController.refreshToken);
+authRouter.post("/register", UserController.registerUser);
+authRouter.post("/login", UserController.loginUser);
+authRouter.post("/logout", authMiddleware, UserController.logoutUser);
+authRouter.get("/me", authMiddleware, UserController.getCurrentUser);
+authRouter.post("/refresh", UserController.refreshToken);
+
+
+export default authRouter;

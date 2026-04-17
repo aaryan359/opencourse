@@ -6,52 +6,68 @@ import { requireAdmin } from "../middlewares/role.middleware";
 import * as AdminController from "../controllers/Admin.controller";
 import * as InterviewQuestionController from "../controllers/InterviewQuestion.Controller";
 
-const router = Router();
+const adminRouter = Router();
 
 
 
-
-router.post("/admin/login", AdminController.adminLogin);
+adminRouter.post("/login", AdminController.adminLogin);
 
 const adminGuard = [authMiddleware, requireAdmin];
 
+
+
 // Dashboard
-router.get("/admin/dashboard", ...adminGuard, AdminController.getDashboard);
+adminRouter.get("/dashboard", ...adminGuard, AdminController.getDashboard);
+
+
 
 // Fields (needed by frontend to populate course creation form)
-router.get("/admin/fields", ...adminGuard, AdminController.listFields);
+adminRouter.get("/fields", ...adminGuard, AdminController.listFields);
+
+
 
 // User management
-router.get("/admin/users", ...adminGuard, AdminController.listUsers);
-router.get("/admin/users/:id", ...adminGuard, AdminController.getUserById);
-router.patch("/admin/users/:id/role", ...adminGuard, AdminController.changeUserRole);
+adminRouter.get("/users", ...adminGuard, AdminController.listUsers);
+adminRouter.get("/users/:id", ...adminGuard, AdminController.getUserById);
+adminRouter.patch("/users/:id/role", ...adminGuard, AdminController.changeUserRole);
+
+
 
 // Contributor applications
-router.get("/admin/applications", ...adminGuard, AdminController.listApplications);
-router.get("/admin/applications/:id", ...adminGuard, AdminController.getApplicationById);
-router.patch("/admin/applications/:id/approve", ...adminGuard, AdminController.approveApplication);
-router.patch("/admin/applications/:id/reject", ...adminGuard, AdminController.rejectApplication);
+adminRouter.get("/applications", ...adminGuard, AdminController.listApplications);
+adminRouter.get("/applications/:id", ...adminGuard, AdminController.getApplicationById);
+adminRouter.patch("/applications/:id/approve", ...adminGuard, AdminController.approveApplication);
+adminRouter.patch("/applications/:id/reject", ...adminGuard, AdminController.rejectApplication);
+
 
 // Video moderation
-router.get("/admin/videos", ...adminGuard, AdminController.listVideos);
-router.patch("/admin/videos/:id/approve", ...adminGuard, AdminController.approveVideo);
-router.patch("/admin/videos/:id/reject", ...adminGuard, AdminController.rejectVideo);
-router.delete("/admin/videos/:id", ...adminGuard, AdminController.deleteVideo);
+adminRouter.get("/videos", ...adminGuard, AdminController.listVideos);
+adminRouter.patch("/videos/:id/approve", ...adminGuard, AdminController.approveVideo);
+adminRouter.patch("/videos/:id/reject", ...adminGuard, AdminController.rejectVideo);
+adminRouter.delete("/videos/:id", ...adminGuard, AdminController.deleteVideo);
+
+
 
 // Course management (list + create — admin only)
-router.get("/admin/courses", ...adminGuard, AdminController.listCourses);
-router.post("/admin/courses", ...adminGuard, AdminController.createCourse);
+adminRouter.get("/courses", ...adminGuard, AdminController.listCourses);
+adminRouter.post("/courses", ...adminGuard, AdminController.createCourse);
+
 
 
 // Topic management (create under a course — admin only)
-router.post("/admin/courses/:courseId/topics", ...adminGuard, AdminController.createTopic);
+adminRouter.post("/courses/:courseId/topics", ...adminGuard, AdminController.createTopic);
+
 
 // Contributors
-router.get("/admin/contributors", ...adminGuard, AdminController.listContributors);
+adminRouter.get("/contributors", ...adminGuard, AdminController.listContributors);
+
 
 // Interview questions moderation
-router.get("/admin/interview-questions/pending", ...adminGuard, InterviewQuestionController.getPendingInterviewQuestions);
-router.get("/admin/interview-questions", ...adminGuard, InterviewQuestionController.getAllInterviewQuestions);
-router.patch("/admin/interview-questions/:id/approve", ...adminGuard, InterviewQuestionController.approveInterviewQuestion);
-router.patch("/admin/interview-questions/:id/reject", ...adminGuard, InterviewQuestionController.rejectInterviewQuestion);
+adminRouter.get("/interview-questions/pending", ...adminGuard, InterviewQuestionController.getPendingInterviewQuestions);
+adminRouter.get("/interview-questions", ...adminGuard, InterviewQuestionController.getAllInterviewQuestions);
+adminRouter.patch("/interview-questions/:id/approve", ...adminGuard, InterviewQuestionController.approveInterviewQuestion);
+adminRouter.patch("/admin/interview-questions/:id/reject", ...adminGuard, InterviewQuestionController.rejectInterviewQuestion);
 
+
+
+export default adminRouter;
