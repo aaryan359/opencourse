@@ -20,8 +20,8 @@ export default function Home() {
 	return (
 		<>
 			<Hero />
-      <div className="mx-auto grid max-w-7xl grid-cols-1 gap-8 px-6  md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {fields.map((field: any, index: number) => (
+      <div className="mx-auto grid max-w-7xl grid-cols-1 gap-8 px-6 py-10 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        {fields.slice(0, 4).map((field: any, index: number) => (
           <Domains
             key={field._id}
             domain={{ name: field.name, contributors: field.courseCount ?? 0 }}
