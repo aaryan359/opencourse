@@ -14,6 +14,21 @@ import { connectDB } from './config/db';
 const app: Application = express();
 
 const REQUEST_BODY_LIMIT = process.env.REQUEST_BODY_LIMIT ?? '2mb';
+const TRUST_PROXY_RAW = process.env.TRUST_PROXY ?? '1';
+
+const parseTrustProxy = (value: string): boolean | number => {
+    const normalized = value.trim().toLowerCase();
+
+    if (normalized === 'true') return true;
+    if (normalized === 'false') return false;
+
+    const asNumber = Number(normalized);
+    if (!Number.isNaN(asNumber)) return asNumber;
+
+    return true;
+};
+
+app.set('trust proxy', parseTrustProxy(TRUST_PROXY_RAW));
 
 const parseAllowedOrigins = (rawOrigins?: string): string[] => {
     if (!rawOrigins) return [];
