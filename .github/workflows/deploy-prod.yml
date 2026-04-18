@@ -4,6 +4,11 @@ on:
   push:
     branches:
       - prod
+    paths-ignore:
+      - server/**
+
+permissions:
+  contents: write
 
 jobs:
   build-and-deploy:
@@ -16,18 +21,19 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 22
           cache: npm
+          cache-dependency-path: package-lock.json
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
-      - name: Build project
-        run: npm run dev
+      - name: Build frontend
+        run: npm run build
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: / # Vite → dist | CRA → build
+          publish_dir: ./dist
           publish_branch: gh-pages
