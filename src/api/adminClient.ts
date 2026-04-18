@@ -6,6 +6,7 @@ import {
 import { clearAdminStorage } from "@/redux/helper/storage";
 
 const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:4000/api/v1";
+const IS_NGROK_URL = /ngrok-free\.(dev|app)/i.test(BASE_URL);
 
 // Separate client for admin — stores token in a different localStorage key
 // so it cannot interfere with the normal user session at all.
@@ -18,6 +19,11 @@ const adminClient = axios.create({
 adminClient.interceptors.request.use((config) => {
   const token = getStoredToken(ADMIN_TOKEN_KEY);
   if (token) config.headers.Authorization = `Bearer ${token}`;
+
+  if (IS_NGROK_URL) {
+    config.headers["ngrok-skip-browser-warning"] = "true";
+  }
+
   return config;
 });
 
