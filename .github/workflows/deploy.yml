@@ -10,59 +10,38 @@ on:
 
 permissions:
     contents: write
+    pages: write
+    id-token: write
 
 concurrency:
-    group: pages
+    group: "pages"
     cancel-in-progress: true
 
 jobs:
-    build:
-        name: Build
+    deploy:
+        environment:
+            name: github-pages
+            url: ${{ steps.deployment.outputs.page_url }}
         runs-on: ubuntu-latest
-
         steps:
-            - name: Checkout repo
-              uses: actions/checkout@v4
-
-            - name: Setup Node
-              uses: actions/setup-node@v4
+            - name: Checkout
+              uses: actions/checkout@v6
+            - name: Set up Node
+              uses: actions/setup-node@v6
               with:
-                  node-version: 22
-                  cache: npm
-                  cache-dependency-path: package-lock.json
-
+                  node-version: lts/*
+                  cache: "npm"
             - name: Install dependencies
               run: npm ci
-
-            - name: Build project
-              env:
-                  VITE_BASE_PATH: /opencourse/
+            - name: Build
               run: npm run build
-
-            - name: Add SPA fallback
-              run: cp dist/index.html dist/404.html
-
-            - name: Upload production-ready build files
-              uses: actions/upload-artifact@v4
+            - name: Setup Pages
+              uses: actions/configure-pages@v6
+            - name: Upload artifact
+              uses: actions/upload-pages-artifact@v4
               with:
-                  name: production-files
-                  path: ./dist
-
-    deploy:
-        name: Deploy
-        needs: build
-        runs-on: ubuntu-latest
-
-        steps:
-            - name: Download artifact
-              uses: actions/download-artifact@v4
-              with:
-                  name: production-files
-                  path: ./dist
-
-            - name: Deploy to GitHub Pages branch
-              uses: peaceiris/actions-gh-pages@v4
-              with:
-                  github_token: ${{ secrets.GITHUB_TOKEN }}
-                  publish_dir: ./dist
-                  publish_branch: gh-pages
+                  # Upload dist folder
+                  path: "./dist"
+            - name: Deploy to GitHub Pages
+              id: deployment
+              uses: actions/deploy-pages@v5
