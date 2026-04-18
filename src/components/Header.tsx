@@ -6,10 +6,12 @@ import { logoutUser } from "../redux/slice/authSlice";
 import { User, LogOut, ChevronDown, Menu, X } from "lucide-react";
 
 const NAV_ITEMS = [
-	{ label: "About", href: "/about" },
+	
 	{ label: "Courses", href: "/courses" },
 	{ label: "Contribute", href: "/contribute" },
 	{ label: "Interview Prep", href: "/prep" },
+	{ label: "About", href: "/about" },
+	{ label: "Docs", href: "/docs" },
 ];
 
 export default function Header() {

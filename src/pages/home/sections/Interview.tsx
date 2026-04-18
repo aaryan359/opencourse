@@ -1,32 +1,50 @@
 "use client";
 
-import { motion, useMotionTemplate, useMotionValue } from "framer-motion";
+import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 import Container from "../../../components/ui/Container";
+import { BorderBeam } from "@/components/ui/border-beam";
 
-const interviewCategories = [
+interface InterviewCategory {
+  title: string;
+  description: string;
+  count: number;
+  beamFrom: string;
+  beamTo: string;
+}
+
+const interviewCategories: InterviewCategory[] = [
   {
     title: "Data Structures & Algorithms",
     description:
       "Frequently asked problems covering arrays, trees, graphs, and complexity.",
     count: 120,
+    beamFrom: "#8ab4ff",
+    beamTo: "#f8fbff",
   },
   {
     title: "System Design",
     description:
       "Design scalable systems, APIs, databases, and distributed architectures.",
     count: 45,
+    beamFrom: "#a78bfa",
+    beamTo: "#ede9fe",
   },
   {
     title: "Backend & APIs",
     description:
       "REST, authentication, databases, and backend best practices.",
     count: 60,
+    beamFrom: "#22d3ee",
+    beamTo: "#cffafe",
   },
   {
     title: "Frontend",
     description:
       "JavaScript, React, performance, accessibility, and UI patterns.",
     count: 55,
+    beamFrom: "#34d399",
+    beamTo: "#dcfce7",
   },
 ];
 
@@ -34,7 +52,7 @@ export default function Interview() {
   return (
     <section className="relative py-10 bg-neutral-950 overflow-hidden">
       {/* Ambient glow */}
-      <div className="pointer-events-none absolute -top-40 left-1/2 h-[520px] w-[520px] -translate-x-1/2 rounded-full bg-indigo-500/10 blur-[140px]" />
+      <div className="pointer-events-none absolute -top-40 left-1/2 h-130 w-130 -translate-x-1/2 rounded-full bg-indigo-500/10 blur-[140px]" />
 
       <Container>
         {/* ===== HEADER ===== */}
@@ -72,7 +90,8 @@ export default function Interview() {
 
         {/* ===== CTA ===== */}
         <div className="mt-10 flex flex-col sm:flex-row items-start sm:items-center gap-4">
-          <button
+          <Link
+            to="/prep"
             className="
               inline-flex items-center justify-center
               rounded-lg
@@ -86,9 +105,10 @@ export default function Interview() {
             "
           >
             Start Practicing
-          </button>
+          </Link>
 
-          <button
+          <Link
+            to="/contribute"
             className="
               inline-flex items-center justify-center
               rounded-lg
@@ -97,13 +117,13 @@ export default function Interview() {
               text-sm font-medium text-white
               transition
               hover:border-white/25
-              hover:bg-white/[0.05]
+              hover:bg-white/5
               focus-visible:outline-none
               focus-visible:ring-2 focus-visible:ring-white/30
             "
           >
             Contribute Questions
-          </button>
+          </Link>
         </div>
 
         {/* Trust */}
@@ -117,18 +137,7 @@ export default function Interview() {
 
 /* ================= CARD ================= */
 
-function CategoryCard({ category, index }: any) {
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
-
-  const glow = useMotionTemplate`
-    radial-gradient(
-      220px at ${mouseX}px ${mouseY}px,
-      rgba(99,102,241,0.18),
-      transparent 70%
-    )
-  `;
-
+function CategoryCard({ category, index }: { category: InterviewCategory; index: number }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 22 }}
@@ -138,11 +147,6 @@ function CategoryCard({ category, index }: any) {
         duration: 0.35,
         delay: index * 0.05,
         ease: [0.16, 1, 0.3, 1],
-      }}
-      onMouseMove={(e) => {
-        const rect = e.currentTarget.getBoundingClientRect();
-        mouseX.set(e.clientX - rect.left);
-        mouseY.set(e.clientY - rect.top);
       }}
       className="
         group relative overflow-hidden rounded-2xl
@@ -155,10 +159,15 @@ function CategoryCard({ category, index }: any) {
         hover:border-white/20
       "
     >
-      {/* Hover glow */}
-      <motion.div
-        style={{ background: glow }}
-        className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+      <BorderBeam
+        size={130}
+        duration={8}
+        delay={0}
+        anchor={82}
+        borderWidth={1.25}
+        colorFrom={category.beamFrom}
+        colorTo={category.beamTo}
+        className="opacity-95"
       />
 
       {/* Inner stroke */}

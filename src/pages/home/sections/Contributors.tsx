@@ -8,7 +8,7 @@ export default function Contributors() {
   return (
     <section className="relative py-10 bg-neutral-950 overflow-hidden">
       {/* Ambient background */}
-      <div className="pointer-events-none absolute -top-32 left-1/2 h-[420px] w-[420px] -translate-x-1/2 rounded-full bg-indigo-500/10 blur-[120px]" />
+      <div className="pointer-events-none absolute -top-32 left-1/2 h-105 w-105 -translate-x-1/2 rounded-full bg-indigo-500/10 blur-[120px]" />
 
       <Container>
         {/* ===== HEADER ===== */}
@@ -106,7 +106,7 @@ function ContributorCard({ contributor, index }: any) {
           {/* Avatar */}
           <div className="
             h-10 w-10 rounded-full
-            bg-gradient-to-br from-indigo-500/30 to-purple-500/20
+            bg-linear-to-br from-indigo-500/30 to-purple-500/20
             flex items-center justify-center
             text-sm font-semibold text-white
             ring-1 ring-white/10

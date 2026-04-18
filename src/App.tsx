@@ -6,6 +6,7 @@ import AppLayout from "./layouts/AppLayout";
 
 import Home from "./pages/home/Home";
 import About from "./pages/about/About";
+import Docs from "./pages/docs/Docs";
 
 
 import CoursesPage from "./pages/courses/course";
@@ -63,6 +64,7 @@ function App() {
 			<Route element={<AppLayout />}>
 					<Route path="/"       element={<Home />} />
 					<Route path="/about"  element={<About />} />
+					<Route path="/docs" element={<Docs />} />
 					<Route path="/courses" element={<CoursesPage />} />
 					<Route path="/courses/:courseId" element={<CourseTopicsPage />} />
 					<Route path="/courses/:courseId/topics/:topicId/videos" element={<TopicVideosPage />} />

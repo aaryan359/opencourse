@@ -18,7 +18,7 @@ export const interviewApi = {
     apiClient.post("/interview/submit", payload),
 
   list: (params?: Record<string, unknown>) =>
-    apiClient.get("/interview/getquestions", { params }),
+    apiClient.get("/interview", { params }),
 
   getById: (id: string) => apiClient.get(`/interview/getquestions/${id}`),
 

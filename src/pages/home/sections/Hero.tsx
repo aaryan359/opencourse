@@ -1,9 +1,35 @@
 import { motion, useMotionValue, useTransform } from "framer-motion";
 import { CheckCircle, Users, Layers, BookOpen } from "lucide-react";
+import type { ReactNode } from "react";
 import Container from "../../../components/ui/Container";
 import Button from "../../../components/ui/Button";
 import { HoverBorderGradient } from "../../../components/ui/hover-border-gradient";
 import { useNavigate } from "react-router-dom";
+import { BorderBeam } from "@/components/ui/border-beam";
+
+const heroFeatures = [
+	{
+		icon: <Layers />,
+		title: "Structured Courses",
+		desc: "Community-maintained curricula with real-world depth.",
+		beamFrom: "#60a5fa",
+		beamTo: "#dbeafe",
+	},
+	{
+		icon: <Users />,
+		title: "Verified Contributors",
+		desc: "Developers and educators reviewed by peers.",
+		beamFrom: "#a78bfa",
+		beamTo: "#ede9fe",
+	},
+	{
+		icon: <CheckCircle />,
+		title: "Always Up-to-date",
+		desc: "Lessons evolve with hiring trends.",
+		beamFrom: "#34d399",
+		beamTo: "#dcfce7",
+	},
+];
 
 export default function Hero() {
   const navigate = useNavigate();
@@ -88,24 +114,29 @@ export default function Hero() {
 								
 							<div className='rounded-3xl border border-white/10 bg-white/[0.05] backdrop-blur-xl p-8 shadow-2xl'>
 								<div className='space-y-6'>
-									<Feature
-										icon={<Layers />}
-										title='Structured Courses'
-										desc='Community-maintained curricula with real-world depth.'
-									/>
-									<Feature
-										icon={<Users />}
-										title='Verified Contributors'
-										desc='Developers and educators reviewed by peers.'
-									/>
-									<Feature
-										icon={<CheckCircle />}
-										title='Always Up-to-date'
-										desc='Lessons evolve with hiring trends.'
-									/>
+									{heroFeatures.map((feature) => (
+										<Feature
+											key={feature.title}
+											icon={feature.icon}
+											title={feature.title}
+											desc={feature.desc}
+											beamFrom={feature.beamFrom}
+											beamTo={feature.beamTo}
+										/>
+									))}
 								</div>
 
-								<div className='mt-8 rounded-xl border border-white/10 bg-black/30 p-4'>
+								<div className='relative mt-8 overflow-hidden rounded-xl border border-white/10 bg-black/30 p-4'>
+									<BorderBeam
+										size={92}
+										duration={8}
+										delay={0}
+										anchor={86}
+										borderWidth={1.1}
+										colorFrom='#f59e0b'
+										colorTo='#fef3c7'
+										className='opacity-95'
+									/>
 									<div className='flex items-center gap-2 text-xs text-neutral-400 mb-2'>
 										<BookOpen className='h-4 w-4 text-indigo-400' />
 										Community activity
@@ -126,13 +157,37 @@ export default function Hero() {
 
 /* ================= HELPERS ================= */
 
-function Feature({ icon, title, desc }: any) {
+function Feature({
+	icon,
+	title,
+	desc,
+	beamFrom,
+	beamTo,
+}: {
+	icon: ReactNode;
+	title: string;
+	desc: string;
+	beamFrom: string;
+	beamTo: string;
+}) {
 	return (
-		<div className='flex gap-4'>
-			<div className='mt-1 text-indigo-400'>{icon}</div>
-			<div>
+		<div className='relative overflow-hidden rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3'>
+			<BorderBeam
+				size={96}
+				duration={8}
+				delay={0}
+				anchor={84}
+				borderWidth={1.1}
+				colorFrom={beamFrom}
+				colorTo={beamTo}
+				className='opacity-90'
+			/>
+			<div className='relative z-10 flex gap-4'>
+				<div className='mt-1 text-indigo-400'>{icon}</div>
+				<div>
 				<div className='text-white font-medium'>{title}</div>
 				<div className='text-sm text-neutral-400'>{desc}</div>
+				</div>
 			</div>
 		</div>
 	);
