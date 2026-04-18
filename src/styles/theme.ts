@@ -8,78 +8,78 @@ export const theme = {
   colors: {
     // Base backgrounds
     bg: {
-      primary: '#050506',
-      secondary: '#0a0a0c',
-      tertiary: '#0f0f12',
-      elevated: '#141418',
+      primary: '#050507',
+      secondary: '#0b0f17',
+      tertiary: '#111829',
+      elevated: '#18233a',
     },
     
     // Accent colors
     accent: {
-      primary: '#5E6AD2',       // Main brand color (indigo)
-      primaryHover: '#6872D9',
-      primaryMuted: 'rgba(94, 106, 210, 0.15)',
-      secondary: '#8B5CF6',     // Purple accent
-      tertiary: '#06B6D4',      // Cyan accent
+      primary: '#6D7DFF',       // Main brand color (bright indigo)
+      primaryHover: '#8493FF',
+      primaryMuted: 'rgba(109, 125, 255, 0.18)',
+      secondary: '#FF5EA8',     // Bright pink accent
+      tertiary: '#32D7FF',      // Neon cyan accent
     },
     
     // Text colors
     text: {
-      primary: '#EDEDEF',
-      secondary: '#A1A1AA',
-      muted: '#8A8F98',
-      disabled: '#52525B',
+      primary: '#F3F7FF',
+      secondary: '#CBD5E8',
+      muted: '#9AA7C0',
+      disabled: '#68758E',
     },
     
     // Border colors
     border: {
-      default: 'rgba(255, 255, 255, 0.06)',
-      hover: 'rgba(255, 255, 255, 0.12)',
-      active: 'rgba(255, 255, 255, 0.2)',
-      accent: 'rgba(94, 106, 210, 0.3)',
+      default: 'rgba(224, 233, 255, 0.16)',
+      hover: 'rgba(232, 239, 255, 0.28)',
+      active: 'rgba(239, 244, 255, 0.4)',
+      accent: 'rgba(109, 125, 255, 0.45)',
     },
     
     // Status colors
     status: {
-      success: '#10B981',
-      successMuted: 'rgba(16, 185, 129, 0.15)',
-      warning: '#F59E0B',
-      warningMuted: 'rgba(245, 158, 11, 0.15)',
-      error: '#EF4444',
-      errorMuted: 'rgba(239, 68, 68, 0.15)',
-      info: '#3B82F6',
-      infoMuted: 'rgba(59, 130, 246, 0.15)',
+      success: '#28D68B',
+      successMuted: 'rgba(40, 214, 139, 0.18)',
+      warning: '#FFBE55',
+      warningMuted: 'rgba(255, 190, 85, 0.18)',
+      error: '#FF6A7A',
+      errorMuted: 'rgba(255, 106, 122, 0.18)',
+      info: '#4FA8FF',
+      infoMuted: 'rgba(79, 168, 255, 0.18)',
     },
     
     // Level colors for courses
     level: {
-      beginner: { bg: 'rgba(16, 185, 129, 0.1)', text: '#10B981', border: 'rgba(16, 185, 129, 0.2)' },
-      intermediate: { bg: 'rgba(59, 130, 246, 0.1)', text: '#3B82F6', border: 'rgba(59, 130, 246, 0.2)' },
-      advanced: { bg: 'rgba(139, 92, 246, 0.1)', text: '#8B5CF6', border: 'rgba(139, 92, 246, 0.2)' },
+      beginner: { bg: 'rgba(40, 214, 139, 0.16)', text: '#5BE7A9', border: 'rgba(91, 231, 169, 0.34)' },
+      intermediate: { bg: 'rgba(79, 168, 255, 0.16)', text: '#8BC5FF', border: 'rgba(139, 197, 255, 0.34)' },
+      advanced: { bg: 'rgba(182, 102, 255, 0.16)', text: '#CCA3FF', border: 'rgba(204, 163, 255, 0.34)' },
     },
   },
   
   // Shadows
   shadows: {
-    sm: '0 2px 8px rgba(0, 0, 0, 0.3)',
-    md: '0 4px 16px rgba(0, 0, 0, 0.35)',
-    lg: '0 8px 32px rgba(0, 0, 0, 0.4)',
-    xl: '0 16px 48px rgba(0, 0, 0, 0.5)',
+    sm: '0 2px 10px rgba(2, 8, 28, 0.34)',
+    md: '0 6px 20px rgba(2, 8, 28, 0.4)',
+    lg: '0 12px 36px rgba(2, 8, 28, 0.48)',
+    xl: '0 18px 58px rgba(2, 8, 28, 0.56)',
     glow: {
-      accent: '0 0 40px rgba(94, 106, 210, 0.25)',
-      success: '0 0 40px rgba(16, 185, 129, 0.25)',
+      accent: '0 0 42px rgba(109, 125, 255, 0.28)',
+      success: '0 0 42px rgba(40, 214, 139, 0.24)',
     },
-    card: '0 0 0 1px rgba(255,255,255,0.06), 0 2px 20px rgba(0,0,0,0.4)',
-    cardHover: '0 0 0 1px rgba(255,255,255,0.1), 0 8px 40px rgba(0,0,0,0.5), 0 0 60px rgba(94,106,210,0.15)',
+    card: '0 0 0 1px rgba(223,233,255,0.14), 0 6px 24px rgba(2,8,28,0.44)',
+    cardHover: '0 0 0 1px rgba(235,241,255,0.24), 0 12px 46px rgba(2,8,28,0.54), 0 0 58px rgba(109,125,255,0.18)',
   },
   
   // Gradients
   gradients: {
-    bgMain: 'radial-gradient(ellipse_at_top,#0a0a0f_0%,#050506_50%,#020203_100%)',
-    textPrimary: 'linear-gradient(to bottom, white, rgba(255,255,255,0.7))',
-    accent: 'linear-gradient(135deg, #5E6AD2, #8B5CF6)',
-    shine: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent)',
-    cardBg: 'linear-gradient(to bottom, rgba(255,255,255,0.08), rgba(255,255,255,0.02))',
+    bgMain: 'radial-gradient(ellipse_at_top,#1a2354_0%,#101737_42%,#050507_100%)',
+    textPrimary: 'linear-gradient(to bottom, #ffffff, rgba(243,247,255,0.78))',
+    accent: 'linear-gradient(135deg, #6D7DFF, #32D7FF 52%, #FF5EA8)',
+    shine: 'linear-gradient(90deg, transparent, rgba(245,249,255,0.16), transparent)',
+    cardBg: 'linear-gradient(to bottom, rgba(228,236,255,0.14), rgba(228,236,255,0.05))',
   },
   
   // Border radius
@@ -122,20 +122,20 @@ export const theme = {
 // Common gradient classes for inline use
 export const gradientClasses = {
   fields: [
-    "from-[#5E6AD2]/30 via-purple-500/20 to-transparent",
-    "from-emerald-500/30 via-teal-500/20 to-transparent",
-    "from-pink-500/30 via-rose-500/20 to-transparent",
-    "from-cyan-500/30 via-blue-500/20 to-transparent",
-    "from-amber-500/30 via-orange-500/20 to-transparent",
-    "from-violet-500/30 via-purple-500/20 to-transparent",
+    "from-[#6D7DFF]/34 via-[#32D7FF]/20 to-transparent",
+    "from-emerald-400/32 via-teal-300/18 to-transparent",
+    "from-rose-400/30 via-pink-400/18 to-transparent",
+    "from-sky-400/32 via-blue-400/18 to-transparent",
+    "from-amber-400/30 via-orange-400/18 to-transparent",
+    "from-violet-400/32 via-fuchsia-400/18 to-transparent",
   ],
 };
 
 // Level badge styling
 export const levelStyles = {
-  beginner: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
-  intermediate: "bg-blue-500/10 text-blue-400 border-blue-500/20",
-  advanced: "bg-purple-500/10 text-purple-400 border-purple-500/20",
+  beginner: "bg-emerald-400/16 text-emerald-300 border-emerald-300/34",
+  intermediate: "bg-sky-400/16 text-sky-300 border-sky-300/34",
+  advanced: "bg-violet-400/16 text-violet-300 border-violet-300/34",
 };
 
 export default theme;
