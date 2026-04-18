@@ -4,11 +4,11 @@ import tailwindcss from '@tailwindcss/vite'
 import path from 'path'
 
 // https://vite.dev/config/
-const repoName = process.env.GITHUB_REPOSITORY?.split('/')[1]
 const isGitHubActions = process.env.GITHUB_ACTIONS === 'true'
+const basePath = process.env.VITE_BASE_PATH ?? (isGitHubActions ? '/opencourse/' : '/')
 
 export default defineConfig({
-  base: isGitHubActions && repoName ? `/${repoName}/` : '/',
+  base: basePath,
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {

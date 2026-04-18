@@ -52,7 +52,7 @@ export default function Header() {
 					{/* Logo */}
 					<Link to='/' className='flex items-center gap-2 group'>
 						<img
-							src='/logo.png'
+							src={`${import.meta.env.BASE_URL}logo.png`}
 							alt='OpenCourse'
 							width={100}
 							height={110}
