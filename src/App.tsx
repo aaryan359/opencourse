@@ -8,9 +8,11 @@ import Home from "./pages/home/Home";
 import About from "./pages/about/About";
 
 
-import CommunityPage from "./pages/community/Community";
 import CoursesPage from "./pages/courses/course";
 import CourseTopicsPage from "./pages/courses/courseTopics";
+import TopicVideosPage from "./pages/courses/topicVideos";
+import ContributePage from "./pages/contribute/ContributePage";
+import ContributorDashboard from "./pages/dashboard/ContributorDashboard";
 
 
 import StartPrep from "./pages/interviewPrep/InterviewPrep";
@@ -63,9 +65,11 @@ function App() {
 					<Route path="/about"  element={<About />} />
 					<Route path="/courses" element={<CoursesPage />} />
 					<Route path="/courses/:courseId" element={<CourseTopicsPage />} />
+					<Route path="/courses/:courseId/topics/:topicId/videos" element={<TopicVideosPage />} />
+					<Route path="/contribute" element={<ContributePage />} />
+					<Route path="/dashboard" element={<ContributorDashboard />} />
 
 
-					<Route path="/community" element={<CommunityPage />} />
 					<Route path="/prep"      element={<StartPrep />} />
 			</Route>
 

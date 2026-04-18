@@ -15,14 +15,14 @@ export interface SubmitInterviewPayload {
 
 export const interviewApi = {
   submit: (payload: SubmitInterviewPayload) =>
-    apiClient.post("/interview-questions", payload),
+    apiClient.post("/interview/submit", payload),
 
   list: (params?: Record<string, unknown>) =>
-    apiClient.get("/interview-questions", { params }),
+    apiClient.get("/interview/getquestions", { params }),
 
-  getById: (id: string) => apiClient.get(`/interview-questions/${id}`),
+  getById: (id: string) => apiClient.get(`/interview/getquestions/${id}`),
 
-  getCompanies: () => apiClient.get("/interview-questions/companies"),
+  getCompanies: () => apiClient.get("/interview/companies"),
 
-  getRoles: () => apiClient.get("/interview-questions/roles"),
+  getRoles: () => apiClient.get("/interview/roles"),
 };

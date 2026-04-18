@@ -6,6 +6,9 @@ export interface IVideo extends Document {
     title: string;
     description?: string;
     url: string;
+    sourceType: 'url' | 'file';
+    mimeType?: string;
+    fileSize?: number;
 
     /** Duration in seconds */
     duration?: number;

@@ -20,6 +20,22 @@ const VideoSchema = new Schema<IVideo>(
             trim: true,
         },
 
+        sourceType: {
+            type: String,
+            enum: ['url', 'file'],
+            default: 'url',
+        },
+
+        mimeType: {
+            type: String,
+            trim: true,
+        },
+
+        fileSize: {
+            type: Number,
+            min: 0,
+        },
+
         thumbnail: {
             type: String,
             trim: true,

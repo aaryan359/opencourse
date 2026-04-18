@@ -1,14 +1,20 @@
+export type VideoStatus = 'pending' | 'approved' | 'rejected';
+
 export interface Video {
-  id: string;
+  _id: string;
   title: string;
-  description: string;
-  thumbnail: string;
-  videoUrl: string;
-  duration: string;
-  rating: number;
-  views: number;
-  upvotes: number;
-  downvotes: number;
-  tags: string[];
-  author?: string;
+  description?: string;
+  url: string;
+  sourceType?: 'url' | 'file';
+  mimeType?: string;
+  fileSize?: number;
+  duration?: number;
+  thumbnail?: string;
+  tags?: string[];
+  status?: VideoStatus;
+  views?: number;
+  rating?: number;
+  reviewNote?: string;
+  createdAt?: string;
+  updatedAt?: string;
 }

@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { authMiddleware } from '../middlewares/auth.middleware';
 import { requireInstructor } from '../middlewares/role.middleware';
+import { uploadVideoFile } from '../middlewares/videoUpload.middleware';
 
 import * as VideoController from '../controllers/Video.controller';
 
@@ -15,6 +16,7 @@ videoRouter.post(
     '/topics/:topicId/videos',
     authMiddleware,
     requireInstructor,
+    uploadVideoFile,
     VideoController.uploadVideo,
 );
 

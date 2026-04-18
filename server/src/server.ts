@@ -1,5 +1,6 @@
 import type { Response, Application, Request, NextFunction } from 'express';
 import express from 'express';
+import path from 'path';
 
 import helmet from 'helmet';
 import cors from 'cors';
@@ -14,6 +15,7 @@ const app: Application = express();
 
 app.use(express.json({ limit: '10kb' }));
 app.use(express.urlencoded({ extended: true, limit: '10kb' }));
+app.use('/uploads', express.static(path.resolve(process.cwd(), 'uploads')));
 app.use(helmet());
 
 app.use(

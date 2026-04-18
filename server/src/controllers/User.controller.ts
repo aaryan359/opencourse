@@ -2,6 +2,7 @@ import type { Request, Response } from 'express';
 import type { AuthRequest } from '../middlewares/auth.middleware';
 import { User } from '../models/User';
 import { Video } from '../models/Video';
+import { ContributorApplication } from '../models/ContributorApplication';
 import ApiResponse from '../utils/ApiResponse';
 import jwt from 'jsonwebtoken';
 import type { SignOptions } from 'jsonwebtoken';
@@ -389,6 +390,126 @@ export const getUserUploads = async (req: AuthRequest, res: Response) => {
         console.error('Get user uploads error:', error);
         return ApiResponse.error(res, {
             message: 'Failed to retrieve user uploads',
+            statusCode: 500,
+        });
+    }
+};
+
+export const applyForContributor = async (req: AuthRequest, res: Response) => {
+    try {
+        const userId = req.user?.userId;
+        const { motivation, portfolioLinks, intendedTopics } = req.body as {
+            motivation?: string;
+            portfolioLinks?: string[];
+            intendedTopics?: string[];
+        };
+
+        if (!userId) {
+            return ApiResponse.error(res, {
+                message: 'Unauthorized',
+                statusCode: 401,
+            });
+        }
+
+        const user = await User.findById(userId);
+        if (!user) {
+            return ApiResponse.error(res, {
+                message: 'User not found',
+                statusCode: 404,
+            });
+        }
+
+        if (user.role === 'admin') {
+            return ApiResponse.error(res, {
+                message: 'Admin account cannot apply as contributor',
+                statusCode: 403,
+            });
+        }
+
+        if (user.role === 'contributor' || user.contributorStatus === 'approved') {
+            return ApiResponse.error(res, {
+                message: 'You are already an approved contributor',
+                statusCode: 400,
+            });
+        }
+
+        const normalizedMotivation = String(motivation || '').trim();
+        if (normalizedMotivation.length < 50) {
+            return ApiResponse.error(res, {
+                message: 'Motivation must be at least 50 characters',
+                statusCode: 400,
+            });
+        }
+
+        const normalizedLinks = Array.isArray(portfolioLinks)
+            ? portfolioLinks.map((item) => String(item).trim()).filter(Boolean)
+            : [];
+
+        const normalizedTopics = Array.isArray(intendedTopics)
+            ? intendedTopics.map((item) => String(item).trim()).filter(Boolean)
+            : [];
+
+        const existingPending = await ContributorApplication.findOne({
+            applicant: userId,
+            status: 'pending',
+        });
+
+        if (existingPending) {
+            return ApiResponse.error(res, {
+                message: 'You already have a pending application',
+                statusCode: 409,
+            });
+        }
+
+        const application = await ContributorApplication.create({
+            applicant: userId,
+            motivation: normalizedMotivation,
+            portfolioLinks: normalizedLinks,
+            intendedTopics: normalizedTopics,
+            status: 'pending',
+        });
+
+        user.contributorStatus = 'pending';
+        await user.save();
+
+        return ApiResponse.success(res, {
+            message: 'Contributor application submitted successfully',
+            data: application,
+            statusCode: 201,
+        });
+    } catch (error) {
+        console.error('Apply contributor error:', error);
+        return ApiResponse.error(res, {
+            message: 'Failed to submit contributor application',
+            statusCode: 500,
+        });
+    }
+};
+
+export const getMyContributorApplication = async (req: AuthRequest, res: Response) => {
+    try {
+        const userId = req.user?.userId;
+
+        if (!userId) {
+            return ApiResponse.error(res, {
+                message: 'Unauthorized',
+                statusCode: 401,
+            });
+        }
+
+        const application = await ContributorApplication.findOne({ applicant: userId })
+            .populate('reviewedBy', 'username email')
+            .sort({ createdAt: -1 });
+
+        return ApiResponse.success(res, {
+            message: 'Contributor application retrieved successfully',
+            data: application,
+            statusCode: 200,
+        });
+    } catch (error) {
+        console.error('Get contributor application error:', error);
+        return ApiResponse.error(res, {
+            message: 'Failed to retrieve contributor application',
             statusCode: 500,
         });
     }

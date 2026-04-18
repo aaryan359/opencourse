@@ -7,10 +7,14 @@ import type {
   AuthUser,
 } from '@/types';
 
+
 const asObject = (value: unknown): Record<string, unknown> | null => {
   if (typeof value !== 'object' || value === null) return null;
   return value as Record<string, unknown>;
 };
+
+
+
 
 export const extractAuthPayload = (raw: unknown): AuthPayload => {
   const wrapped = raw as ApiEnvelope<AuthPayload | AuthResponse>;
@@ -27,20 +31,23 @@ export const extractAuthPayload = (raw: unknown): AuthPayload => {
   return { token, user };
 };
 
+
+
 export const extractAdminPayload = (raw: unknown): AdminAuthPayload => {
-  const wrapped = raw as ApiEnvelope<AdminAuthPayload | { token: string; user: AdminUser }>;
-  const payload = wrapped?.data ?? raw;
-  const obj = asObject(payload);
+    const wrapped = raw as ApiEnvelope<AdminAuthPayload | { token: string; user: AdminUser }>;
+    const payload = wrapped?.data ?? raw;
+    const obj = asObject(payload);
 
-  const token = typeof obj?.token === 'string' ? obj.token : null;
-  const admin = (asObject(obj?.admin) ?? asObject(obj?.user)) as AdminUser | null;
+    const token = typeof obj?.token === 'string' ? obj.token : null;
+    const admin = (asObject(obj?.admin) ?? asObject(obj?.user)) as AdminUser | null;
 
-  if (!token || !admin) {
-    throw new Error('Invalid admin authentication response from server');
-  }
+    if (!token || !admin) {
+        throw new Error('Invalid admin authentication response from server');
+    }
 
-  return { token, admin };
+    return { token, admin };
 };
+
 
 export const extractAuthUser = (raw: unknown): AuthUser => {
   const wrapped = raw as ApiEnvelope<AuthUser>;

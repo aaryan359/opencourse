@@ -4,6 +4,23 @@ import { Video } from '../models/Video';
 import { Topic } from '../models/Topic';
 import { User } from '../models/User';
 import ApiResponse from '../utils/ApiResponse';
+import { MAX_VIDEO_DURATION_SECONDS } from '../middlewares/videoUpload.middleware';
+
+const parseDuration = (raw: unknown): number | undefined => {
+    if (raw === undefined || raw === null || raw === '') return undefined;
+    const parsed = Number(raw);
+    if (!Number.isFinite(parsed) || parsed <= 0) return undefined;
+    return parsed;
+};
+
+const isValidHttpUrl = (value: string): boolean => {
+    try {
+        const parsed = new URL(value);
+        return parsed.protocol === 'http:' || parsed.protocol === 'https:';
+    } catch {
+        return false;
+    }
+};
 
 export const listVideosByCourse = async (req: AuthRequest, res: Response) => {
     try {
@@ -46,7 +63,6 @@ export const listVideosByCourse = async (req: AuthRequest, res: Response) => {
     }
 };
 
-/* ================= LIST VIDEOS BY TOPIC (PUBLIC) ================= */
 export const listVideosByTopic = async (req: AuthRequest, res: Response) => {
     try {
         const { topicId } = req.params;
@@ -71,7 +87,6 @@ export const listVideosByTopic = async (req: AuthRequest, res: Response) => {
     }
 };
 
-/* ================= GET VIDEO BY ID (PUBLIC) ================= */
 export const getVideoById = async (req: AuthRequest, res: Response) => {
     try {
         const { id } = req.params;
@@ -104,16 +119,58 @@ export const getVideoById = async (req: AuthRequest, res: Response) => {
     }
 };
 
-/* ================= UPLOAD VIDEO (USER) ================= */
 export const uploadVideo = async (req: AuthRequest, res: Response) => {
     try {
         const { topicId } = req.params;
         const userId = req.user?.userId;
         const { title, description, url } = req.body;
+        const file = req.file;
+        const duration = parseDuration(req.body?.duration);
 
-        if (!title || !url) {
+        if (!title) {
             return ApiResponse.error(res, {
-                message: 'Title and URL are required',
+                message: 'Title is required',
+                statusCode: 400,
+            });
+        }
+
+        const normalizedUrl = String(url || '').trim();
+        const hasExternalUrl = Boolean(normalizedUrl);
+        const hasFileUpload = Boolean(file);
+
+        if (!hasExternalUrl && !hasFileUpload) {
+            return ApiResponse.error(res, {
+                message: 'Provide either a video file upload or a video URL',
+                statusCode: 400,
+            });
+        }
+
+        if (hasExternalUrl && hasFileUpload) {
+            return ApiResponse.error(res, {
+                message: 'Provide only one source: either file upload or URL',
+                statusCode: 400,
+            });
+        }
+
+        if (hasExternalUrl && !isValidHttpUrl(normalizedUrl)) {
+            return ApiResponse.error(res, {
+                message: 'Video URL must be a valid http/https link',
+                statusCode: 400,
+            });
+        }
+
+        if (duration && duration > MAX_VIDEO_DURATION_SECONDS) {
+            return ApiResponse.error(res, {
+                message: `Video is too long. Max allowed duration is ${Math.floor(
+                    MAX_VIDEO_DURATION_SECONDS / 60,
+                )} minutes`,
+                statusCode: 400,
+            });
+        }
+
+        if (hasFileUpload && !duration) {
+            return ApiResponse.error(res, {
+                message: 'Duration is required when uploading a video file',
                 statusCode: 400,
             });
         }
@@ -127,10 +184,16 @@ export const uploadVideo = async (req: AuthRequest, res: Response) => {
             });
         }
 
+        const resolvedUrl = hasFileUpload ? `/uploads/videos/${file?.filename}` : normalizedUrl;
+
         const video = await Video.create({
-            title,
+            title: String(title).trim(),
             description,
-            url,
+            url: resolvedUrl,
+            sourceType: hasFileUpload ? 'file' : 'url',
+            mimeType: file?.mimetype,
+            fileSize: file?.size,
+            duration,
             topic: topicId,
             course: topic.course,
             uploadedBy: userId,
@@ -161,7 +224,6 @@ export const uploadVideo = async (req: AuthRequest, res: Response) => {
     }
 };
 
-/* ================= GET USER'S UPLOADED VIDEOS ================= */
 export const getUserVideos = async (req: AuthRequest, res: Response) => {
     try {
         const userId = req.user?.userId;

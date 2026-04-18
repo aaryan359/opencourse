@@ -12,6 +12,10 @@ interviewRouter.post(
     InterviewQuestionController.submitInterviewQuestions,
 );
 
+interviewRouter.get('/', InterviewQuestionController.listInterviewQuestions);
 interviewRouter.get('/getquestions', InterviewQuestionController.getAllInterviewQuestions);
+interviewRouter.get('/companies', InterviewQuestionController.getCompanies);
+interviewRouter.get('/roles', InterviewQuestionController.getRoles);
+interviewRouter.get('/getquestions/:id', InterviewQuestionController.getInterviewQuestionById);
 
 export default interviewRouter;

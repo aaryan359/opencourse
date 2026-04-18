@@ -118,8 +118,10 @@ export default function CourseTopicsPage() {
                 {!loading && !error && topics.length > 0 && (
                     <div className='space-y-3'>
                         {topics.map((topic) => (
-                            <article
+                            <Link
                                 key={topic._id}
+                                to={`/courses/${courseId}/topics/${topic._id}/videos`}
+                                state={{ topicTitle: topic.title, courseTitle: course?.title }}
                                 className='rounded-xl border border-white/10 bg-[#0b0b10] p-5 transition hover:border-indigo-500/40'
                             >
                                 <div className='flex items-start gap-4'>
@@ -133,7 +135,7 @@ export default function CourseTopicsPage() {
                                         </p>
                                     </div>
                                 </div>
-                            </article>
+                            </Link>
                         ))}
                     </div>
                 )}
