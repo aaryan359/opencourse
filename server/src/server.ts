@@ -15,6 +15,35 @@ const app: Application = express();
 
 const REQUEST_BODY_LIMIT = process.env.REQUEST_BODY_LIMIT ?? '2mb';
 
+const parseAllowedOrigins = (rawOrigins?: string): string[] => {
+    if (!rawOrigins) return [];
+
+    const normalized = rawOrigins.trim();
+
+    // Support JSON array format and simple comma-separated format.
+    if (normalized.startsWith('[')) {
+        try {
+            const parsed = JSON.parse(normalized);
+            if (Array.isArray(parsed)) {
+                return parsed
+                    .map((origin) => String(origin).trim())
+                    .filter(Boolean)
+                    .map((origin) => origin.replace(/\/+$/, ''));
+            }
+        } catch {
+            // Fall through to comma-separated parsing.
+        }
+    }
+
+    return normalized
+        .split(',')
+        .map((origin) => origin.trim().replace(/^['\"]|['\"]$/g, ''))
+        .filter(Boolean)
+        .map((origin) => origin.replace(/\/+$/, ''));
+};
+
+const allowedOrigins = parseAllowedOrigins(process.env.ALLOWED_ORIGINS);
+
 app.use(express.json({ limit: REQUEST_BODY_LIMIT }));
 app.use(express.urlencoded({ extended: true, limit: REQUEST_BODY_LIMIT }));
 app.use('/uploads', express.static(path.resolve(process.cwd(), 'uploads')));
@@ -22,7 +51,16 @@ app.use(helmet());
 
 app.use(
     cors({
-        origin: process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(',') : '*',
+        origin: (requestOrigin, callback) => {
+            if (!requestOrigin) return callback(null, true);
+            const normalizedOrigin = requestOrigin.replace(/\/+$/, '');
+
+            if (allowedOrigins.length === 0 || allowedOrigins.includes(normalizedOrigin)) {
+                return callback(null, true);
+            }
+
+            return callback(new Error('Not allowed by CORS'));
+        },
         methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
         credentials: true,
     }),
