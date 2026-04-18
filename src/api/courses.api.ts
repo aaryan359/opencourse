@@ -7,7 +7,7 @@ import type { ApiEnvelope, Course, Topic } from "../types";
 // --------------------
 export const fieldsApi = {
   getAllFields: () => {
-    return apiClient.get("/fields");
+    return apiClient.get("/course/getfields");
   },
 
   getFieldBySlug: (slug: string) => {
