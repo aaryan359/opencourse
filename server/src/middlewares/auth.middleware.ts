@@ -8,7 +8,6 @@ import { User } from '../models/User';
 
 interface JwtUserPayload extends JwtPayload {
     userId: string;
-    role: string;
 }
 
 /* ================= EXTEND REQUEST ================= */
@@ -67,9 +66,9 @@ export const authMiddleware = async (req: AuthRequest, res: Response, next: Next
             });
         }
 
-        const userExists = await User.exists({ _id: decoded.userId });
+        const currentUser = await User.findById(decoded.userId).select('role');
 
-        if (!userExists) {
+        if (!currentUser) {
             return ApiResponse.error(res, {
                 message: 'User not found',
                 statusCode: 401,
@@ -79,7 +78,8 @@ export const authMiddleware = async (req: AuthRequest, res: Response, next: Next
         /* attach minimal user info */
         req.user = {
             userId: decoded.userId,
-            role: decoded.role,
+            // Always trust current DB role; JWT role can be stale after admin approvals.
+            role: currentUser.role,
         };
 
         return next();
