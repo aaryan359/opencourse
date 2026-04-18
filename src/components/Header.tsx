@@ -16,22 +16,17 @@ const NAV_ITEMS = [
 
 export default function Header() {
 	const [menuOpen, setMenuOpen] = useState(false);
-	const [scrolled, setScrolled] = useState(false);
 	const [userMenuOpen, setUserMenuOpen] = useState(false);
+	const [avatarLoadError, setAvatarLoadError] = useState(false);
 	const location = useLocation();
 	const dispatch = useAppDispatch();
 	const user = useAppSelector((state) => state.auth.user);
+	const avatarUrl = user?.profile?.avatar?.trim() ?? "";
+	const hasAvatar = Boolean(avatarUrl) && !avatarLoadError;
 
 	const logout = () => {
 		void dispatch(logoutUser());
 	};
-
-	// Handle scroll effect
-	useEffect(() => {
-		const handleScroll = () => setScrolled(window.scrollY > 20);
-		window.addEventListener("scroll", handleScroll);
-		return () => window.removeEventListener("scroll", handleScroll);
-	}, []);
 
 	// Close mobile menu on route change
 	useEffect(() => {
@@ -39,15 +34,16 @@ export default function Header() {
 		setUserMenuOpen(false);
 	}, [location.pathname]);
 
+	useEffect(() => {
+		setAvatarLoadError(false);
+	}, [avatarUrl]);
+
 	return (
 		<header
 			className={`
 				sticky top-0 z-50
 				transition-all duration-300
-				${scrolled 
-					? "bg-[#050506]/90 backdrop-blur-xl border-b border-white/6 shadow-lg shadow-black/20" 
-					: "bg-transparent border-b border-transparent"
-				}
+				bg-transparent backdrop-blur-sm border-b border-transparent
 			`}>
 			<Container>
 				<div className='flex h-16 items-center justify-between'>
@@ -81,10 +77,19 @@ export default function Header() {
 									onClick={() => setUserMenuOpen(!userMenuOpen)}
 									className="flex items-center gap-2 px-3 py-2 rounded-xl bg-white/3 hover:bg-white/6 border border-white/6 transition-all duration-200"
 								>
-									<div className="w-7 h-7 rounded-lg bg-linear-to-br from-[#5E6AD2] to-purple-500 flex items-center justify-center">
-										<span className="text-xs font-semibold text-white">
-											{user.username?.charAt(0).toUpperCase() || "U"}
-										</span>
+									<div className="w-7 h-7 overflow-hidden rounded-lg bg-linear-to-br from-[#5E6AD2] to-purple-500 flex items-center justify-center">
+										{hasAvatar ? (
+											<img
+												src={avatarUrl}
+												alt={user.username}
+												className="h-full w-full object-cover"
+												onError={() => setAvatarLoadError(true)}
+											/>
+										) : (
+											<span className="text-xs font-semibold text-white">
+												{user.username?.charAt(0).toUpperCase() || "U"}
+											</span>
+										)}
 									</div>
 									<span className="text-sm text-[#EDEDEF] font-medium max-w-25 truncate">
 										{user.username}
@@ -173,6 +178,26 @@ export default function Header() {
 							<div className="pt-4 mt-4 border-t border-white/6 space-y-2">
 								{user ? (
 									<>
+										<div className="mb-2 flex items-center gap-3 rounded-xl border border-white/8 bg-white/4 px-3 py-2.5">
+											<div className="h-9 w-9 overflow-hidden rounded-full bg-linear-to-br from-[#5E6AD2] to-purple-500 flex items-center justify-center">
+												{hasAvatar ? (
+													<img
+														src={avatarUrl}
+														alt={user.username}
+														className="h-full w-full object-cover"
+														onError={() => setAvatarLoadError(true)}
+													/>
+												) : (
+													<span className="text-xs font-semibold text-white">
+														{user.username?.charAt(0).toUpperCase() || "U"}
+													</span>
+												)}
+											</div>
+											<div className="min-w-0">
+												<p className="truncate text-sm font-medium text-[#EDEDEF]">{user.username}</p>
+												<p className="truncate text-xs text-[#8A8F98]">{user.email}</p>
+											</div>
+										</div>
 										<Link
 											to="/dashboard"
 											className="block rounded-xl px-4 py-3 text-sm font-medium text-[#EDEDEF] bg-white/3 hover:bg-white/6 transition-colors"

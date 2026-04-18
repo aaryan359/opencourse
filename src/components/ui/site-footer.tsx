@@ -17,21 +17,20 @@ function SiteFooter() {
     {
       title: "About Us",
       links: [
-        { label: "Company History", href: "#" },
-        { label: "Meet the Team", href: "#" },
-        { label: "Employee Handbook", href: "#" },
-        { label: "Careers", href: "#" },
+        { label: "Company History", href: "/about#company-history" },
+        { label: "Meet the Team", href: "/about#meet-the-team" },
+        { label: "Careers", href: "/about#careers" },
       ],
     },
     {
       title: "Helpful Links",
       links: [
-        { label: "FAQs", href: "#" },
-        { label: "Support", href: "#" },
+        { label: "FAQs", href: "/about#faqs" },
+        { label: "Support", href: "/about#support" },
         {
           label: "Live Chat",
           href: "#",
-          pulse: true,
+          pulse: false,
         },
       ],
     },
@@ -40,17 +39,17 @@ function SiteFooter() {
   const contactInfo = [
     {
       icon: <Mail size={18} className="text-[#3ca2fa]" />,
-      text: "hello@opencourse.dev",
-      href: "mailto:hello@opencourse.dev",
+      text: "aaryanmeena96@gmail.com",
+      href: "mailto:aaryanmeena96@gmail.com",
     },
     {
       icon: <Phone size={18} className="text-[#3ca2fa]" />,
-      text: "+91 86373 73116",
-      href: "tel:+918637373116",
+      text: "+91 9799819141",
+      href: "tel:+919799819141",
     },
     {
       icon: <MapPin size={18} className="text-[#3ca2fa]" />,
-      text: "Bengaluru, India",
+      text: "India",
     },
   ];
 

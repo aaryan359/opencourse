@@ -85,32 +85,29 @@ const quickActions = [
 	{
 		label: "Start Learning",
 		href: "/courses",
-		bg: "bg-[#0057FF]",
 	},
 	{
 		label: "Contribute Content",
 		href: "/contribute",
-		bg: "bg-[#FF4D00]",
 	},
 	{
 		label: "Practice Interview",
 		href: "/prep",
-		bg: "bg-[#00A86B]",
 	},
 ];
 
 export default function Docs() {
 	return (
-		<div className="min-h-screen bg-[#0F1319] text-white">
-			<section className="border-b-2 border-[#2F4E77] bg-[#141B26] py-16">
+		<div className="min-h-screen bg-neutral-950 text-white">
+			<section className="border-b border-white/10 bg-neutral-950 py-16">
 				<Container>
-					<p className="inline-block rounded-full bg-[#2F4E77] px-4 py-2 text-xs font-semibold uppercase tracking-wide">
+					<p className="inline-block rounded-full border border-white/15 bg-white/5 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-neutral-200">
 						OpenCourse Documentation
 					</p>
 					<h1 className="mt-5 text-4xl font-extrabold md:text-5xl">
 						Simple Guide: How This Website Works
 					</h1>
-					<p className="mt-4 max-w-3xl text-[#D1D5DB]">
+					<p className="mt-4 max-w-3xl text-neutral-300">
 						This page explains the complete OpenCourse flow in very simple language. Use this when
 						you want to understand the product, contribute content, or present the project.
 					</p>
@@ -119,15 +116,15 @@ export default function Docs() {
 
 			<section className="py-12">
 				<Container>
-					<div className="mx-auto grid max-w-6xl gap-8 lg:grid-cols-[280px_1fr]">
-						<aside className="h-fit rounded-2xl border border-[#2A2A2A] bg-[#1A1F28] p-5 lg:sticky lg:top-24">
-							<p className="mb-3 text-sm font-bold text-[#93C5FD]">On This Page</p>
+					<div className="grid gap-8 lg:grid-cols-[280px_1fr]">
+						<aside className="h-fit rounded-2xl border border-white/10 bg-white/3 p-5 lg:sticky lg:top-24">
+							<p className="mb-3 text-sm font-bold text-white">On This Page</p>
 							<nav className="space-y-2">
 								{sections.map((section) => (
 									<a
 										key={section.id}
 										href={`#${section.id}`}
-										className="block rounded-lg bg-[#111827] px-3 py-2 text-sm font-medium text-[#E5E7EB] hover:bg-[#1F2937]"
+										className="block rounded-lg border border-white/8 bg-white/2 px-3 py-2 text-sm font-medium text-neutral-200 transition hover:bg-white/5"
 									>
 										{section.title}
 									</a>
@@ -140,16 +137,16 @@ export default function Docs() {
 								<article
 									id={section.id}
 									key={section.id}
-									className="rounded-2xl border border-[#2A2A2A] bg-[#171D26] p-6"
+									className="rounded-2xl border border-white/10 bg-white/3 p-6"
 								>
-									<h2 className="text-xl font-bold text-[#F8FAFC]">{section.title}</h2>
-									<p className="mt-3 leading-7 text-[#D1D5DB]">{section.content}</p>
+									<h2 className="text-xl font-bold text-white">{section.title}</h2>
+									<p className="mt-3 leading-7 text-neutral-300">{section.content}</p>
 								</article>
 							))}
 
-							<section className="rounded-2xl border border-[#2A2A2A] bg-[#171D26] p-6">
+							<section className="rounded-2xl border border-white/10 bg-white/3 p-6">
 								<h2 className="text-xl font-bold">Quick Actions</h2>
-								<p className="mt-2 text-[#D1D5DB]">
+								<p className="mt-2 text-neutral-300">
 									Use these shortcuts to directly open key parts of the platform.
 								</p>
 								<div className="mt-4 grid gap-3 sm:grid-cols-3">
@@ -157,7 +154,7 @@ export default function Docs() {
 										<a
 											key={action.href}
 											href={action.href}
-											className={`${action.bg} rounded-xl px-4 py-3 text-center text-sm font-bold transition hover:-translate-y-0.5`}
+											className="rounded-xl border border-white/15 bg-white px-4 py-3 text-center text-sm font-bold text-black transition hover:bg-neutral-200"
 										>
 											{action.label}
 										</a>

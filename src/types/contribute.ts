@@ -35,4 +35,5 @@ export interface UploadTopicContributionPayload {
   url?: string;
   videoFile?: File;
   duration?: number;
+  onUploadProgress?: (progressPercent: number) => void;
 }

@@ -1,6 +1,7 @@
-import { useEffect, useMemo, useState, type FormEvent } from 'react';
+import { useEffect, useMemo, useState, type ChangeEvent, type FormEvent } from 'react';
 import { Link, Navigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { Camera, Mail, ShieldCheck, UserCircle2 } from 'lucide-react';
 import { contributeApi } from '@/api/contribute.api';
 import { userApi } from '@/api/user.api';
 import Button from '@/components/ui/Button';
@@ -19,6 +20,47 @@ const splitListInput = (value: string): string[] =>
     .split(/\n|,/)
     .map((item) => item.trim())
     .filter(Boolean);
+
+const readImageAsAvatarDataUrl = (file: File): Promise<string> =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      const result = reader.result;
+      if (typeof result !== 'string') {
+        reject(new Error('Could not read image.'));
+        return;
+      }
+
+      const image = new Image();
+      image.onload = () => {
+        const maxSide = 320;
+        const scale = Math.min(1, maxSide / Math.max(image.width, image.height));
+        const width = Math.max(1, Math.round(image.width * scale));
+        const height = Math.max(1, Math.round(image.height * scale));
+
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        const context = canvas.getContext('2d');
+
+        if (!context) {
+          reject(new Error('Could not process image.'));
+          return;
+        }
+
+        context.drawImage(image, 0, 0, width, height);
+        const compressed = canvas.toDataURL('image/jpeg', 0.82);
+        resolve(compressed);
+      };
+
+      image.onerror = () => reject(new Error('Invalid image file.'));
+      image.src = result;
+    };
+
+    reader.onerror = () => reject(new Error('Failed to read image file.'));
+    reader.readAsDataURL(file);
+  });
 
 const statusBadgeClass: Record<'pending' | 'approved' | 'rejected', string> = {
   pending: 'border border-amber-500/30 bg-amber-500/10 text-amber-300',
@@ -54,6 +96,10 @@ export default function ContributorDashboard() {
   const [bio, setBio] = useState('');
   const [avatar, setAvatar] = useState('');
   const [skillsInput, setSkillsInput] = useState('');
+  const [avatarPreviewError, setAvatarPreviewError] = useState(false);
+  const [avatarFileName, setAvatarFileName] = useState('');
+  const [avatarUploading, setAvatarUploading] = useState(false);
+  const [avatarUploadProgress, setAvatarUploadProgress] = useState(0);
 
   const [savingProfile, setSavingProfile] = useState(false);
 
@@ -66,6 +112,17 @@ export default function ContributorDashboard() {
   const isApprovedContributor =
     user?.role === 'contributor' || user?.contributorStatus === 'approved';
 
+  const displayName =
+    [firstName.trim(), lastName.trim()].filter(Boolean).join(' ') ||
+    [user?.profile?.firstName, user?.profile?.lastName].filter(Boolean).join(' ') ||
+    user?.username ||
+    'User';
+  const avatarUrl = avatar.trim() || user?.profile?.avatar?.trim() || '';
+  const profileSkills = splitListInput(skillsInput);
+  const uploadedCount = stats?.uploadedVideos ?? user?.stats?.uploadedVideos ?? uploads.length;
+  const profileXp = stats?.xp ?? user?.stats?.xp ?? 0;
+  const profileLevel = stats?.level ?? user?.stats?.level ?? 1;
+
   useEffect(() => {
     setFirstName(user?.profile?.firstName ?? '');
     setLastName(user?.profile?.lastName ?? '');
@@ -74,6 +131,10 @@ export default function ContributorDashboard() {
     setAvatar(user?.profile?.avatar ?? '');
     setSkillsInput((user?.profile?.skills ?? []).join(', '));
   }, [user]);
+
+  useEffect(() => {
+    setAvatarPreviewError(false);
+  }, [avatar, user?.profile?.avatar]);
 
   useEffect(() => {
     if (!initialized || !isLoggedIn) {
@@ -243,6 +304,48 @@ export default function ContributorDashboard() {
     }
   };
 
+  const handleAvatarUpload = async (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      toast.error('Please upload an image file.');
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error('Image must be less than 5MB.');
+      return;
+    }
+
+    try {
+      setAvatarUploading(true);
+      setAvatarUploadProgress(0);
+
+      const progressInterval = window.setInterval(() => {
+        setAvatarUploadProgress((previous) => (previous >= 90 ? previous : previous + 10));
+      }, 80);
+
+      const dataUrl = await readImageAsAvatarDataUrl(file);
+
+      window.clearInterval(progressInterval);
+      setAvatarUploadProgress(100);
+      setAvatar(dataUrl);
+      setAvatarFileName(file.name);
+      setAvatarPreviewError(false);
+      toast.success('Profile picture uploaded. Click Save Profile to apply.');
+
+      window.setTimeout(() => {
+        setAvatarUploading(false);
+        setAvatarUploadProgress(0);
+      }, 350);
+    } catch (error: unknown) {
+      setAvatarUploading(false);
+      setAvatarUploadProgress(0);
+      toast.error(error instanceof Error ? error.message : 'Failed to process image.');
+    }
+  };
+
   if (!initialized) {
     return (
       <section className='min-h-screen bg-[#050506] px-4 py-16 md:px-8'>
@@ -262,21 +365,52 @@ export default function ContributorDashboard() {
   return (
     <section className='min-h-screen bg-[#050506] px-4 py-12 text-zinc-100 md:px-8 md:py-16'>
       <div className='mx-auto max-w-7xl'>
-        <div className='mb-6 rounded-2xl border border-white/10 bg-[#0b0b10] p-6'>
-          <h1 className='text-2xl font-semibold md:text-3xl'>Dashboard</h1>
-          <p className='mt-2 text-sm text-zinc-400 md:text-base'>
-            Manage your profile, contributor application, and contributions from one place.
-          </p>
+        <div className='mb-6 rounded-2xl border border-white/10 bg-linear-to-br from-[#0d0f16] via-[#0b0b10] to-[#131320] p-6'>
+          <div className='flex flex-col gap-5 md:flex-row md:items-center md:justify-between'>
+            <div className='flex items-center gap-4'>
+              <div className='h-16 w-16 overflow-hidden rounded-2xl border border-white/10 bg-[#151624]'>
+                {avatarUrl && !avatarPreviewError ? (
+                  <img
+                    src={avatarUrl}
+                    alt={displayName}
+                    className='h-full w-full object-cover'
+                    onError={() => setAvatarPreviewError(true)}
+                  />
+                ) : (
+                  <div className='flex h-full w-full items-center justify-center bg-linear-to-br from-[#5E6AD2] to-purple-500 text-lg font-semibold text-white'>
+                    {displayName.charAt(0).toUpperCase()}
+                  </div>
+                )}
+              </div>
+
+              <div>
+                <h1 className='text-2xl font-semibold md:text-3xl'>{displayName}</h1>
+                <p className='mt-1 text-sm text-zinc-400 md:text-base'>
+                  Manage your profile, contributor application, and contributions from one place.
+                </p>
+              </div>
+            </div>
+
+            <div className='grid grid-cols-3 gap-2 text-xs md:text-sm'>
+              <div className='rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-center'>
+                <p className='text-zinc-400'>Uploads</p>
+                <p className='mt-1 text-base font-semibold text-white'>{uploadedCount}</p>
+              </div>
+              <div className='rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-center'>
+                <p className='text-zinc-400'>XP</p>
+                <p className='mt-1 text-base font-semibold text-white'>{profileXp}</p>
+              </div>
+              <div className='rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-center'>
+                <p className='text-zinc-400'>Level</p>
+                <p className='mt-1 text-base font-semibold text-white'>{profileLevel}</p>
+              </div>
+            </div>
+          </div>
+
           <div className='mt-4 flex flex-wrap items-center gap-2 text-xs text-zinc-400'>
-            <span className='rounded-full border border-white/10 bg-white/5 px-2.5 py-1'>
-              @{user?.username}
-            </span>
-            <span className='rounded-full border border-white/10 bg-white/5 px-2.5 py-1'>
-              {user?.email}
-            </span>
-            <span className='rounded-full border border-white/10 bg-white/5 px-2.5 py-1 capitalize'>
-              role: {user?.role}
-            </span>
+            <span className='rounded-full border border-white/10 bg-white/5 px-2.5 py-1'>@{user?.username}</span>
+            <span className='rounded-full border border-white/10 bg-white/5 px-2.5 py-1'>{user?.email}</span>
+            <span className='rounded-full border border-white/10 bg-white/5 px-2.5 py-1 capitalize'>role: {user?.role}</span>
             <span className='rounded-full border border-white/10 bg-white/5 px-2.5 py-1 capitalize'>
               contributor: {user?.contributorStatus ?? 'none'}
             </span>
@@ -319,6 +453,59 @@ export default function ContributorDashboard() {
                 Keep your profile updated so other learners and contributors know you better.
               </p>
 
+              <div className='mt-6 rounded-xl border border-white/10 bg-[#11131c] p-4'>
+                <div className='flex flex-col gap-4 sm:flex-row sm:items-center'>
+                  <div className='h-20 w-20 overflow-hidden rounded-2xl border border-white/10 bg-[#151624]'>
+                    {avatarUrl && !avatarPreviewError ? (
+                      <img
+                        src={avatarUrl}
+                        alt={displayName}
+                        className='h-full w-full object-cover'
+                        onError={() => setAvatarPreviewError(true)}
+                      />
+                    ) : (
+                      <div className='flex h-full w-full items-center justify-center bg-linear-to-br from-[#5E6AD2] to-purple-500 text-xl font-semibold text-white'>
+                        {displayName.charAt(0).toUpperCase()}
+                      </div>
+                    )}
+                  </div>
+
+                  <div className='min-w-0 flex-1 space-y-2'>
+                    <Label htmlFor='avatarUpload' className='flex items-center gap-2 text-zinc-300'>
+                      <Camera className='h-4 w-4 text-indigo-300' />
+                      Upload Profile Picture
+                    </Label>
+                    <input
+                      id='avatarUpload'
+                      type='file'
+                      accept='image/*'
+                      onChange={handleAvatarUpload}
+                      disabled={avatarUploading}
+                      className='block w-full cursor-pointer rounded-md border border-white/10 bg-[#121218] px-3 py-2 text-sm text-zinc-300 file:mr-3 file:cursor-pointer file:rounded-md file:border-0 file:bg-indigo-500 file:px-3 file:py-1.5 file:text-xs file:font-medium file:text-white hover:file:bg-indigo-400'
+                    />
+                    {avatarUploading && (
+                      <div className='space-y-2 pt-1'>
+                        <div className='h-2 w-full overflow-hidden rounded-full bg-white/10'>
+                          <div
+                            className='h-full rounded-full bg-linear-to-r from-indigo-400 to-cyan-400 transition-all duration-200'
+                            style={{ width: `${avatarUploadProgress}%` }}
+                          />
+                        </div>
+                        <p className='text-xs text-indigo-300'>
+                          Processing image... {avatarUploadProgress}%
+                        </p>
+                      </div>
+                    )}
+                    {avatarFileName && (
+                      <p className='text-xs text-zinc-400'>Selected: {avatarFileName}</p>
+                    )}
+                    <p className='text-xs text-zinc-500'>
+                      This photo is also used in the header account icon after saving your profile.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
               <div className='mt-6 grid grid-cols-1 gap-4 md:grid-cols-2'>
                 <div className='space-y-2'>
                   <Label htmlFor='firstName' className='text-zinc-300'>
@@ -354,19 +541,6 @@ export default function ContributorDashboard() {
                   value={title}
                   onChange={(event) => setTitle(event.target.value)}
                   placeholder='Frontend Developer, Data Scientist, etc.'
-                  className='border-white/10 bg-[#121218] text-zinc-100 placeholder:text-zinc-500 focus-visible:ring-indigo-500/50'
-                />
-              </div>
-
-              <div className='mt-4 space-y-2'>
-                <Label htmlFor='avatar' className='text-zinc-300'>
-                  Avatar URL
-                </Label>
-                <Input
-                  id='avatar'
-                  value={avatar}
-                  onChange={(event) => setAvatar(event.target.value)}
-                  placeholder='https://...'
                   className='border-white/10 bg-[#121218] text-zinc-100 placeholder:text-zinc-500 focus-visible:ring-indigo-500/50'
                 />
               </div>
@@ -410,6 +584,53 @@ export default function ContributorDashboard() {
               onSubmit={handlePasswordUpdate}
               className='rounded-2xl border border-white/10 bg-[#0b0b10] p-6 md:p-8'
             >
+              <div className='mb-6 rounded-xl border border-white/10 bg-[#11131c] p-4'>
+                <h2 className='text-xl font-semibold'>Profile Summary</h2>
+                <div className='mt-4 space-y-3 text-sm text-zinc-300'>
+                  <div className='flex items-center gap-2 text-zinc-200'>
+                    <UserCircle2 className='h-4 w-4 text-indigo-300' />
+                    <span className='font-medium'>{displayName}</span>
+                  </div>
+                  <div className='flex items-center gap-2 text-zinc-300'>
+                    <Mail className='h-4 w-4 text-zinc-400' />
+                    <span className='truncate'>{user?.email}</span>
+                  </div>
+                  <div className='flex items-center gap-2 text-zinc-300 capitalize'>
+                    <ShieldCheck className='h-4 w-4 text-zinc-400' />
+                    <span>
+                      {user?.role} • Contributor {user?.contributorStatus ?? 'none'}
+                    </span>
+                  </div>
+                  {title && (
+                    <p className='text-zinc-300'>
+                      <span className='text-zinc-500'>Title:</span> {title}
+                    </p>
+                  )}
+                  {bio && (
+                    <p className='text-zinc-300'>
+                      <span className='text-zinc-500'>Bio:</span> {bio}
+                    </p>
+                  )}
+                  <div>
+                    <p className='mb-1 text-zinc-500'>Skills</p>
+                    <div className='flex flex-wrap gap-2'>
+                      {profileSkills.length > 0 ? (
+                        profileSkills.map((skill) => (
+                          <span
+                            key={skill}
+                            className='rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-xs text-zinc-300'
+                          >
+                            {skill}
+                          </span>
+                        ))
+                      ) : (
+                        <span className='text-xs text-zinc-500'>No skills added yet.</span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
               <h2 className='text-xl font-semibold'>Change Password</h2>
               <p className='mt-2 text-sm text-zinc-400'>
                 Keep your account secure by updating your password regularly.

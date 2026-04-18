@@ -13,8 +13,10 @@ import { connectDB } from './config/db';
 
 const app: Application = express();
 
-app.use(express.json({ limit: '10kb' }));
-app.use(express.urlencoded({ extended: true, limit: '10kb' }));
+const REQUEST_BODY_LIMIT = process.env.REQUEST_BODY_LIMIT ?? '2mb';
+
+app.use(express.json({ limit: REQUEST_BODY_LIMIT }));
+app.use(express.urlencoded({ extended: true, limit: REQUEST_BODY_LIMIT }));
 app.use('/uploads', express.static(path.resolve(process.cwd(), 'uploads')));
 app.use(helmet());
 
@@ -54,6 +56,18 @@ app.use((_req: Request, res: Response) => {
 
 app.use((err: unknown, _req: Request, res: Response, next: NextFunction) => {
     void next;
+
+    if (
+        typeof err === 'object' &&
+        err !== null &&
+        'type' in err &&
+        (err as { type?: string }).type === 'entity.too.large'
+    ) {
+        return ApiResponse.error(res, {
+            statusCode: 413,
+            message: `Request payload is too large. Max allowed size is ${REQUEST_BODY_LIMIT}.`,
+        });
+    }
 
     const message = err instanceof Error ? err.message : 'Internal Server Error';
     const statusCode =

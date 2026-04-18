@@ -4,7 +4,7 @@ import Button from "../../../components/ui/Button";
 
 export default function CTA() {
   return (
-    <section className="relative py-24 overflow-hidden">
+    <section className="relative py-12 overflow-hidden">
       <Container>
         <div className="relative max-w-7xl w-[calc(100%-1rem)] md:w-[calc(100%-2rem)] mx-auto rounded-3xl border border-white/10 bg-[#0A0B0E]/90 overflow-hidden">
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(94,106,210,0.2),transparent_60%)]" />
@@ -23,7 +23,7 @@ export default function CTA() {
             transition={{ duration: 11, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }}
           />
 
-          <div className="relative z-10 px-6 md:px-12 py-16 md:py-20 text-center">
+          <div className="relative z-10 px-6 md:px-10 py-10 md:py-20 text-center">
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -65,26 +65,6 @@ export default function CTA() {
             >
               <Button className="shadow-[0_0_50px_rgba(94,106,210,0.45)]">Join OpenCourse</Button>
               <Button variant="secondary">Contribute</Button>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-              className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 max-w-3xl mx-auto"
-            >
-              {[
-                { value: "1.2K+", label: "Contributors" },
-                { value: "12K+", label: "Learners" },
-                { value: "380+", label: "Courses" },
-                { value: "Weekly", label: "New Content" },
-              ].map((item) => (
-                <div key={item.label} className="rounded-xl border border-white/10 bg-white/3 px-4 py-3">
-                  <div className="text-white font-semibold text-lg">{item.value}</div>
-                  <div className="text-xs text-neutral-400 uppercase tracking-wider">{item.label}</div>
-                </div>
-              ))}
             </motion.div>
           </div>
         </div>

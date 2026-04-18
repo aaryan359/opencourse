@@ -20,7 +20,7 @@ export default function Home() {
 	return (
 		<>
 			<Hero />
-      <div className="mx-auto grid max-w-7xl grid-cols-1 gap-8 px-6 py-16 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      <div className="mx-auto grid max-w-7xl grid-cols-1 gap-8 px-6  md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {fields.map((field: any, index: number) => (
           <Domains
             key={field._id}
@@ -30,8 +30,7 @@ export default function Home() {
         ))}
       </div>
 
-     
-			
+    
 			<Interview />
 			<Contributors />
 			<CTA />

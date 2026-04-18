@@ -52,12 +52,12 @@ export default function Hero() {
 			<div className='absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,rgba(34,211,238,0.12),transparent_55%)]' />
 
 			<Container>
-				<div className='relative z-10 pt-20 pb-15'>
+				<div className='relative z-10 pt-20 pb-10'>
 					
 					<motion.div
 						initial={{ opacity: 0, y: 8 }}
 						animate={{ opacity: 1, y: 0 }}
-						className='mb-8 flex'>
+						className='mb-6 flex'>
 						<HoverBorderGradient
 							containerClassName='rounded-full px-1 py-0.5'
 							as='button'
@@ -66,7 +66,7 @@ export default function Hero() {
 						</HoverBorderGradient>
 					</motion.div>
 
-					{/* ===== MAIN GRID ===== */}
+					
 					<div className='grid lg:grid-cols-2 gap-16 items-start'>
 						{/* ===== LEFT ===== */}
 						<motion.div
@@ -93,11 +93,11 @@ export default function Hero() {
 
 							<div className='mt-12 grid grid-cols-3 gap-6 max-w-xl'>
 								<Stat
-									value='120+'
+									value='12+'
 									label='Courses & Paths'
 								/>
 								<Stat
-									value='300+'
+									value='3+'
 									label='Contributors'
 								/>
 								<Stat
@@ -148,6 +148,7 @@ export default function Hero() {
 								</div>
 							</div>
 						</motion.div>
+
 					</div>
 				</div>
 			</Container>
@@ -155,7 +156,6 @@ export default function Hero() {
 	);
 }
 
-/* ================= HELPERS ================= */
 
 function Feature({
 	icon,

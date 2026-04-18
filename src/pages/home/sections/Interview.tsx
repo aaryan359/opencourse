@@ -135,7 +135,6 @@ export default function Interview() {
   );
 }
 
-/* ================= CARD ================= */
 
 function CategoryCard({ category, index }: { category: InterviewCategory; index: number }) {
   return (
@@ -190,9 +189,9 @@ function CategoryCard({ category, index }: { category: InterviewCategory; index:
 
         <div className="mt-auto pt-6 flex items-center justify-between text-sm">
           <span className="text-neutral-500">Updated regularly</span>
-          <span className="flex items-center gap-1 text-indigo-400 transition group-hover:gap-2">
+          <span className="flex items-center gap-1 text-indigo-400">
             Practice
-            <span className="transition group-hover:translate-x-1">→</span>
+            <span className="transitiontr"></span>
           </span>
         </div>
       </div>

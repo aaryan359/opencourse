@@ -21,6 +21,4 @@ const FieldSchema = new Schema<IField>(
     { timestamps: true },
 );
 
-FieldSchema.index({ slug: 1 });
-
 export const Field: Model<IField> = mongoose.model<IField>('Field', FieldSchema);

@@ -57,6 +57,10 @@ export default function ContributePage() {
   const [uploadMode, setUploadMode] = useState<'file' | 'url'>('file');
   const [videoFile, setVideoFile] = useState<File | null>(null);
   const [videoDuration, setVideoDuration] = useState<number | null>(null);
+  const [videoProcessing, setVideoProcessing] = useState(false);
+  const [videoProcessingProgress, setVideoProcessingProgress] = useState(0);
+  const [videoUploading, setVideoUploading] = useState(false);
+  const [videoUploadProgress, setVideoUploadProgress] = useState(0);
   const [submittingContribution, setSubmittingContribution] = useState(false);
 
   const [company, setCompany] = useState('');
@@ -135,6 +139,10 @@ export default function ContributePage() {
       setUploadMode('file');
       setVideoFile(null);
       setVideoDuration(null);
+      setVideoProcessing(false);
+      setVideoProcessingProgress(0);
+      setVideoUploading(false);
+      setVideoUploadProgress(0);
 
       const response = await contributeApi.getTopicsByCourseId(course._id);
       const payload = response.data?.data;
@@ -246,12 +254,20 @@ export default function ContributePage() {
 
     try {
       setSubmittingContribution(true);
+      if (uploadMode === 'file') {
+        setVideoUploading(true);
+        setVideoUploadProgress(0);
+      }
+
       await contributeApi.uploadTopicContribution(selectedTopic._id, {
         title: contributionTitle.trim(),
         description: contributionDescription.trim() || undefined,
         url: uploadMode === 'url' ? contributionUrl.trim() : undefined,
         videoFile: uploadMode === 'file' ? videoFile ?? undefined : undefined,
         duration: videoDuration ?? undefined,
+        onUploadProgress: (progress) => {
+          setVideoUploadProgress(progress);
+        },
       });
 
       toast.success('Contribution submitted and pending approval.');
@@ -260,6 +276,7 @@ export default function ContributePage() {
       setContributionUrl('');
       setVideoFile(null);
       setVideoDuration(null);
+      setVideoUploadProgress(100);
     } catch (error: unknown) {
       const message =
         typeof error === 'object' &&
@@ -275,6 +292,10 @@ export default function ContributePage() {
       toast.error(message);
     } finally {
       setSubmittingContribution(false);
+      setTimeout(() => {
+        setVideoUploading(false);
+        setVideoUploadProgress(0);
+      }, 250);
     }
   };
 
@@ -360,6 +381,8 @@ export default function ContributePage() {
     const file = event.target.files?.[0] ?? null;
     setVideoFile(file);
     setVideoDuration(null);
+    setVideoUploading(false);
+    setVideoUploadProgress(0);
 
     if (!file) return;
 
@@ -371,33 +394,52 @@ export default function ContributePage() {
       return;
     }
 
+    setVideoProcessing(true);
+    setVideoProcessingProgress(5);
+    const progressInterval = window.setInterval(() => {
+      setVideoProcessingProgress((previous) => (previous >= 90 ? previous : previous + 8));
+    }, 90);
+
     const objectUrl = URL.createObjectURL(file);
     const probe = document.createElement('video');
     probe.preload = 'metadata';
     probe.src = objectUrl;
 
     probe.onloadedmetadata = () => {
+      window.clearInterval(progressInterval);
       URL.revokeObjectURL(objectUrl);
       const duration = Math.floor(probe.duration);
       if (!Number.isFinite(duration) || duration <= 0) {
         toast.error('Could not read video duration. Please choose another file.');
         setVideoFile(null);
+        setVideoProcessing(false);
+        setVideoProcessingProgress(0);
         return;
       }
 
       if (duration > MAX_VIDEO_DURATION_SECONDS) {
         toast.error('Video is too long. Maximum allowed length is 60 minutes.');
         setVideoFile(null);
+        setVideoProcessing(false);
+        setVideoProcessingProgress(0);
         return;
       }
 
+      setVideoProcessingProgress(100);
       setVideoDuration(duration);
+      window.setTimeout(() => {
+        setVideoProcessing(false);
+        setVideoProcessingProgress(0);
+      }, 240);
     };
 
     probe.onerror = () => {
+      window.clearInterval(progressInterval);
       URL.revokeObjectURL(objectUrl);
       toast.error('Unable to process selected video file.');
       setVideoFile(null);
+      setVideoProcessing(false);
+      setVideoProcessingProgress(0);
     };
   };
 
@@ -575,6 +617,10 @@ export default function ContributePage() {
                       setUploadMode('file');
                       setVideoFile(null);
                       setVideoDuration(null);
+                      setVideoProcessing(false);
+                      setVideoProcessingProgress(0);
+                      setVideoUploading(false);
+                      setVideoUploadProgress(0);
                     }}
                     className='mb-4 inline-flex rounded-lg border border-white/10 bg-[#121218] px-3 py-2 text-xs text-zinc-300 hover:bg-white/10'
                   >
@@ -681,6 +727,10 @@ export default function ContributePage() {
                           setUploadMode('file');
                           setVideoFile(null);
                           setVideoDuration(null);
+                          setVideoProcessing(false);
+                          setVideoProcessingProgress(0);
+                          setVideoUploading(false);
+                          setVideoUploadProgress(0);
                         }}
                         className={`rounded-xl border p-4 text-left transition ${
                           selectedTopic?._id === topic._id
@@ -783,9 +833,28 @@ export default function ContributePage() {
                               onChange={(event) => {
                                 void handleVideoFileChange(event);
                               }}
+                              disabled={videoProcessing || videoUploading || submittingContribution}
                               className='border-white/10 bg-[#0f0f15] text-zinc-100 file:mr-3 file:rounded-md file:border-0 file:bg-indigo-500 file:px-3 file:py-2 file:text-xs file:font-medium file:text-white hover:file:bg-indigo-400'
                               required={uploadMode === 'file'}
                             />
+
+                            {(videoProcessing || videoUploading) && (
+                              <div className='space-y-2 rounded-lg border border-white/10 bg-[#0f0f15] p-3'>
+                                <div className='h-2 w-full overflow-hidden rounded-full bg-white/10'>
+                                  <div
+                                    className='h-full rounded-full bg-linear-to-r from-indigo-400 to-cyan-400 transition-all duration-200'
+                                    style={{
+                                      width: `${videoUploading ? videoUploadProgress : videoProcessingProgress}%`,
+                                    }}
+                                  />
+                                </div>
+                                <p className='text-xs text-zinc-300'>
+                                  {videoUploading
+                                    ? `Uploading video... ${videoUploadProgress}%`
+                                    : `Preparing video... ${videoProcessingProgress}%`}
+                                </p>
+                              </div>
+                            )}
 
                             <p className='text-xs text-zinc-400'>
                               Allowed formats: MP4, WebM, OGG, MOV, MKV. Max size: 200MB. Max duration: 60 minutes.
@@ -824,9 +893,18 @@ export default function ContributePage() {
                       <Button
                         type='submit'
                         className='w-full'
-                        disabled={!hasContributorUploadAccess || submittingContribution}
+                        disabled={
+                          !hasContributorUploadAccess ||
+                          submittingContribution ||
+                          videoProcessing ||
+                          (uploadMode === 'file' && !videoDuration)
+                        }
                       >
-                        {submittingContribution ? 'Submitting...' : 'Submit Contribution'}
+                        {videoUploading
+                          ? `Uploading video... ${videoUploadProgress}%`
+                          : submittingContribution
+                            ? 'Submitting...'
+                            : 'Submit Contribution'}
                       </Button>
                     </div>
                   </form>

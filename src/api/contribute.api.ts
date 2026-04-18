@@ -51,6 +51,13 @@ export const contributeApi = {
 
       return apiClient.post<ApiEnvelope<unknown>>(`/video/topics/${topicId}/videos`, formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
+        onUploadProgress: (event) => {
+          if (!payload.onUploadProgress) return;
+          const total = event.total ?? 0;
+          if (total <= 0) return;
+          const progress = Math.round((event.loaded * 100) / total);
+          payload.onUploadProgress(progress);
+        },
       });
     },
 
