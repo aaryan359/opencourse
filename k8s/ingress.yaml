@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: opencourse-backend-ingress
+  namespace: default
+  annotations:
+    # Uses the Nginx Ingress Controller's rewrite engine
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  ingressClassName: nginx # Instructs the cluster to route this traffic using the Nginx Ingress Controller
+  rules:
+    - host: api.opencourse.local # The domain name for your backend API
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: opencourse-backend-service # Sends traffic to the service we created
+                port:
+                  number: 80 # Sends it to the Service's listening port (port 80)

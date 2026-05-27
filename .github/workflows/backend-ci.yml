@@ -1,0 +1,119 @@
+name: Deploy Backend to AWS EC2
+
+on:
+  push:
+    branches:
+      - dev
+      - prod
+    paths:
+      - 'server/**'
+      - '.github/workflows/backend-ci.yml'
+      - 'docker-compose.yml'
+  workflow_dispatch: # Allows manual trigger of this workflow from the GitHub UI
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Checkout the source code from repository
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. Setup Node.js (for lint check)
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+          cache-dependency-path: 'server/package-lock.json'
+
+      # 3. Install packages and run code lint checks
+      - name: Install dependencies & Lint check
+        run: |
+          cd server
+          npm ci
+          npm run lint --if-present
+
+      # 4. Set up Docker Buildx (for optimized docker caching and building)
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # 5. Log in to Docker Hub
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      # 6. Build the Docker Image and Push it to Docker Hub
+      # We tag it with 'latest' and the unique Git Commit SHA to track releases and allow rollbacks.
+      - name: Build and Push Docker Image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./server
+          file: ./server/Dockerfile
+          push: true
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/opencourse-backend:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/opencourse-backend:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      # 7. SSH into the AWS EC2 VM and Deploy
+      - name: Deploy to AWS EC2 via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ubuntu
+          key: ${{ secrets.EC2_SSH_KEY }}
+          port: 22
+          script: |
+            # 1. Ensure deployment directory exists
+            mkdir -p /home/ubuntu/opencourse
+            cd /home/ubuntu/opencourse
+
+            # 2. Write the docker-compose.yml file dynamically on the server
+            cat << 'EOF' > docker-compose.yml
+            version: '3.8'
+            services:
+              backend:
+                image: ${{ secrets.DOCKERHUB_USERNAME }}/opencourse-backend:latest
+                container_name: opencourse_backend
+                restart: unless-stopped
+                ports:
+                  - "4004:4004"
+                environment:
+                  - PORT=4004
+                  - MONGO_URI=${MONGO_URI}
+                  - JWT_SECRET=${JWT_SECRET}
+                  - JWT_EXPIRY=${JWT_EXPIRY}
+                  - TRUST_PROXY=${TRUST_PROXY}
+                  - ALLOWED_ORIGINS=${ALLOWED_ORIGINS}
+                  - ADMIN_SECRET=${ADMIN_SECRET}
+                volumes:
+                  - uploads-data:/usr/src/app/uploads
+
+            volumes:
+              uploads-data:
+                driver: local
+            EOF
+
+            # 3. Recreate the production .env file using secure secrets passed from GitHub
+            cat << 'EOF' > .env
+            MONGO_URI=${{ secrets.MONGO_URI }}
+            JWT_SECRET=${{ secrets.JWT_SECRET }}
+            JWT_EXPIRY=${{ secrets.JWT_EXPIRY }}
+            TRUST_PROXY=${{ secrets.TRUST_PROXY }}
+            ALLOWED_ORIGINS=${{ secrets.ALLOWED_ORIGINS }}
+            ADMIN_SECRET=${{ secrets.ADMIN_SECRET }}
+            EOF
+
+            # 4. Pull the newly pushed image from Docker Hub
+            docker compose pull
+
+            # 5. Recreate and start the containers in detached (background) mode
+            docker compose up -d
+
+            # 6. Crucial step: Clean up old Docker images to save precious disk space on the t3.micro!
+            docker image prune -af

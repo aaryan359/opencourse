@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: opencourse-backend-service
+  namespace: default
+  labels:
+    app: opencourse-backend
+    tier: api
+spec:
+  type: ClusterIP # Internal load-balanced IP inside the cluster (unreachable from outside directly)
+  ports:
+    - port: 80 # The port the Service listens on
+      targetPort: 4004 # The port on the Pod/Container where Express is listening
+      protocol: TCP
+      name: http
+  selector:
+    app: opencourse-backend # Directs traffic ONLY to Pods matching this tag

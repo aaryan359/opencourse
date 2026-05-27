@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: opencourse-backend
+  namespace: default
+  labels:
+    app: opencourse-backend
+    tier: api
+spec:
+  replicas: 1 # Number of Pod instances to run
+  selector:
+    matchLabels:
+      app: opencourse-backend
+  template:
+    metadata:
+      labels:
+        app: opencourse-backend
+        tier: api
+    spec:
+      containers:
+        - name: backend
+          image: aaryan359/opencourse-backend:latest # Replace 'aaryan359' with your Docker Hub username
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 4004
+              name: http
+          # Environment variables for your Node Express app
+          env:
+            - name: PORT
+              value: "4004"
+            - name: TRUST_PROXY
+              value: "1"
+            - name: ALLOWED_ORIGINS
+              value: "http://localhost:5173,https://aaryan359.github.io"
+            # Load sensitive credentials securely from the Kubernetes Secret
+            - name: MONGO_URI
+              valueFrom:
+                secretKeyRef:
+                  name: opencourse-backend-secrets
+                  key: MONGO_URI
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: opencourse-backend-secrets
+                  key: JWT_SECRET
+            - name: JWT_EXPIRY
+              value: "7d"
+            - name: ADMIN_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: opencourse-backend-secrets
+                  key: ADMIN_SECRET
+          # Resource constraints to prevent your containers from hogging cluster memory
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "50m"
+            limits:
+              memory: "256Mi"
+              cpu: "150m"
+          # Liveness checks if your container is running (if it fails, K8s kills the container and restarts it)
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 4004
+            initialDelaySeconds: 15
+            periodSeconds: 10
+          # Readiness checks if your container is fully ready to receive traffic (if it fails, K8s removes it from the Service load balancer)
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 4004
+            initialDelaySeconds: 10
+            periodSeconds: 5

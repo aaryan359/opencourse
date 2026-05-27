@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: opencourse_backend
+    restart: unless-stopped
+    ports:
+      - "4004:4004"
+    env_file:
+      - ./server/.env # Automatically loads your environment variables locally
+    volumes:
+      - uploads-data:/usr/src/app/uploads # Persists user uploads so they are never lost on rebuilds
+
+volumes:
+  uploads-data:
+    driver: local
