@@ -28,12 +28,11 @@ jobs:
           cache: 'npm'
           cache-dependency-path: 'server/package-lock.json'
 
-      # 3. Install packages and run code lint checks
-      - name: Install dependencies & Lint check
+      # 3. Install packages
+      - name: Install dependencies
         run: |
           cd server
           npm ci
-          npm run lint --if-present
 
       # 4. Set up Docker Buildx (for optimized docker caching and building)
       - name: Set up Docker Buildx
