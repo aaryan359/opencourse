@@ -8,7 +8,7 @@ services:
     container_name: opencourse_backend
     restart: unless-stopped
     ports:
-      - "4004:4004"
+      - "80:4004"
     env_file:
       - ./server/.env # Automatically loads your environment variables locally
     volumes:

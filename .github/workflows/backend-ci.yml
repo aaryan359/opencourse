@@ -81,7 +81,7 @@ jobs:
                 container_name: opencourse_backend
                 restart: unless-stopped
                 ports:
-                  - "4004:4004"
+                  - "80:4004"
                 environment:
                   - PORT=4004
                   - MONGO_URI=${MONGO_URI}
